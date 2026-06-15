@@ -43,12 +43,8 @@ services:
       - workspace_node_modules:/workspace/node_modules
       - backend_node_modules:/workspace/apps/backend/node_modules
     command: >
-      sh -c "if [ -f apps/backend/package.json ]; then
-        yarn workspace backend start:dev;
-      else
-        echo 'Pending backend scaffold. Expected command: yarn workspace backend start:dev' &&
-        tail -f /dev/null;
-      fi"
+      sh -c "yarn install --frozen-lockfile || yarn install &&
+        yarn workspace backend start:dev"
 
   web:
     build:
