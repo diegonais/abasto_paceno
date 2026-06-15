@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.yarn
+.turbo
+coverage
+npm-debug.log
+yarn-error.log
+Dockerfile
+docker-compose.yml
