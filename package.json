@@ -1,0 +1,8 @@
+{
+  "name": "abasto-paceno",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

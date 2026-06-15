@@ -1,0 +1,4 @@
+# Docker Compose will be configured later for:
+# - PostgreSQL + PostGIS
+# - NestJS backend
+# - React + Vite web app
