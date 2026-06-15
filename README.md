@@ -36,7 +36,7 @@ abasto-paceno/
 `docker-compose.yml` deja preparados estos servicios:
 
 - `db`: PostgreSQL + PostGIS con volumen persistente y healthcheck.
-- `backend`: contenedor Node para NestJS en modo desarrollo sobre Yarn Workspaces.
+- `backend`: contenedor Node para NestJS en modo desarrollo sobre Yarn Workspaces y conectado a `db`.
 - `web`: contenedor Node para Vite en modo desarrollo sobre Yarn Workspaces.
 
 La app mobile no se dockeriza en el MVP. `apps/mobile` corre localmente con React Native CLI.
@@ -54,7 +54,8 @@ Notas:
 
 - `docker compose up backend` levantara tambien `db` por la dependencia declarada.
 - `docker compose up web` levantara `backend` y `db`.
-- Mientras `apps/backend/package.json` o `apps/web/package.json` no existan, sus contenedores quedaran en espera con un mensaje indicando el comando esperado.
+- La extension `postgis` se habilita desde el backend al iniciar con `CREATE EXTENSION IF NOT EXISTS postgis;`.
+- Copia `apps/backend/.env.example` a `apps/backend/.env` para ejecutar el backend fuera de Docker.
 
 ### Variables y puertos base
 
@@ -68,8 +69,39 @@ Notas:
 - Android emulator: usar `http://10.0.2.2:3000`
 - Celular fisico: usar `http://IP_DE_LA_PC:3000`
 
-## Pendiente para siguientes prompts
+## Backend y base de datos
 
-- Crear `apps/backend/package.json` y el scaffold real de NestJS para que `yarn workspace backend start:dev` arranque la API.
-- Crear `apps/web/package.json` y el scaffold real de React + Vite para que `yarn workspace web dev --host 0.0.0.0` arranque la web.
-- Ajustar instalacion de dependencias si el monorepo adopta Yarn Berry, pnpm o una estrategia distinta de workspaces.
+El backend usa `@nestjs/config` y `@nestjs/typeorm` con configuracion centralizada.
+
+- En Docker, usa `DATABASE_HOST=db`.
+- Fuera de Docker, usa `DATABASE_HOST=localhost`.
+- `synchronize` esta en `false` para evitar cambios peligrosos sobre la BD.
+- Aun no se definieron entidades de negocio ni autenticacion.
+
+### Levantar la base de datos
+
+```bash
+docker compose up db
+```
+
+Esto deja PostgreSQL + PostGIS disponible en `localhost:5432`.
+
+### Levantar el backend conectado a la BD
+
+```bash
+docker compose up backend
+```
+
+El backend quedara disponible en `http://localhost:3000` y expondra:
+
+- Health: `GET http://localhost:3000/api/health`
+- Swagger: `http://localhost:3000/api/docs`
+
+### Ejecutar backend fuera de Docker
+
+```bash
+copy apps\\backend\\.env.example apps\\backend\\.env
+yarn workspace backend start:dev
+```
+
+Para este flujo, deja `DATABASE_HOST=localhost` en `apps/backend/.env`.

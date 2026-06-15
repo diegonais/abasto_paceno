@@ -1,4 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -6,9 +7,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   app.enableCors({
-    origin: process.env.CORS_ORIGIN ?? true,
+    origin: configService.get<string>('app.corsOrigin') ?? true,
     credentials: true,
   });
 
@@ -25,18 +27,18 @@ async function bootstrap(): Promise<void> {
   );
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle(process.env.APP_NAME ?? 'Abasto Paceno API')
+    .setTitle(configService.get<string>('app.name') ?? 'Abasto Paceno API')
     .setDescription(
-      process.env.APP_DESCRIPTION ??
+      configService.get<string>('app.description') ??
         'API documentation for the Abasto Paceno backend.',
     )
-    .setVersion(process.env.APP_VERSION ?? '1.0.0')
+    .setVersion(configService.get<string>('app.version') ?? '1.0.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 3000);
+  await app.listen(configService.get<number>('app.port') ?? 3000);
 }
 
 void bootstrap();
