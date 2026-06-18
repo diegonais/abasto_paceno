@@ -37,7 +37,7 @@ export class Offer extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 7 })
   longitude: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   locationDescription: string | null;
 
   @Column({ type: 'timestamp', nullable: true })

@@ -10,13 +10,13 @@ export class MerchantProfile extends BaseEntity {
   @JoinColumn()
   user: User;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   businessName: string | null;
 
   @Column()
   ownerFullName: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   phone: string | null;
 
   @Column({ type: 'text', nullable: true })

@@ -6,16 +6,16 @@ import { MapView } from '../../components/map/MapView';
 import { formatCurrency } from '../../utils/format';
 import { useOffersMap } from './useOffersMap';
 
-export function PublicMapPanel() {
+export function PublicMapPanel({ variant = 'default', mapHeight = 420 }) {
   const { offers, loading, error } = useOffersMap();
 
   return (
-    <section className="map-panel">
-      <div className="stack-md">
+    <section className={`map-panel map-panel-${variant}`}>
+      <div className={`stack-md map-panel-column map-panel-column-${variant}`}>
         <h2>Ofertas activas</h2>
         <p className="muted">Visualiza comerciantes que están ofertando ahora mismo.</p>
         <ErrorMessage message={error} />
-        <Card className="offers-list">
+        <Card className={`offers-list offers-list-${variant}`}>
           {loading ? (
             <LoadingState />
           ) : offers.length ? (
@@ -37,8 +37,8 @@ export function PublicMapPanel() {
         </Card>
       </div>
 
-      <Card>
-        {loading ? <LoadingState /> : <MapView offers={offers} />}
+      <Card className={`map-card map-card-${variant}`}>
+        {loading ? <LoadingState /> : <MapView offers={offers} height={mapHeight} />}
       </Card>
     </section>
   );
