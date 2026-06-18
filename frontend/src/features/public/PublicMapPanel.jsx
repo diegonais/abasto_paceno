@@ -22,8 +22,13 @@ export function PublicMapPanel({ variant = 'default', mapHeight = 420 }) {
             offers.map((offer) => (
               <article className="offer-item" key={offer.id}>
                 <div>
-                  <strong>{offer.product?.productName}</strong>
-                  <p>{offer.merchantProfile?.businessName ?? offer.merchantProfile?.ownerFullName}</p>
+                  <strong>{offer.product?.productName ?? offer.productName}</strong>
+                  <p>
+                    {offer.merchantProfile?.businessName ??
+                      offer.businessName ??
+                      offer.merchantProfile?.ownerFullName ??
+                      offer.ownerFullName}
+                  </p>
                 </div>
                 <div>
                   <span>{offer.saleType}</span>
