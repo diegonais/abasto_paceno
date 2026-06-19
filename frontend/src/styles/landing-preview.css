@@ -1,6 +1,7 @@
 .public-shell.public-shell-home {
-  min-height: 100vh;
-  overflow-x: hidden;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
   background:
     radial-gradient(circle at 92% 16%, rgba(170, 41, 80, 0.11), transparent 34%),
     radial-gradient(circle at 4% 80%, rgba(123, 24, 53, 0.07), transparent 34%),
@@ -8,6 +9,7 @@
 }
 
 .public-shell-home .public-header {
+  height: 56px;
   min-height: 56px;
   border-bottom: 1px solid rgba(123, 24, 53, 0.12);
   background: rgba(255, 250, 243, 0.92);
@@ -26,15 +28,23 @@
 }
 
 .public-shell-home .brand-mark {
-  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  display: inline-grid;
+  place-items: center;
   align-items: center;
   text-decoration: none;
   color: #7b1835;
 }
 
 .public-shell-home .brand-mark-logo {
-  width: 46px;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
+  margin: auto;
+  object-fit: contain;
+  object-position: center;
 }
 
 .public-shell-home .public-nav {
@@ -69,8 +79,8 @@
 }
 
 .public-shell-home .navButton {
-  min-height: 44px;
-  padding: 0.75rem 1rem;
+  min-height: 40px;
+  padding: 0.65rem 0.85rem;
   border: 0;
   border-radius: 14px;
   background: #7b1835;
@@ -84,21 +94,28 @@
   width: 100%;
   max-width: none;
   padding: 0;
+  height: calc(100dvh - 56px);
+  overflow: hidden;
 }
 
 .landingPage {
+  height: 100%;
   min-height: 0;
+  overflow: hidden;
   color: #201018;
 }
 
 .landingPage .pageShell {
+  height: 100%;
   min-height: 0;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .landingPage .heroSection {
   box-sizing: border-box;
-  min-height: calc(100dvh - 92px);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   padding: clamp(0.1rem, 0.3vh, 0.3rem) clamp(1rem, 2.4vw, 2.75rem);
@@ -107,6 +124,7 @@
 .landingPage .heroGrid {
   width: 100%;
   max-width: 1600px;
+  max-height: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(520px, 0.9fr) minmax(700px, 1.1fr);
@@ -147,6 +165,8 @@
   display: block;
   width: clamp(420px, 16vw, 400px);
   height: auto;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 0.75rem;
 }
 
@@ -214,6 +234,7 @@
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
+  position: relative;
 }
 
 .landingPage .buttonIcon {
@@ -221,17 +242,28 @@
   height: 1.25rem;
 }
 
+.landingPage .buttonIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
 .landingPage .buttonIcon svg,
 .landingPage .infoIcon svg,
 .landingPage .roleIcon svg {
-  width: 100%;
-  height: 100%;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .landingPage .infoPanel {
   width: 100%;
   display: grid;
   gap: 0.7rem;
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
 }
 
 .landingPage .infoCard {
@@ -252,9 +284,9 @@
 
 .landingPage .infoIcon,
 .landingPage .roleIcon {
-  border: 1px solid rgba(123, 24, 53, 0.12);
-  border-radius: 999px;
-  background: rgba(170, 41, 80, 0.075);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #7b1835;
 }
 
@@ -264,8 +296,8 @@
 }
 
 .landingPage .infoIcon svg {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .landingPage .infoCardBody h3,
@@ -319,8 +351,8 @@
 }
 
 .landingPage .roleIcon svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .landingPage .roleCard strong {
@@ -356,7 +388,7 @@
 
 @media (max-width: 1023px) {
   .landingPage .heroSection {
-    min-height: calc(100dvh - 96px);
+    min-height: 0;
     padding: 0.75rem 1rem 0.4rem;
   }
 
@@ -395,12 +427,13 @@
 
 @media (max-width: 760px) {
   .public-shell-home .public-header-inner {
-    min-height: 68px;
+    height: 56px;
+    min-height: 56px;
     padding: 0.75rem 1rem;
   }
 
   .public-shell-home .brand-mark-logo {
-    width: 124px;
+    width: 46px;
   }
 
   .public-shell-home .public-nav {
@@ -421,13 +454,13 @@
   }
 
   .landingPage .heroSection {
-    min-height: calc(100dvh - 108px);
+    min-height: 0;
     padding: 0.4rem 0.85rem 0.25rem;
   }
 
   .landingPage .heroTitle {
     max-width: none;
-    font-size: 2.8rem;
+    font-size: 2.35rem;
     letter-spacing: 0;
   }
 
@@ -475,4 +508,82 @@
   .landingPage .rolesCard {
     border-radius: 22px;
   }
+}
+
+[data-theme='dark'] .public-shell.public-shell-home {
+  background:
+    radial-gradient(circle at 92% 16%, rgba(0, 121, 52, 0.38), transparent 34%),
+    radial-gradient(circle at 4% 80%, rgba(127, 220, 169, 0.12), transparent 34%),
+    linear-gradient(180deg, #101722 0%, #18212e 100%);
+}
+
+[data-theme='dark'] .public-shell-home .public-header,
+[data-theme='dark'] .public-shell-home .public-header-inner {
+  background: rgba(16, 23, 34, 0.94);
+  border-bottom-color: rgba(248, 240, 223, 0.12);
+}
+
+[data-theme='dark'] .public-shell-home .public-nav-link {
+  color: #f8f0df;
+}
+
+[data-theme='dark'] .public-shell-home .public-nav-link.active,
+[data-theme='dark'] .public-shell-home .public-nav-link:hover {
+  color: #9fe8bd;
+}
+
+[data-theme='dark'] .public-shell-home .public-nav-link.active::after {
+  background: #007934;
+}
+
+[data-theme='dark'] .landingPage {
+  color: #f8f0df;
+}
+
+[data-theme='dark'] .landingPage .heroTitle,
+[data-theme='dark'] .landingPage .infoCardBody h3,
+[data-theme='dark'] .landingPage .rolesHeader h3,
+[data-theme='dark'] .landingPage .roleCard strong {
+  color: #f8f0df;
+}
+
+[data-theme='dark'] .landingPage .heroDescription,
+[data-theme='dark'] .landingPage .infoCardBody p,
+[data-theme='dark'] .landingPage .rolesHeader p,
+[data-theme='dark'] .landingPage .roleCard span {
+  color: #c7b89f;
+}
+
+[data-theme='dark'] .landingPage .infoCard {
+  background: rgba(24, 33, 46, 0.86);
+  border-color: rgba(248, 240, 223, 0.12);
+}
+
+[data-theme='dark'] .landingPage .roleCard {
+  background: rgba(248, 240, 223, 0.04);
+  border-color: rgba(248, 240, 223, 0.12);
+}
+
+[data-theme='dark'] .public-shell-home .navButton,
+[data-theme='dark'] .landingPage .primaryButton {
+  background: #007934;
+  border-color: #007934;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(0, 121, 52, 0.28);
+}
+
+[data-theme='dark'] .public-shell-home .navButton:hover,
+[data-theme='dark'] .landingPage .primaryButton:hover {
+  background: #00642b;
+  border-color: #00642b;
+}
+
+[data-theme='dark'] .landingPage .secondaryButton {
+  background: rgba(248, 240, 223, 0.05);
+  border-color: rgba(248, 240, 223, 0.14);
+  color: #7fdca9;
+}
+
+[data-theme='dark'] .landingPage .secondaryButton:hover {
+  background: rgba(127, 220, 169, 0.12);
 }

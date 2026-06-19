@@ -8,7 +8,7 @@ export function UserMapPage() {
         title="Mapa de ofertas"
         description="Explora el mapa autenticado con la misma visibilidad pública y espacio para futuras acciones personalizadas."
       />
-      <PublicMapPanel variant="immersive" mapHeight="clamp(700px, 82vh, 980px)" />
+      <PublicMapPanel variant="immersive" mapHeight="100%" />
     </div>
   );
 }

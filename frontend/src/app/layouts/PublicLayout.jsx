@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../../components/ui/Button';
+import { ThemeToggle } from '../../components/common/ThemeToggle';
 import { getDefaultRouteForRole } from '../../config/navigation';
 
 export function PublicLayout() {
@@ -52,6 +53,7 @@ export function PublicLayout() {
                 </Link>
               </>
             )}
+            <ThemeToggle />
           </nav>
         </div>
       </header>

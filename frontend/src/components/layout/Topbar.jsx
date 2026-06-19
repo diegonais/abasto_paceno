@@ -1,12 +1,14 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth';
+import { navigationByRole } from '../../config/navigation';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { Button } from '../ui/Button';
 
 export function Topbar() {
-  const { user, logout } = useAuth();
-  const location = useLocation();
+  const { user, role, logout } = useAuth();
   const navigate = useNavigate();
+  const items = navigationByRole[role] ?? [];
 
   function handleLogout() {
     logout();
@@ -15,17 +17,38 @@ export function Topbar() {
 
   return (
     <header className="topbar">
-      <div>
-        <p className="topbar-path">{location.pathname}</p>
-        <h2>Hola, {user?.fullName ?? 'usuario'}</h2>
-      </div>
+      <div className="topbar-inner">
+        <Link className="brand-mark" to="/">
+          <img
+            className="brand-mark-logo"
+            src="/abasto-paceno.png"
+            alt="Abasto Paceno"
+          />
+        </Link>
 
-      <div className="topbar-actions">
-        <div className="topbar-user">
-          <strong>{user?.role ?? 'visitante'}</strong>
-          <span>{user?.email}</span>
+        <nav className="role-nav" aria-label="Navegacion del panel">
+          {items.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => `public-nav-link role-nav-link${isActive ? ' active' : ''}`}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="topbar-actions">
+          <div className="topbar-user">
+            <strong>{user?.fullName ?? 'Usuario'}</strong>
+            <span>{user?.role ?? 'visitante'}</span>
+          </div>
+
+          <Button variant="primary" size="sm" className="navButton" onClick={handleLogout}>
+            Salir
+          </Button>
+          <ThemeToggle />
         </div>
-        <Button variant="ghost" onClick={handleLogout}>Cerrar sesión</Button>
       </div>
     </header>
   );
