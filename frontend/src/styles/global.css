@@ -50,6 +50,17 @@ textarea {
 
 .public-shell {
   min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 92% 16%, rgba(170, 41, 80, 0.11), transparent 34%),
+    radial-gradient(circle at 4% 80%, rgba(123, 24, 53, 0.07), transparent 34%),
+    linear-gradient(180deg, #fffaf3 0%, #fff4ed 100%);
+  color: var(--color-text);
+}
+
+.public-shell-home {
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .public-header,
@@ -63,11 +74,24 @@ textarea {
 .public-header {
   position: sticky;
   top: 0;
-  z-index: 5;
-  padding: 1rem 1.5rem;
-  background: rgba(255, 250, 243, 0.9);
+  z-index: 20;
+  min-height: 72px;
+  padding: 0;
+  background: rgba(255, 250, 243, 0.92);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(123, 24, 53, 0.08);
+  border-bottom: 1px solid rgba(123, 24, 53, 0.12);
+}
+
+.public-header-inner {
+  width: 100%;
+  max-width: none;
+  min-height: 72px;
+  margin: 0;
+  padding: 0.85rem clamp(1rem, 2vw, 2rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .brand-mark,
@@ -76,15 +100,88 @@ textarea {
   letter-spacing: 0.02em;
 }
 
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
+.brand-mark-logo,
+.sidebar-brand-logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-mark-logo {
+  width: clamp(120px, 12vw, 160px);
+  height: auto;
+}
+
+.sidebar-brand-logo {
+  max-width: 100%;
+  height: 56px;
+}
+
 .public-nav {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(1.1rem, 2vw, 2rem);
+}
+
+.public-nav-link {
+  position: relative;
+  padding: 0;
+  font-weight: 650;
+  color: var(--color-text);
+  font-size: 0.96rem;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.public-nav-link:hover,
+.public-nav-link.active {
+  color: var(--color-primary);
+}
+
+.public-nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1.45rem;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--color-primary-active);
+}
+
+.navButton {
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 14px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(123, 24, 53, 0.18);
 }
 
 .public-main,
 .page-shell {
   padding: 1.5rem;
+}
+
+.public-main {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+}
+
+.public-main-home {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  min-height: calc(100vh - 72px);
 }
 
 .hero,
@@ -121,9 +218,23 @@ textarea {
   align-items: stretch;
 }
 
+.hero-home {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+}
+
+.hero-home-compact {
+  min-height: calc(100vh - 122px);
+  align-items: center;
+}
+
 .hero-copy,
 .hero-card {
   padding: 2rem;
+}
+
+.hero-copy-home {
+  display: grid;
+  align-content: center;
 }
 
 .hero-copy h1 {
@@ -131,6 +242,93 @@ textarea {
   line-height: 0.98;
   margin: 0 0 1rem;
   max-width: 10ch;
+}
+
+.hero-copy-home h1 {
+  max-width: 12ch;
+}
+
+.home-hero-logo {
+  display: block;
+  width: min(100%, 360px);
+  height: auto;
+  margin-bottom: 0.75rem;
+}
+
+.hero-card-home {
+  display: grid;
+  align-content: center;
+}
+
+.home-info-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-intro {
+  max-width: 62ch;
+  margin: 0;
+}
+
+.home-editorial {
+  display: grid;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+  align-content: center;
+}
+
+.home-editorial-block {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.home-section-label {
+  margin: 0;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.home-editorial-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text);
+}
+
+.home-editorial-copy {
+  margin: 0;
+  max-width: 48ch;
+  color: var(--color-muted);
+}
+
+.home-audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(123, 24, 53, 0.12);
+}
+
+.home-audience-item {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.home-audience-item h3,
+.home-audience-item p {
+  margin: 0;
+}
+
+.home-audience-item h3 {
+  font-size: 0.98rem;
+}
+
+.home-audience-item p {
+  color: var(--color-muted);
+  font-size: 0.95rem;
 }
 
 .hero-kicker,
@@ -266,6 +464,7 @@ textarea {
 .btn-secondary {
   background: rgba(123, 24, 53, 0.08);
   color: var(--color-primary);
+  border: 1px solid rgba(123, 24, 53, 0.14);
 }
 
 .btn-ghost {
@@ -467,13 +666,372 @@ textarea {
   width: min(540px, calc(100vw - 2rem));
 }
 
+.landingPage {
+  --landing-bg: #fffaf3;
+  --landing-surface: #ffffff;
+  --landing-border: rgba(123, 24, 53, 0.14);
+  --landing-text: #201018;
+  --landing-muted: #6b4a56;
+  --landing-accent: #7b1835;
+  --landing-accent-active: #aa2950;
+  --landing-accent-soft: rgba(123, 24, 53, 0.08);
+  --landing-shadow: 0 24px 70px rgba(67, 20, 35, 0.08);
+  min-height: calc(100vh - 72px);
+  background:
+    radial-gradient(circle at 92% 16%, rgba(170, 41, 80, 0.11), transparent 34%),
+    radial-gradient(circle at 4% 80%, rgba(123, 24, 53, 0.07), transparent 34%),
+    linear-gradient(180deg, #fffaf3 0%, #fff4ed 100%);
+  color: var(--landing-text);
+}
+
+.pageShell {
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  margin: 0 auto;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+.heroSection {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  padding: clamp(2rem, 4vh, 3.4rem) clamp(1.25rem, 3vw, 3.5rem);
+}
+
+.heroGrid {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(520px, 0.9fr) minmax(700px, 1.1fr);
+  gap: clamp(3rem, 5vw, 6rem);
+  align-items: center;
+}
+
+.heroContent {
+  width: 100%;
+  max-width: 720px;
+}
+
+.eyebrow {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.48rem 0.85rem;
+  margin-bottom: 1.35rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 999px;
+  background: rgba(123, 24, 53, 0.055);
+  color: var(--landing-accent);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.eyebrowDot {
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: var(--landing-accent-active);
+}
+
+.heroLogo {
+  display: block;
+  width: clamp(210px, 18vw, 300px);
+  height: auto;
+  margin-bottom: 1.35rem;
+}
+
+.heroTitle {
+  max-width: 720px;
+  margin: 0 0 1.25rem;
+  color: var(--landing-text);
+  font-size: clamp(3.3rem, 4.8vw, 5.6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.heroDescription {
+  max-width: 680px;
+  margin: 0 0 1.65rem;
+  color: var(--landing-muted);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.heroActions a {
+  text-decoration: none;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.9rem 1.35rem;
+  border-radius: 14px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background: var(--landing-accent);
+  border: 1px solid var(--landing-accent);
+  color: #ffffff;
+  box-shadow: 0 16px 32px rgba(123, 24, 53, 0.24);
+}
+
+.primaryButton:hover {
+  background: var(--landing-accent-active);
+  border-color: var(--landing-accent-active);
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(123, 24, 53, 0.2);
+  color: var(--landing-accent);
+}
+
+.secondaryButton:hover {
+  background: rgba(123, 24, 53, 0.07);
+}
+
+.buttonIcon,
+.infoIcon,
+.roleIcon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.buttonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.buttonIcon svg,
+.infoIcon svg,
+.roleIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.infoPanel {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+}
+
+.infoCard {
+  width: 100%;
+  border: 1px solid var(--landing-border);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--landing-shadow);
+}
+
+.infoCardLarge {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 1.15rem;
+  align-items: center;
+  padding: 1.35rem 1.45rem;
+}
+
+.infoCardBody {
+  min-width: 0;
+}
+
+.infoIcon {
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 999px;
+  background: rgba(170, 41, 80, 0.075);
+  color: var(--landing-accent);
+}
+
+.infoIcon svg {
+  width: 1.85rem;
+  height: 1.85rem;
+}
+
+.infoCardBody h3,
+.rolesHeader h3 {
+  margin: 0 0 0.5rem;
+  color: var(--landing-accent);
+  font-size: 1.22rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.infoCardBody p,
+.rolesHeader p {
+  margin: 0;
+  color: var(--landing-muted);
+  font-size: 0.98rem;
+  line-height: 1.62;
+}
+
+.rolesCard {
+  padding: 1.35rem;
+}
+
+.rolesHeader {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 1.15rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.roleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.roleCard {
+  min-width: 0;
+  min-height: 185px;
+  padding: 1rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 20px;
+  background: rgba(255, 250, 243, 0.74);
+}
+
+.roleIcon {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 0.9rem;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 999px;
+  background: rgba(170, 41, 80, 0.075);
+  color: var(--landing-accent);
+}
+
+.roleIcon svg {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+.roleCard strong {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--landing-accent);
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.roleCard span {
+  display: block;
+  color: var(--landing-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* Tema oscuro preparado para cuando actives data-theme */
+[data-theme='dark'] .public-shell,
+.public-shell[data-theme='dark'] {
+  background: #160b10;
+  color: #fff7f0;
+}
+
+[data-theme='dark'] .public-header,
+.public-shell[data-theme='dark'] .public-header {
+  background: rgba(22, 11, 16, 0.9);
+  border-bottom-color: rgba(255, 250, 243, 0.12);
+}
+
+[data-theme='dark'] .public-nav-link,
+.public-shell[data-theme='dark'] .public-nav-link {
+  color: #fff7f0;
+}
+
+[data-theme='dark'] .public-nav-link:hover,
+[data-theme='dark'] .public-nav-link.active,
+.public-shell[data-theme='dark'] .public-nav-link:hover,
+.public-shell[data-theme='dark'] .public-nav-link.active {
+  color: #ffcad8;
+}
+
+[data-theme='dark'] .landingPage,
+.landingPage[data-theme='dark'] {
+  --landing-bg: #160b10;
+  --landing-surface: #211018;
+  --landing-border: rgba(255, 250, 243, 0.12);
+  --landing-text: #fff7f0;
+  --landing-muted: #d8bfc8;
+  --landing-accent: #ffcad8;
+  --landing-accent-active: #ff9fba;
+  --landing-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  background:
+    radial-gradient(circle at 82% 20%, rgba(170, 41, 80, 0.18), transparent 34%),
+    radial-gradient(circle at 18% 80%, rgba(170, 41, 80, 0.12), transparent 32%),
+    linear-gradient(180deg, #160b10 0%, #211018 100%);
+  color: var(--landing-text);
+}
+
+[data-theme='dark'] .eyebrow,
+.landingPage[data-theme='dark'] .eyebrow {
+  background: rgba(255, 250, 243, 0.05);
+  border-color: rgba(255, 250, 243, 0.12);
+}
+
+[data-theme='dark'] .infoCard,
+.landingPage[data-theme='dark'] .infoCard {
+  background: rgba(33, 16, 24, 0.84);
+  border-color: rgba(255, 250, 243, 0.12);
+}
+
+[data-theme='dark'] .roleCard,
+.landingPage[data-theme='dark'] .roleCard {
+  background: rgba(255, 250, 243, 0.04);
+  border-color: rgba(255, 250, 243, 0.12);
+}
+
+[data-theme='dark'] .infoIcon,
+[data-theme='dark'] .roleIcon,
+.landingPage[data-theme='dark'] .infoIcon,
+.landingPage[data-theme='dark'] .roleIcon {
+  background: rgba(170, 41, 80, 0.16);
+  border-color: rgba(255, 250, 243, 0.12);
+}
+
+[data-theme='dark'] .secondaryButton,
+.landingPage[data-theme='dark'] .secondaryButton {
+  background: rgba(255, 250, 243, 0.05);
+  border-color: rgba(255, 250, 243, 0.14);
+  color: var(--landing-accent);
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1023px) {
+  .public-shell-home {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
   .app-shell,
   .hero,
   .map-panel,
@@ -481,25 +1039,152 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .hero-home-compact {
+    min-height: auto;
+  }
+
+  .home-audience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroSection {
+    min-height: auto;
+    padding: 3rem 1.25rem;
+  }
+
+  .heroGrid {
+    max-width: 780px;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .heroContent {
+    max-width: 680px;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .eyebrow,
+  .heroLogo,
+  .heroDescription {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .heroActions {
+    justify-content: center;
+  }
+
+  .infoPanel {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
   .sidebar {
     margin-bottom: 0;
   }
 }
 
-@media (max-width: 720px) {
-  .public-header,
-  .topbar,
-  .page-header {
-    align-items: start;
+@media (max-width: 760px) {
+  .public-header-inner {
+    min-height: 68px;
+    padding: 0.75rem 1rem;
+  }
+
+  .brand-mark-logo {
+    width: 112px;
+  }
+
+  .public-nav {
+    gap: 0.85rem;
+  }
+
+  .public-nav-link {
+    font-size: 0.9rem;
+  }
+
+  .public-nav-link:nth-of-type(2),
+  .public-nav-link:nth-of-type(3) {
+    display: none;
+  }
+
+  .public-nav-link.active::after {
+    bottom: -1.3rem;
+  }
+
+  .heroSection {
+    padding: 2.5rem 1rem;
+  }
+
+  .heroLogo {
+    width: 210px;
+  }
+
+  .heroTitle {
+    max-width: none;
+    font-size: clamp(2.35rem, 11vw, 3.4rem);
+    letter-spacing: -0.05em;
+  }
+
+  .heroDescription {
+    font-size: 1rem;
+  }
+
+  .infoCardLarge,
+  .rolesHeader {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .infoIcon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .roleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .roleCard {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .public-nav a {
+    display: none;
+  }
+
+  .public-nav > a:last-child {
+    display: inline-flex;
+  }
+
+  .heroActions {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .heroActions a,
+  .heroActions button,
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .infoCard,
+  .rolesCard {
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .public-header-inner {
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .public-nav {
     flex-wrap: wrap;
-  }
-
-  .page-shell,
-  .public-main {
-    padding: 1rem;
+    justify-content: flex-end;
   }
 }

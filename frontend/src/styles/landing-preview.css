@@ -1,0 +1,478 @@
+.public-shell.public-shell-home {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 92% 16%, rgba(170, 41, 80, 0.11), transparent 34%),
+    radial-gradient(circle at 4% 80%, rgba(123, 24, 53, 0.07), transparent 34%),
+    linear-gradient(180deg, #fffaf3 0%, #fff4ed 100%);
+}
+
+.public-shell-home .public-header {
+  min-height: 56px;
+  border-bottom: 1px solid rgba(123, 24, 53, 0.12);
+  background: rgba(255, 250, 243, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.public-shell-home .public-header-inner {
+  width: 100%;
+  max-width: none;
+  min-height: 56px;
+  margin: 0;
+  padding: 0.35rem clamp(1rem, 2vw, 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.public-shell-home .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #7b1835;
+}
+
+.public-shell-home .brand-mark-logo {
+  width: 46px;
+  height: auto;
+}
+
+.public-shell-home .public-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.1rem, 2vw, 2rem);
+}
+
+.public-shell-home .public-nav-link {
+  position: relative;
+  color: #201018;
+  text-decoration: none;
+  font-size: 0.96rem;
+  font-weight: 650;
+  padding: 0;
+}
+
+.public-shell-home .public-nav-link.active,
+.public-shell-home .public-nav-link:hover {
+  color: #7b1835;
+}
+
+.public-shell-home .public-nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1.45rem;
+  height: 3px;
+  border-radius: 999px;
+  background: #aa2950;
+}
+
+.public-shell-home .navButton {
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 14px;
+  background: #7b1835;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(123, 24, 53, 0.18);
+}
+
+.public-shell-home .public-main-home {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.landingPage {
+  min-height: 0;
+  color: #201018;
+}
+
+.landingPage .pageShell {
+  min-height: 0;
+  overflow-x: hidden;
+}
+
+.landingPage .heroSection {
+  box-sizing: border-box;
+  min-height: calc(100dvh - 92px);
+  display: flex;
+  align-items: center;
+  padding: clamp(0.1rem, 0.3vh, 0.3rem) clamp(1rem, 2.4vw, 2.75rem);
+}
+
+.landingPage .heroGrid {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(520px, 0.9fr) minmax(700px, 1.1fr);
+  gap: clamp(1.2rem, 2.2vw, 2.1rem);
+  align-items: center;
+}
+
+.landingPage .heroContent {
+  width: 100%;
+  max-width: 720px;
+}
+
+.landingPage .eyebrow {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.48rem 0.85rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 999px;
+  background: rgba(123, 24, 53, 0.055);
+  color: #7b1835;
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.landingPage .eyebrowDot {
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 999px;
+  background: #aa2950;
+}
+
+.landingPage .heroLogo {
+  display: block;
+  width: clamp(420px, 16vw, 400px);
+  height: auto;
+  margin-bottom: 0.75rem;
+}
+
+.landingPage .heroTitle {
+  max-width: 760px;
+  margin: 0 0 0.55rem;
+  color: #201018;
+  font-size: 2.6rem;
+  font-weight: 950;
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-wrap: balance;
+  text-shadow: 0 10px 26px rgba(32, 16, 24, 0.12);
+}
+
+.landingPage .heroDescription {
+  max-width: 680px;
+  margin: 0;
+  color: #6b4a56;
+  font-size: 0.92rem;
+  line-height: 1.42;
+}
+
+.landingPage .heroActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.landingPage .heroActions a {
+  text-decoration: none;
+}
+
+.landingPage .primaryButton,
+.landingPage .secondaryButton {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.9rem 1.35rem;
+  border-radius: 14px;
+  font-weight: 850;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.landingPage .primaryButton {
+  background: #7b1835;
+  border-color: #7b1835;
+  color: #fff;
+  box-shadow: 0 16px 32px rgba(123, 24, 53, 0.24);
+}
+
+.landingPage .secondaryButton {
+  background: rgba(255, 255, 255, 0.68);
+  border-color: rgba(123, 24, 53, 0.2);
+  color: #7b1835;
+}
+
+.landingPage .buttonIcon,
+.landingPage .infoIcon,
+.landingPage .roleIcon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.landingPage .buttonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.landingPage .buttonIcon svg,
+.landingPage .infoIcon svg,
+.landingPage .roleIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.landingPage .infoPanel {
+  width: 100%;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.landingPage .infoCard {
+  width: 100%;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 24px 70px rgba(67, 20, 35, 0.08);
+}
+
+.landingPage .infoCardLarge {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
+}
+
+.landingPage .infoIcon,
+.landingPage .roleIcon {
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 999px;
+  background: rgba(170, 41, 80, 0.075);
+  color: #7b1835;
+}
+
+.landingPage .infoIcon {
+  width: 44px;
+  height: 44px;
+}
+
+.landingPage .infoIcon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.landingPage .infoCardBody h3,
+.landingPage .rolesHeader h3 {
+  margin: 0 0 0.5rem;
+  color: #7b1835;
+  font-size: 0.98rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.landingPage .infoCardBody p,
+.landingPage .rolesHeader p {
+  margin: 0;
+  color: #6b4a56;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.landingPage .rolesCard {
+  padding: 0.9rem 1rem;
+}
+
+.landingPage .rolesHeader {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 0.7rem;
+}
+
+.landingPage .roleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.landingPage .roleCard {
+  min-width: 0;
+  min-height: 118px;
+  padding: 0.65rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 20px;
+  background: rgba(255, 250, 243, 0.74);
+}
+
+.landingPage .roleIcon {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.45rem;
+}
+
+.landingPage .roleIcon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.landingPage .roleCard strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #7b1835;
+  font-size: 0.82rem;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.landingPage .roleCard span {
+  display: block;
+  color: #6b4a56;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 1350px) {
+  .landingPage .heroGrid {
+    max-width: 1280px;
+    grid-template-columns: minmax(430px, 0.92fr) minmax(560px, 1.08fr);
+  }
+
+  .landingPage .heroTitle {
+    font-size: 3.75rem;
+  }
+
+  .landingPage .heroContent {
+    max-width: 650px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .landingPage .heroSection {
+    min-height: calc(100dvh - 96px);
+    padding: 0.75rem 1rem 0.4rem;
+  }
+
+  .landingPage .heroGrid {
+    max-width: 780px;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .landingPage .heroContent {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .landingPage .eyebrow,
+  .landingPage .heroLogo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landingPage .heroDescription {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landingPage .heroActions {
+    justify-content: center;
+  }
+
+  .landingPage .infoPanel {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .public-shell-home .public-header-inner {
+    min-height: 68px;
+    padding: 0.75rem 1rem;
+  }
+
+  .public-shell-home .brand-mark-logo {
+    width: 124px;
+  }
+
+  .public-shell-home .public-nav {
+    gap: 0.85rem;
+  }
+
+  .public-shell-home .public-nav-link {
+    font-size: 0.9rem;
+  }
+
+  .public-shell-home .public-nav-link:nth-of-type(2),
+  .public-shell-home .public-nav-link:nth-of-type(3) {
+    display: none;
+  }
+
+  .public-shell-home .public-nav-link.active::after {
+    bottom: -1.3rem;
+  }
+
+  .landingPage .heroSection {
+    min-height: calc(100dvh - 108px);
+    padding: 0.4rem 0.85rem 0.25rem;
+  }
+
+  .landingPage .heroTitle {
+    max-width: none;
+    font-size: 2.8rem;
+    letter-spacing: 0;
+  }
+
+  .landingPage .heroDescription {
+    font-size: 1rem;
+  }
+
+  .landingPage .infoCardLarge,
+  .landingPage .rolesHeader {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .landingPage .roleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .landingPage .roleCard {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .public-shell-home .public-nav a {
+    display: none;
+  }
+
+  .public-shell-home .public-nav > a:last-child {
+    display: inline-flex;
+  }
+
+  .landingPage .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .landingPage .heroActions a,
+  .landingPage .heroActions button,
+  .landingPage .primaryButton,
+  .landingPage .secondaryButton {
+    width: 100%;
+  }
+
+  .landingPage .infoCard,
+  .landingPage .rolesCard {
+    border-radius: 22px;
+  }
+}

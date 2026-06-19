@@ -11,7 +11,11 @@ export function Sidebar() {
     <aside className="sidebar">
       <div>
         <p className="sidebar-eyebrow">Panel</p>
-        <h1 className="sidebar-title">Abasto Paceño</h1>
+        <img
+          className="sidebar-brand-logo"
+          src="/abasto-paceno.png"
+          alt="Abasto Paceño"
+        />
       </div>
 
       <nav className="sidebar-nav">

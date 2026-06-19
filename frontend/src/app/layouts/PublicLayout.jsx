@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../../components/ui/Button';
@@ -6,33 +6,57 @@ import { getDefaultRouteForRole } from '../../config/navigation';
 
 export function PublicLayout() {
   const { isAuthenticated, role } = useAuth();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   return (
-    <div className="public-shell">
+    <div className={`public-shell${isHome ? ' public-shell-home' : ''}`}>
       <header className="public-header">
-        <Link className="brand-mark" to="/">
-          Abasto Paceño
-        </Link>
+        <div className="public-header-inner">
+          <Link className="brand-mark" to="/">
+            <img
+              className="brand-mark-logo"
+              src="/abasto-paceno.png"
+              alt="Abasto Paceño"
+            />
+          </Link>
 
-        <nav className="public-nav">
-          <NavLink to="/">Inicio</NavLink>
-          <NavLink to="/map">Mapa</NavLink>
-          {isAuthenticated ? (
-            <Link to={getDefaultRouteForRole(role)}>
-              <Button variant="primary" size="sm">Entrar al panel</Button>
-            </Link>
-          ) : (
-            <>
-              <NavLink to="/login">Ingresar</NavLink>
-              <Link to="/register">
-                <Button variant="primary" size="sm">Crear cuenta</Button>
+          <nav className="public-nav">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) => `public-nav-link${isActive ? ' active' : ''}`}
+            >
+              Inicio
+            </NavLink>
+            <NavLink
+              to="/map"
+              className={({ isActive }) => `public-nav-link${isActive ? ' active' : ''}`}
+            >
+              Mapa
+            </NavLink>
+            {isAuthenticated ? (
+              <Link to={getDefaultRouteForRole(role)}>
+                <Button variant="primary" size="sm" className="navButton">Entrar al panel</Button>
               </Link>
-            </>
-          )}
-        </nav>
+            ) : (
+              <>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) => `public-nav-link${isActive ? ' active' : ''}`}
+                >
+                  Ingresar
+                </NavLink>
+                <Link to="/register">
+                  <Button variant="primary" size="sm" className="navButton">Crear cuenta</Button>
+                </Link>
+              </>
+            )}
+          </nav>
+        </div>
       </header>
 
-      <main className="public-main">
+      <main className={`public-main${isHome ? ' public-main-home' : ''}`}>
         <Outlet />
       </main>
     </div>
