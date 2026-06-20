@@ -8,7 +8,6 @@ export function NotFoundPage() {
     <div className="center-shell">
       <Card className="auth-card">
         <h1>Vista no encontrada</h1>
-        <p>La ruta que intentaste abrir no existe o ya no está disponible.</p>
         <Link to="/"><Button>Volver al inicio</Button></Link>
       </Card>
     </div>

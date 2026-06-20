@@ -17,6 +17,7 @@ export function validateEnv(config: Record<string, unknown>) {
 
   const databasePort = Number(config.DATABASE_PORT);
   const port = config.PORT ? Number(config.PORT) : 3000;
+  const corsOrigins = config.CORS_ORIGIN ?? 'http://localhost:5173';
 
   if (Number.isNaN(databasePort)) {
     throw new Error('DATABASE_PORT must be a number');
@@ -28,6 +29,7 @@ export function validateEnv(config: Record<string, unknown>) {
 
   return {
     ...config,
+    CORS_ORIGIN: corsOrigins,
     DATABASE_PORT: databasePort,
     PORT: port,
   };

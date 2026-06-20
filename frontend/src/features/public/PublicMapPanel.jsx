@@ -6,14 +6,15 @@ import { MapView } from '../../components/map/MapView';
 import { formatCurrency } from '../../utils/format';
 import { useOffersMap } from './useOffersMap';
 
-export function PublicMapPanel({ variant = 'default', mapHeight = 420 }) {
+export function PublicMapPanel({ variant = 'default', mapHeight = '100%' }) {
   const { offers, loading, error } = useOffersMap();
 
   return (
     <section className={`map-panel map-panel-${variant}`}>
       <div className={`stack-md map-panel-column map-panel-column-${variant}`}>
-        <h2>Ofertas activas</h2>
-        <p className="muted">Visualiza comerciantes que están ofertando ahora mismo.</p>
+        <div className="map-panel-heading">
+          <h2>Ofertas activas</h2>
+        </div>
         <ErrorMessage message={error} />
         <Card className={`offers-list offers-list-${variant}`}>
           {loading ? (
@@ -37,14 +38,23 @@ export function PublicMapPanel({ variant = 'default', mapHeight = 420 }) {
               </article>
             ))
           ) : (
-            <EmptyState title="Sin ofertas activas" description="Cuando haya publicaciones disponibles aparecerán aquí." />
+            <EmptyState title="Sin ofertas activas" description="Cuando haya publicaciones disponibles apareceran aqui." />
           )}
         </Card>
       </div>
 
-      <Card className={`map-card map-card-${variant}`}>
-        {loading ? <LoadingState /> : <MapView offers={offers} height={mapHeight} />}
-      </Card>
+      <div className={`stack-md map-panel-map-column map-panel-map-column-${variant}`}>
+        <div className="map-panel-heading">
+          <h2>Mapa de ubicaciones</h2>
+        </div>
+        <Card className={`map-card map-card-${variant}`}>
+          {loading ? (
+            <LoadingState />
+          ) : (
+            <MapView offers={offers} height={mapHeight} />
+          )}
+        </Card>
+      </div>
     </section>
   );
 }

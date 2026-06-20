@@ -1,4 +1,5 @@
-import { CircleMarker, MapContainer, Popup, TileLayer, useMapEvents } from 'react-leaflet';
+import { useEffect } from 'react';
+import { CircleMarker, MapContainer, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from '../../config/constants';
 import { OfferMarkerPopup } from './OfferMarkerPopup';
@@ -13,19 +14,52 @@ function CoordinatePicker({ onPick }) {
   return null;
 }
 
+function MapResizeObserver() {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+
+    resizeObserver.observe(container);
+    map.invalidateSize();
+
+    return () => resizeObserver.disconnect();
+  }, [map]);
+
+  return null;
+}
+
 export function MapView({
-  offers,
+  offers = [],
   onCoordinatePick,
   selectedPoint,
   height = 420,
 }) {
   return (
     <div className="map-wrapper" style={{ height }}>
-      <MapContainer center={DEFAULT_MAP_CENTER} zoom={DEFAULT_MAP_ZOOM} scrollWheelZoom className="map-canvas">
+      <MapContainer
+        center={DEFAULT_MAP_CENTER}
+        zoom={DEFAULT_MAP_ZOOM}
+        scrollWheelZoom="center"
+        wheelPxPerZoomLevel={140}
+        wheelDebounceTime={80}
+        zoomDelta={0.5}
+        zoomSnap={0.5}
+        zoomAnimation
+        fadeAnimation
+        markerZoomAnimation
+        inertia
+        inertiaDeceleration={3600}
+        className="map-canvas"
+      >
         <TileLayer
           attribution='&copy; OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <MapResizeObserver />
 
         {offers.map((offer) => (
           <CircleMarker
@@ -48,7 +82,7 @@ export function MapView({
           />
         ) : null}
 
-        <CoordinatePicker onPick={onCoordinatePick} />
+        {onCoordinatePick ? <CoordinatePicker onPick={onCoordinatePick} /> : null}
       </MapContainer>
     </div>
   );

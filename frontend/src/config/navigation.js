@@ -2,21 +2,21 @@ import { ROLES } from './constants';
 
 export const navigationByRole = {
   [ROLES.USER]: [
-    { to: '/app/map', label: 'Mapa', hint: 'Ver ofertas activas' },
-    { to: '/app/profile', label: 'Perfil', hint: 'Actualizar mis datos' },
+    { to: '/app/map', label: 'Mapa' },
+    { to: '/app/profile', label: 'Perfil' },
   ],
   [ROLES.MERCHANT]: [
-    { to: '/merchant/map', label: 'Mapa', hint: 'Resumen de actividad' },
-    { to: '/merchant/profile', label: 'Perfil comercial', hint: 'Actualizar negocio' },
-    { to: '/merchant/offers', label: 'Ofertas', hint: 'Gestionar publicaciones' },
+    { to: '/merchant/map', label: 'Mapa' },
+    { to: '/merchant/profile', label: 'Perfil comercial' },
+    { to: '/merchant/offers', label: 'Ofertas' },
   ],
   [ROLES.ADMIN]: [
-    { to: '/admin/dashboard', label: 'Dashboard', hint: 'Vista general' },
-    { to: '/admin/users', label: 'Usuarios', hint: 'Administrar cuentas' },
-    { to: '/admin/merchant-profiles', label: 'Comerciantes', hint: 'Perfilar negocios' },
-    { to: '/admin/categories', label: 'Categorías', hint: 'Ordenar productos' },
-    { to: '/admin/products', label: 'Productos', hint: 'Catálogo base' },
-    { to: '/admin/offers', label: 'Ofertas', hint: 'Control de publicaciones' },
+    { to: '/admin/dashboard', label: 'Dashboard' },
+    { to: '/admin/users', label: 'Usuarios' },
+    { to: '/admin/merchant-profiles', label: 'Comerciantes' },
+    { to: '/admin/categories', label: 'Categorias' },
+    { to: '/admin/products', label: 'Productos' },
+    { to: '/admin/offers', label: 'Ofertas' },
   ],
 };
 

@@ -26,7 +26,6 @@ export function Sidebar() {
             className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
           >
             <span>{item.label}</span>
-            <small>{item.hint}</small>
           </NavLink>
         ))}
       </nav>

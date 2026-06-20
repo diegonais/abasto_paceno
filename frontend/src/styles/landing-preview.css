@@ -1,4 +1,7 @@
 .public-shell.public-shell-home {
+  --color-scrollbar-track: #f3e7dc;
+  --color-scrollbar-thumb: #b9968d;
+  --color-scrollbar-thumb-hover: #7b1835;
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
@@ -6,6 +9,30 @@
     radial-gradient(circle at 92% 16%, rgba(170, 41, 80, 0.11), transparent 34%),
     radial-gradient(circle at 4% 80%, rgba(123, 24, 53, 0.07), transparent 34%),
     linear-gradient(180deg, #fffaf3 0%, #fff4ed 100%);
+}
+
+.public-shell.public-shell-home * {
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  scrollbar-width: thin;
+}
+
+.public-shell.public-shell-home *::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.public-shell.public-shell-home *::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+}
+
+.public-shell.public-shell-home *::-webkit-scrollbar-thumb {
+  min-height: 44px;
+  background: var(--color-scrollbar-thumb);
+  border: 3px solid var(--color-scrollbar-track);
+}
+
+.public-shell.public-shell-home *::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-thumb-hover);
 }
 
 .public-shell-home .public-header {
@@ -74,7 +101,7 @@
   right: 0;
   bottom: -1.45rem;
   height: 3px;
-  border-radius: 999px;
+  border-radius: 0;
   background: #aa2950;
 }
 
@@ -145,7 +172,7 @@
   padding: 0.48rem 0.85rem;
   margin-bottom: 0.75rem;
   border: 1px solid rgba(123, 24, 53, 0.14);
-  border-radius: 999px;
+  border-radius: 0;
   background: rgba(123, 24, 53, 0.055);
   color: #7b1835;
   font-size: 0.78rem;
@@ -157,7 +184,7 @@
 .landingPage .eyebrowDot {
   width: 0.48rem;
   height: 0.48rem;
-  border-radius: 999px;
+  border-radius: 0;
   background: #aa2950;
 }
 
@@ -269,7 +296,7 @@
 .landingPage .infoCard {
   width: 100%;
   border: 1px solid rgba(123, 24, 53, 0.14);
-  border-radius: 26px;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 24px 70px rgba(67, 20, 35, 0.08);
 }
@@ -340,7 +367,7 @@
   min-height: 118px;
   padding: 0.65rem;
   border: 1px solid rgba(123, 24, 53, 0.14);
-  border-radius: 20px;
+  border-radius: 0;
   background: rgba(255, 250, 243, 0.74);
 }
 
@@ -506,11 +533,14 @@
 
   .landingPage .infoCard,
   .landingPage .rolesCard {
-    border-radius: 22px;
+    border-radius: 0;
   }
 }
 
 [data-theme='dark'] .public-shell.public-shell-home {
+  --color-scrollbar-track: #101722;
+  --color-scrollbar-thumb: #4f5c68;
+  --color-scrollbar-thumb-hover: #7fdca9;
   background:
     radial-gradient(circle at 92% 16%, rgba(0, 121, 52, 0.38), transparent 34%),
     radial-gradient(circle at 4% 80%, rgba(127, 220, 169, 0.12), transparent 34%),

@@ -158,7 +158,7 @@ export function MerchantOffersPage({ mode }) {
       <ErrorMessage message={error} />
 
       {isFormMode ? (
-        <div className="content-grid">
+        <div className="content-grid content-grid-map-form">
           <Card className="form-card">
             <form className="stack-md" onSubmit={handleSubmit}>
               <Select
@@ -187,7 +187,7 @@ export function MerchantOffersPage({ mode }) {
               <Input label="Longitud" name="longitude" value={formValues.longitude} onChange={handleChange} />
               <Input label="Disponible desde" name="availableFrom" type="datetime-local" value={formValues.availableFrom} onChange={handleChange} />
               <Input label="Disponible hasta" name="availableUntil" type="datetime-local" value={formValues.availableUntil} onChange={handleChange} />
-              <Textarea label="Descripción de ubicación" name="locationDescription" value={formValues.locationDescription} onChange={handleChange} rows={4} />
+              <Textarea label="Descripcion de ubicacion" name="locationDescription" value={formValues.locationDescription} onChange={handleChange} rows={4} />
               <div className="inline-actions">
                 <Button variant="ghost" onClick={() => navigate('/merchant/offers')}>Cancelar</Button>
                 <Button type="submit" disabled={saving}>{saving ? 'Guardando...' : 'Guardar oferta'}</Button>
@@ -195,9 +195,16 @@ export function MerchantOffersPage({ mode }) {
             </form>
           </Card>
 
-          <Card>
-            <p className="muted">Haz clic en el mapa para completar coordenadas rápidamente.</p>
-            <MapView offers={offers} onCoordinatePick={handleCoordinatePick} selectedPoint={selectedPoint} />
+          <Card className="map-card map-card-picker">
+            <div className="map-panel-heading">
+              <h2>Ubicacion de la oferta</h2>
+            </div>
+            <MapView
+              offers={offers}
+              height="100%"
+              onCoordinatePick={handleCoordinatePick}
+              selectedPoint={selectedPoint}
+            />
           </Card>
         </div>
       ) : (
@@ -225,7 +232,7 @@ export function MerchantOffersPage({ mode }) {
               rows={offers}
             />
           ) : (
-            <EmptyState title="Sin ofertas propias" description="Crea tu primera oferta para aparecer en el mapa público." />
+            <EmptyState title="Sin ofertas propias" description="Crea tu primera oferta para aparecer en el mapa publico." />
           )}
         </Card>
       )}
