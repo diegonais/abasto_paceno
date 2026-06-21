@@ -8,6 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build:apk": "npx --yes --package eas-cli@20.3.0 eas build --platform android --profile apk",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

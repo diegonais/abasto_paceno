@@ -1,98 +1,195 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend Abasto Paceno
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST de Abasto Paceno construida con NestJS, TypeScript, TypeORM y PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+El backend expone la informacion que consumen el frontend web y el prototipo movil: usuarios, autenticacion, productos, categorias, perfiles de comerciantes y ofertas geolocalizadas.
 
-## Description
+## Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- NestJS 11
+- TypeScript
+- TypeORM
+- PostgreSQL
+- JWT con Passport
+- Swagger/OpenAPI
+- class-validator y class-transformer
 
-## Project setup
+## Estructura relevante
 
-```bash
-$ yarn install
+```text
+backend/
+|-- src/
+|   |-- modules/
+|   |   |-- auth/
+|   |   |-- categories/
+|   |   |-- merchant-profiles/
+|   |   |-- offers/
+|   |   |-- products/
+|   |   `-- users/
+|   |-- scripts/
+|   `-- main.ts
+|-- docker-compose.yml
+|-- .env.example
+`-- package.json
 ```
 
-## Compile and run the project
+## Variables de entorno
 
-```bash
-# development
-$ yarn run start
+Copia el ejemplo:
 
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+```powershell
+cd backend
+copy .env.example .env
 ```
 
-## Run tests
+Variables disponibles:
 
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```text
+NODE_ENV=development
+PORT=3000
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=abasto_paceno
+JWT_SECRET=super_secret_change_me
+JWT_EXPIRES_IN=1d
+CORS_ORIGIN=http://localhost:5173
 ```
 
-## Deployment
+`CORS_ORIGIN` acepta una lista separada por comas si necesitas permitir mas de un origen, por ejemplo el frontend web y una URL adicional de pruebas.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Base de datos
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Levantar PostgreSQL local:
 
-```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+```powershell
+cd backend
+docker compose up -d
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Apagar PostgreSQL:
 
-## Resources
+```powershell
+docker compose down
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Si cambias el puerto publicado en Docker, actualiza tambien `DATABASE_PORT`.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Instalacion
 
-## Support
+```powershell
+cd backend
+yarn install
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Ejecucion
 
-## Stay in touch
+Desarrollo con recarga:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```powershell
+yarn start:dev
+```
 
-## License
+Produccion local:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```powershell
+yarn build
+yarn start:prod
+```
+
+La API queda disponible por defecto en:
+
+```text
+http://localhost:3000/api
+```
+
+Swagger queda disponible en:
+
+```text
+http://localhost:3000/docs
+```
+
+## Seed de datos
+
+Para cargar datos iniciales:
+
+```powershell
+yarn seed
+```
+
+Ejecuta este comando con PostgreSQL levantado y las variables de entorno configuradas.
+
+## Endpoints principales
+
+La API usa prefijo global `/api`.
+
+Autenticacion:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+
+Ofertas:
+
+- `GET /api/offers`
+- `GET /api/offers/map`
+- `GET /api/offers/my-offers`
+- `GET /api/offers/:id`
+- `POST /api/offers`
+- `PATCH /api/offers/:id`
+- `PATCH /api/offers/:id/disable`
+
+Productos:
+
+- `GET /api/products`
+- `GET /api/products/:id`
+- `POST /api/products`
+- `PATCH /api/products/:id`
+- `PATCH /api/products/:id/disable`
+
+Categorias:
+
+- `GET /api/categories`
+- `GET /api/categories/:id`
+- `POST /api/categories`
+- `PATCH /api/categories/:id`
+- `PATCH /api/categories/:id/disable`
+
+Perfiles de comerciante:
+
+- `GET /api/merchant-profiles`
+- `GET /api/merchant-profiles/me`
+- `GET /api/merchant-profiles/:id`
+- `POST /api/merchant-profiles`
+- `PATCH /api/merchant-profiles/me`
+- `PATCH /api/merchant-profiles/:id`
+- `PATCH /api/merchant-profiles/:id/disable`
+
+Usuarios:
+
+- `GET /api/users`
+- `GET /api/users/:id`
+- `POST /api/users`
+- `PATCH /api/users/me`
+- `PATCH /api/users/:id`
+- `PATCH /api/users/:id/disable`
+
+El endpoint usado por el prototipo movil para el mapa es `GET /api/offers/map`. Devuelve ofertas con informacion basica del producto, precio si existe, comerciante y coordenadas.
+
+## Comandos utiles
+
+```powershell
+yarn build
+yarn lint
+yarn test
+yarn test:e2e
+yarn test:cov
+```
+
+## Notas de integracion
+
+- El frontend web consume la API con `VITE_API_URL`.
+- La app movil consume la API con `EXPO_PUBLIC_API_URL`.
+- Ambas URLs deben incluir `/api`.
+- Para pruebas desde Expo Go en telefono fisico, la URL del backend debe usar la IP local de la computadora, no `localhost`.

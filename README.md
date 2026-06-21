@@ -1,139 +1,98 @@
-# Abasto Paceño
+# Abasto Paceno
 
-Plataforma web geolocalizada para consultar puntos de venta de productos esenciales en La Paz, Bolivia.
+Plataforma geolocalizada para consultar puntos de venta y ofertas de productos esenciales en La Paz, Bolivia.
 
-El proyecto no es ecommerce, no procesa pagos, no gestiona delivery y no maneja inventario exacto. Su objetivo es mostrar ofertas o disponibilidad aproximada en un mapa.
+Abasto Paceno no es un ecommerce: no procesa pagos, no gestiona delivery y no maneja inventario exacto. Su foco es mostrar disponibilidad aproximada y ofertas en un mapa, con una experiencia web y un prototipo movil de consulta.
 
-## Stack
-
-- Backend: NestJS, TypeScript, TypeORM, PostgreSQL, JWT y Swagger.
-- Frontend web: React, Vite, React Router, Axios, Leaflet y OpenStreetMap.
-- App movil: Expo, React Native, TypeScript, React Navigation y react-native-maps.
-- Base de datos local: PostgreSQL mediante Docker Compose.
-- Gestores de paquetes: Yarn para backend/frontend y npm para la app movil.
-
-## Estructura
+## Contenido del monorepo
 
 ```text
 abasto_paceno/
-|-- backend/
-|-- frontend/
-|-- mobile/
-|-- packages/
-|-- docs/
-|-- AGENTS.md
+|-- backend/     API REST con NestJS, TypeORM y PostgreSQL
+|-- frontend/    Aplicacion web con React, Vite y Leaflet
+|-- mobile/      Prototipo movil con Expo, React Native y TypeScript
+|-- docs/        Documentacion de apoyo del proyecto
+|-- packages/    Espacio reservado para paquetes compartidos
 `-- README.md
 ```
+
+## Stack principal
+
+- Backend: NestJS, TypeScript, TypeORM, PostgreSQL, JWT y Swagger.
+- Frontend web: React, Vite, React Router, Axios, Leaflet y OpenStreetMap.
+- App movil: Expo SDK 54, React Native, TypeScript, React Navigation, react-native-maps y Axios.
+- Base de datos local: PostgreSQL con Docker Compose.
+- Gestores: Yarn en backend/frontend y npm en mobile.
 
 ## Requisitos
 
 - Node.js instalado.
 - Yarn instalado.
-- Docker Desktop o Docker Engine instalado.
-- Git instalado.
+- Docker Desktop o Docker Engine.
+- Git.
+- Expo Go en el telefono para probar la app movil sin instalar APK.
+- Cuenta de Expo solo si quieres generar APK con EAS Build.
 
-En Windows, si PowerShell bloquea `yarn`, usa `yarn.cmd` en los comandos.
+En Windows, si PowerShell bloquea scripts, usa `yarn.cmd`, `npm.cmd` o `npx.cmd`.
 
 ## Variables de entorno
 
-Cada app tiene su propio archivo de ejemplo. Copia el ejemplo, ajusta valores según tu máquina y evita versionar archivos `.env` reales.
-
-### Backend
-
-Archivo:
+Cada aplicacion tiene su propio ejemplo. Copia cada archivo antes de ejecutar el proyecto:
 
 ```powershell
 cd backend
 copy .env.example .env
-```
 
-Variables requeridas:
+cd ..\frontend
+copy .env.example .env
 
-| Variable | Uso |
-| --- | --- |
-| `NODE_ENV` | Entorno de ejecución, por ejemplo desarrollo o producción. |
-| `PORT` | Puerto donde escuchará el backend. Elige uno disponible en tu equipo. |
-| `DATABASE_HOST` | Host de PostgreSQL. Si usas Docker local normalmente será el host accesible desde tu máquina. |
-| `DATABASE_PORT` | Puerto publicado de PostgreSQL. Debe coincidir con Docker Compose o con tu base externa. |
-| `DATABASE_USER` | Usuario de PostgreSQL. |
-| `DATABASE_PASSWORD` | Contraseña de PostgreSQL. |
-| `DATABASE_NAME` | Nombre de la base de datos. |
-| `JWT_SECRET` | Secreto para firmar tokens JWT. Cambiarlo fuera de desarrollo local. |
-| `JWT_EXPIRES_IN` | Tiempo de expiración del token JWT. |
-| `CORS_ORIGIN` | Origen del frontend autorizado para consumir el backend. Si hay varios, separarlos por coma. |
-
-La API usa prefijo global `/api`. Swagger queda disponible en `/docs` sobre la URL base del backend.
-
-### Frontend
-
-Archivo:
-
-```powershell
-cd frontend
+cd ..\mobile
 copy .env.example .env
 ```
 
-Variables requeridas:
+Valores importantes:
 
-| Variable | Uso |
-| --- | --- |
-| `VITE_API_URL` | URL completa de la API backend, incluyendo el prefijo `/api`. |
-| `VITE_PORT` | Puerto donde Vite servirá el frontend. Elige uno disponible en tu equipo. |
+- Backend: `PORT`, `DATABASE_*`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CORS_ORIGIN`.
+- Frontend: `VITE_API_URL`, por ejemplo `http://localhost:3000/api`.
+- Mobile: `EXPO_PUBLIC_API_URL`, por ejemplo `http://192.168.1.25:3000/api`.
 
-`VITE_API_URL` debe coincidir con la URL real donde levantaste el backend.
+La API usa el prefijo global `/api`. Swagger queda disponible en `http://localhost:3000/docs`.
 
-## Base de datos
+Para Expo Go en telefono fisico no uses `localhost` en `EXPO_PUBLIC_API_URL`: eso apuntaria al telefono. Usa la IP local de la computadora donde corre el backend y asegurate de que telefono y computadora esten en la misma red.
 
-El archivo de Docker Compose de la base está en `backend/docker-compose.yml`.
+## Base de datos local
 
-Levantar PostgreSQL:
+El compose de PostgreSQL vive en `backend/docker-compose.yml`.
 
 ```powershell
 cd backend
 docker compose up -d
 ```
 
-Apagar PostgreSQL:
+Para apagar la base:
 
 ```powershell
-cd backend
 docker compose down
 ```
 
-Si el puerto de PostgreSQL ya está ocupado, cambia el puerto publicado en `backend/docker-compose.yml` y ajusta `DATABASE_PORT` en `backend/.env` para que ambos coincidan.
+Si el puerto de PostgreSQL ya esta ocupado, cambia el puerto publicado en `backend/docker-compose.yml` y ajusta `DATABASE_PORT` en `backend/.env`.
 
 ## Instalar dependencias
-
-Backend:
 
 ```powershell
 cd backend
 yarn install
-```
 
-Frontend:
-
-```powershell
-cd frontend
+cd ..\frontend
 yarn install
-```
 
-App movil:
-
-```powershell
-cd mobile
+cd ..\mobile
 npm.cmd install
-```
-
-En Windows con restricción de scripts:
-
-```powershell
-yarn.cmd install
 ```
 
 ## Ejecutar en desarrollo
 
-Primero levanta la base de datos y asegúrate de tener configurados los `.env`.
+Levanta primero PostgreSQL y configura los `.env`.
 
 Backend:
 
@@ -142,7 +101,7 @@ cd backend
 yarn start:dev
 ```
 
-Frontend:
+Frontend web:
 
 ```powershell
 cd frontend
@@ -153,27 +112,71 @@ App movil con Expo Go:
 
 ```powershell
 cd mobile
-copy .env.example .env
-# Edita EXPO_PUBLIC_API_URL con la IP local de tu computadora y el prefijo /api.
 npm.cmd start
 ```
 
-Escanea el QR con Expo Go. En un telefono fisico, `EXPO_PUBLIC_API_URL` debe usar la IP local de la computadora, no `localhost`.
+Escanea el QR con Expo Go. Si hay problemas de cache o assets viejos:
 
-El frontend mostrará en consola la URL local donde quedó disponible. El backend escuchará en el valor definido por `PORT`.
+```powershell
+npx.cmd expo start --clear --host lan
+```
 
-## Seed de datos
+## Datos iniciales
 
-Para cargar datos iniciales:
+Para cargar datos de prueba:
 
 ```powershell
 cd backend
 yarn seed
 ```
 
-Ejecuta el seed con la base levantada y las variables del backend configuradas.
+Ejecuta el seed con PostgreSQL levantado y `backend/.env` configurado.
 
-## Comandos útiles
+## Generar APK de la app movil
+
+La app movil esta preparada para generar un APK instalable con EAS Build.
+
+Antes de construir, ajusta `mobile/eas.json`:
+
+```json
+"EXPO_PUBLIC_API_URL": "http://TU_IP_LOCAL:3000/api"
+```
+
+Luego:
+
+```powershell
+cd mobile
+npx.cmd --yes --package eas-cli@20.3.0 eas login
+npm.cmd run build:apk
+```
+
+EAS mostrara un enlace de descarga del `.apk`.
+
+Notas importantes:
+
+- La URL del backend queda embebida dentro del APK.
+- Si compilas con una IP local, ese APK solo funcionara en esa red y contra esa computadora.
+- Para compartir el APK con otras personas, usa una URL publica del backend.
+- Para publicar en Google Play normalmente se genera AAB, no APK.
+
+Durante el desarrollo se genero este APK de prueba:
+
+[Descargar APK de prueba](https://expo.dev/artifacts/eas/rnzvAc-s_lXaTVE-6hcPJxfKHetyKswRBNxyr7-21Zk.apk)
+
+Ese APK fue compilado para el entorno local del desarrollador, asi que no debe asumirse como distribuible para cualquier equipo.
+
+## Flujo recomendado para probar todo desde cero
+
+1. Clonar el repositorio.
+2. Crear `backend/.env`, `frontend/.env` y `mobile/.env` desde sus ejemplos.
+3. Levantar PostgreSQL con Docker Compose.
+4. Instalar dependencias del backend, frontend y mobile.
+5. Ejecutar `yarn seed` en backend si se necesitan datos de prueba.
+6. Levantar el backend con `yarn start:dev`.
+7. Levantar el frontend con `yarn dev`.
+8. Levantar la app movil con `npm.cmd start` y escanear el QR con Expo Go.
+
+## Comandos utiles
 
 Backend:
 
@@ -193,57 +196,49 @@ yarn lint
 yarn preview
 ```
 
-## Flujo recomendado para levantar todo
+Mobile:
 
-1. Clonar el repositorio.
-2. Crear `backend/.env` desde `backend/.env.example`.
-3. Crear `frontend/.env` desde `frontend/.env.example`.
-4. Ajustar puertos y URLs en los `.env` según tu equipo.
-5. Levantar PostgreSQL con Docker Compose.
-6. Instalar dependencias del backend.
-7. Instalar dependencias del frontend.
-8. Ejecutar el backend en modo desarrollo.
-9. Ejecutar el frontend en modo desarrollo.
-10. Opcionalmente ejecutar el seed.
+```powershell
+cd mobile
+npm.cmd run typecheck
+npm.cmd run build:apk
+```
 
 ## Problemas comunes
 
-### El backend no conecta a la base
+### El backend no conecta a PostgreSQL
 
-Revisa:
-
-- Que Docker esté corriendo.
-- Que el servicio de PostgreSQL esté levantado.
-- Que `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`, `DATABASE_PASSWORD` y `DATABASE_NAME` coincidan con tu base.
-- Que el puerto publicado en Docker Compose sea el mismo configurado en `DATABASE_PORT`.
+- Revisa que Docker este corriendo.
+- Revisa que el contenedor de PostgreSQL este levantado.
+- Revisa que `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`, `DATABASE_PASSWORD` y `DATABASE_NAME` coincidan con tu base.
 
 ### El frontend no consume la API
 
-Revisa:
+- Revisa que el backend este levantado.
+- Revisa que `VITE_API_URL` incluya `/api`.
+- Revisa que `CORS_ORIGIN` en backend permita el origen del frontend.
 
-- Que el backend esté levantado.
-- Que `VITE_API_URL` apunte a la URL real del backend e incluya `/api`.
-- Que `CORS_ORIGIN` en el backend incluya el origen real del frontend.
+### La app movil no consume la API
 
-### PowerShell no deja ejecutar Yarn
+- Revisa que el backend este levantado.
+- Revisa que `EXPO_PUBLIC_API_URL` incluya `/api`.
+- En telefono fisico, usa la IP local de la computadora, no `localhost`.
+- Asegurate de que telefono y computadora esten en la misma red.
 
-Usa `yarn.cmd` en lugar de `yarn`:
+### Expo Go indica SDK incompatible
 
-```powershell
-yarn.cmd install
-yarn.cmd dev
-```
+- Este prototipo usa Expo SDK 54.
+- Actualiza Expo Go desde la tienda o usa un build APK generado con EAS.
 
-## Notas de alcance
+## Alcance actual
 
-Para el MVP quedan fuera:
+La app movil es un prototipo de consulta. Incluye mapa, listado de ofertas, seleccion desde listado hacia mapa, tema claro/oscuro, cliente API centralizado y marca visual alineada al frontend web.
 
-- Pagos.
-- Carrito.
-- Delivery.
-- Inventario exacto.
-- Chat.
-- Push notifications reales.
-- Login con Google.
-- Verificación telefónica.
-- Analytics complejos.
+Quedan fuera por ahora:
+
+- Login y registro en mobile.
+- Administracion en mobile.
+- Perfil en mobile.
+- Creacion o edicion de ofertas en mobile.
+- Pagos, carrito, delivery e inventario exacto.
+- Chat, notificaciones push reales y analytics complejos.
