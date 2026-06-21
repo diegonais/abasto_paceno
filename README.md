@@ -8,8 +8,9 @@ El proyecto no es ecommerce, no procesa pagos, no gestiona delivery y no maneja 
 
 - Backend: NestJS, TypeScript, TypeORM, PostgreSQL, JWT y Swagger.
 - Frontend web: React, Vite, React Router, Axios, Leaflet y OpenStreetMap.
+- App movil: Expo, React Native, TypeScript, React Navigation y react-native-maps.
 - Base de datos local: PostgreSQL mediante Docker Compose.
-- Gestor de paquetes: Yarn.
+- Gestores de paquetes: Yarn para backend/frontend y npm para la app movil.
 
 ## Estructura
 
@@ -17,6 +18,7 @@ El proyecto no es ecommerce, no procesa pagos, no gestiona delivery y no maneja 
 abasto_paceno/
 |-- backend/
 |-- frontend/
+|-- mobile/
 |-- packages/
 |-- docs/
 |-- AGENTS.md
@@ -116,6 +118,13 @@ cd frontend
 yarn install
 ```
 
+App movil:
+
+```powershell
+cd mobile
+npm.cmd install
+```
+
 En Windows con restricción de scripts:
 
 ```powershell
@@ -139,6 +148,17 @@ Frontend:
 cd frontend
 yarn dev
 ```
+
+App movil con Expo Go:
+
+```powershell
+cd mobile
+copy .env.example .env
+# Edita EXPO_PUBLIC_API_URL con la IP local de tu computadora y el prefijo /api.
+npm.cmd start
+```
+
+Escanea el QR con Expo Go. En un telefono fisico, `EXPO_PUBLIC_API_URL` debe usar la IP local de la computadora, no `localhost`.
 
 El frontend mostrará en consola la URL local donde quedó disponible. El backend escuchará en el valor definido por `PORT`.
 
