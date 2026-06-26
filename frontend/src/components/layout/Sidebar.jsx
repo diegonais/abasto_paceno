@@ -13,8 +13,8 @@ export function Sidebar() {
         <p className="sidebar-eyebrow">Panel</p>
         <img
           className="sidebar-brand-logo"
-          src="/abasto-paceno.png"
-          alt="Abasto Paceño"
+          src="/abasto-boliviano.png"
+          alt="Abasto Boliviano"
         />
       </div>
 

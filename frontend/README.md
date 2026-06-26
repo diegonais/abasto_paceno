@@ -1,6 +1,6 @@
-# Frontend web Abasto Paceno
+# Frontend web Abasto Boliviano
 
-Aplicacion web de Abasto Paceno construida con React y Vite.
+Aplicacion web de Abasto Boliviano construida con React y Vite.
 
 El frontend web es la referencia visual y funcional del proyecto. Consume el backend NestJS, muestra ofertas geolocalizadas con Leaflet/OpenStreetMap y define la identidad visual que tambien usa el prototipo movil.
 
@@ -19,7 +19,7 @@ El frontend web es la referencia visual y funcional del proyecto. Consume el bac
 frontend/
 |-- public/
 |   |-- logo.png
-|   `-- abasto-paceno.png
+|   `-- abasto-boliviano.png
 |-- src/
 |   |-- components/
 |   |-- pages/
@@ -112,7 +112,7 @@ La paleta del frontend define los tonos usados por el prototipo movil:
 Los logos estan en `public/`:
 
 - `logo.png`: icono tipo pin, pensado para favicon o usos compactos.
-- `abasto-paceno.png`: logo completo con nombre, usado como referencia para la app movil.
+- `abasto-boliviano.png`: logo completo con nombre, usado como referencia para la app movil.
 
 ## Mapa
 

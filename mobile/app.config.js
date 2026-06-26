@@ -1,6 +1,6 @@
 module.exports = () => ({
-  name: process.env.EAS_BUILD ? 'Abasto Pace\u00f1o' : ' ',
-  slug: 'abasto-paceno-mobile',
+  name: process.env.EAS_BUILD ? 'Abasto Boliviano' : ' ',
+  slug: 'abasto-boliviano-mobile',
   version: '0.1.0',
   orientation: 'portrait',
   icon: './assets/app-icon.png',
@@ -16,7 +16,7 @@ module.exports = () => ({
     supportsTablet: true,
   },
   android: {
-    package: 'com.abastopaceno.mobile',
+    package: 'com.abastoboliviano.mobile',
     adaptiveIcon: {
       foregroundImage: './assets/app-icon.png',
       backgroundColor: '#fffaf3',

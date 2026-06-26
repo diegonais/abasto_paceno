@@ -1,4 +1,4 @@
-const TOKEN_KEY = 'abasto-paceno-token';
+const TOKEN_KEY = 'abasto-boliviano-token';
 
 export function getStoredToken() {
   return window.localStorage.getItem(TOKEN_KEY);

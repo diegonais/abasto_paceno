@@ -54,75 +54,75 @@ const DEFAULT_PASSWORD = 'abasto123';
 const ADMIN_PASSWORD = 'admin123';
 
 const usersSeed: SeedUser[] = [
-  { fullName: 'Diego Farinas', email: 'admin@abastopaceno.bo', role: Role.ADMIN },
-  { fullName: 'Lucia Quispe', email: 'lucia.quispe@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Marco Cardenas', email: 'marco.cardenas@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Elena Mamani', email: 'elena.mamani@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Victor Choque', email: 'victor.choque@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Rosa Callisaya', email: 'rosa.callisaya@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Nancy Flores', email: 'nancy.flores@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Javier Perez', email: 'javier.perez@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Patricia Alcon', email: 'patricia.alcon@abastopaceno.bo', role: Role.MERCHANT },
-  { fullName: 'Mateo Veizaga', email: 'mateo.veizaga@abastopaceno.bo', role: Role.USER },
-  { fullName: 'Andrea Nina', email: 'andrea.nina@abastopaceno.bo', role: Role.USER },
-  { fullName: 'Sofia Loza', email: 'sofia.loza@abastopaceno.bo', role: Role.USER },
-  { fullName: 'Carlos Medina', email: 'carlos.medina@abastopaceno.bo', role: Role.USER },
-  { fullName: 'Fernanda Rios', email: 'fernanda.rios@abastopaceno.bo', role: Role.USER },
-  { fullName: 'Paulo Salazar', email: 'paulo.salazar@abastopaceno.bo', role: Role.USER, isActive: false },
+  { fullName: 'Diego Farinas', email: 'admin@abastoboliviano.bo', role: Role.ADMIN },
+  { fullName: 'Lucia Quispe', email: 'lucia.quispe@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Marco Cardenas', email: 'marco.cardenas@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Elena Mamani', email: 'elena.mamani@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Victor Choque', email: 'victor.choque@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Rosa Callisaya', email: 'rosa.callisaya@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Nancy Flores', email: 'nancy.flores@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Javier Perez', email: 'javier.perez@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Patricia Alcon', email: 'patricia.alcon@abastoboliviano.bo', role: Role.MERCHANT },
+  { fullName: 'Mateo Veizaga', email: 'mateo.veizaga@abastoboliviano.bo', role: Role.USER },
+  { fullName: 'Andrea Nina', email: 'andrea.nina@abastoboliviano.bo', role: Role.USER },
+  { fullName: 'Sofia Loza', email: 'sofia.loza@abastoboliviano.bo', role: Role.USER },
+  { fullName: 'Carlos Medina', email: 'carlos.medina@abastoboliviano.bo', role: Role.USER },
+  { fullName: 'Fernanda Rios', email: 'fernanda.rios@abastoboliviano.bo', role: Role.USER },
+  { fullName: 'Paulo Salazar', email: 'paulo.salazar@abastoboliviano.bo', role: Role.USER, isActive: false },
 ];
 
 const merchantProfilesSeed: SeedMerchantProfile[] = [
   {
-    email: 'lucia.quispe@abastopaceno.bo',
+    email: 'lucia.quispe@abastoboliviano.bo',
     businessName: 'Caserita Lucía',
     ownerFullName: 'Lucia Quispe',
     phone: '72510001',
     description: 'Puesto familiar con huevos, lacteos y abarrotes en la zona Miraflores.',
   },
   {
-    email: 'marco.cardenas@abastopaceno.bo',
+    email: 'marco.cardenas@abastoboliviano.bo',
     businessName: 'Distribuidora Cardenas',
     ownerFullName: 'Marco Cardenas',
     phone: '72510002',
     description: 'Venta por mayor y detalle de verduras frescas para mercados y tiendas.',
   },
   {
-    email: 'elena.mamani@abastopaceno.bo',
+    email: 'elena.mamani@abastoboliviano.bo',
     businessName: 'Frutas Elena',
     ownerFullName: 'Elena Mamani',
     phone: '72510003',
     description: 'Fruta de temporada traida de los Yungas y Cochabamba.',
   },
   {
-    email: 'victor.choque@abastopaceno.bo',
+    email: 'victor.choque@abastoboliviano.bo',
     businessName: 'Don Victor Carnes',
     ownerFullName: 'Victor Choque',
     phone: '72510004',
     description: 'Cortes de pollo, res y cerdo con venta por kilo y combos.',
   },
   {
-    email: 'rosa.callisaya@abastopaceno.bo',
+    email: 'rosa.callisaya@abastoboliviano.bo',
     businessName: 'Abarrotes La Caserita',
     ownerFullName: 'Rosa Callisaya',
     phone: '72510005',
     description: 'Arroz, azucar, aceite y productos de despensa para la semana.',
   },
   {
-    email: 'nancy.flores@abastopaceno.bo',
+    email: 'nancy.flores@abastoboliviano.bo',
     businessName: 'Huerta Nancy',
     ownerFullName: 'Nancy Flores',
     phone: '72510006',
     description: 'Verduras organicas, hierbas aromaticas y combos saludables.',
   },
   {
-    email: 'javier.perez@abastopaceno.bo',
+    email: 'javier.perez@abastoboliviano.bo',
     businessName: 'Mercado Javier',
     ownerFullName: 'Javier Perez',
     phone: '72510007',
     description: 'Venta mixta de lacteos, pan y abarrotes para compras rapidas.',
   },
   {
-    email: 'patricia.alcon@abastopaceno.bo',
+    email: 'patricia.alcon@abastoboliviano.bo',
     businessName: 'Paty Delivery Barrial',
     ownerFullName: 'Patricia Alcon',
     phone: '72510008',
@@ -171,7 +171,7 @@ const productsSeed: SeedProduct[] = [
 
 const offersSeed: SeedOffer[] = [
   {
-    merchantEmail: 'lucia.quispe@abastopaceno.bo',
+    merchantEmail: 'lucia.quispe@abastoboliviano.bo',
     productName: 'huevo criollo',
     saleType: SaleType.TRAY,
     approximateQuantity: 38,
@@ -183,7 +183,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:00:00.000Z',
   },
   {
-    merchantEmail: 'lucia.quispe@abastopaceno.bo',
+    merchantEmail: 'lucia.quispe@abastoboliviano.bo',
     productName: 'leche',
     saleType: SaleType.UNIT,
     approximateQuantity: 55,
@@ -195,7 +195,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T20:00:00.000Z',
   },
   {
-    merchantEmail: 'marco.cardenas@abastopaceno.bo',
+    merchantEmail: 'marco.cardenas@abastoboliviano.bo',
     productName: 'tomate',
     saleType: SaleType.UNIT,
     approximateQuantity: 140,
@@ -207,7 +207,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T16:30:00.000Z',
   },
   {
-    merchantEmail: 'marco.cardenas@abastopaceno.bo',
+    merchantEmail: 'marco.cardenas@abastoboliviano.bo',
     productName: 'cebolla',
     saleType: SaleType.UNIT,
     approximateQuantity: 95,
@@ -219,7 +219,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T16:30:00.000Z',
   },
   {
-    merchantEmail: 'marco.cardenas@abastopaceno.bo',
+    merchantEmail: 'marco.cardenas@abastoboliviano.bo',
     productName: 'papa holandesa',
     saleType: SaleType.UNIT,
     approximateQuantity: 110,
@@ -231,7 +231,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T16:30:00.000Z',
   },
   {
-    merchantEmail: 'elena.mamani@abastopaceno.bo',
+    merchantEmail: 'elena.mamani@abastoboliviano.bo',
     productName: 'platano',
     saleType: SaleType.UNIT,
     approximateQuantity: 90,
@@ -243,7 +243,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:30:00.000Z',
   },
   {
-    merchantEmail: 'elena.mamani@abastopaceno.bo',
+    merchantEmail: 'elena.mamani@abastoboliviano.bo',
     productName: 'papaya',
     saleType: SaleType.UNIT,
     approximateQuantity: 35,
@@ -255,7 +255,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:30:00.000Z',
   },
   {
-    merchantEmail: 'elena.mamani@abastopaceno.bo',
+    merchantEmail: 'elena.mamani@abastoboliviano.bo',
     productName: 'manzana',
     saleType: SaleType.UNIT,
     approximateQuantity: 70,
@@ -267,7 +267,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:30:00.000Z',
   },
   {
-    merchantEmail: 'victor.choque@abastopaceno.bo',
+    merchantEmail: 'victor.choque@abastoboliviano.bo',
     productName: 'pollo entero',
     saleType: SaleType.UNIT,
     approximateQuantity: 42,
@@ -279,7 +279,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T17:30:00.000Z',
   },
   {
-    merchantEmail: 'victor.choque@abastopaceno.bo',
+    merchantEmail: 'victor.choque@abastoboliviano.bo',
     productName: 'carne molida',
     saleType: SaleType.UNIT,
     approximateQuantity: 28,
@@ -291,7 +291,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T17:30:00.000Z',
   },
   {
-    merchantEmail: 'rosa.callisaya@abastopaceno.bo',
+    merchantEmail: 'rosa.callisaya@abastoboliviano.bo',
     productName: 'arroz',
     saleType: SaleType.UNIT,
     approximateQuantity: 85,
@@ -303,7 +303,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T21:00:00.000Z',
   },
   {
-    merchantEmail: 'rosa.callisaya@abastopaceno.bo',
+    merchantEmail: 'rosa.callisaya@abastoboliviano.bo',
     productName: 'aceite',
     saleType: SaleType.UNIT,
     approximateQuantity: 44,
@@ -315,7 +315,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T21:00:00.000Z',
   },
   {
-    merchantEmail: 'rosa.callisaya@abastopaceno.bo',
+    merchantEmail: 'rosa.callisaya@abastoboliviano.bo',
     productName: 'azucar',
     saleType: SaleType.UNIT,
     approximateQuantity: 60,
@@ -327,7 +327,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T21:00:00.000Z',
   },
   {
-    merchantEmail: 'nancy.flores@abastopaceno.bo',
+    merchantEmail: 'nancy.flores@abastoboliviano.bo',
     productName: 'zanahoria',
     saleType: SaleType.UNIT,
     approximateQuantity: 66,
@@ -339,7 +339,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:00:00.000Z',
   },
   {
-    merchantEmail: 'nancy.flores@abastopaceno.bo',
+    merchantEmail: 'nancy.flores@abastoboliviano.bo',
     productName: 'brocoli',
     saleType: SaleType.UNIT,
     approximateQuantity: 24,
@@ -352,7 +352,7 @@ const offersSeed: SeedOffer[] = [
     isActive: false,
   },
   {
-    merchantEmail: 'nancy.flores@abastopaceno.bo',
+    merchantEmail: 'nancy.flores@abastoboliviano.bo',
     productName: 'yogur natural',
     saleType: SaleType.UNIT,
     approximateQuantity: 18,
@@ -364,7 +364,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:00:00.000Z',
   },
   {
-    merchantEmail: 'javier.perez@abastopaceno.bo',
+    merchantEmail: 'javier.perez@abastoboliviano.bo',
     productName: 'pan marraqueta',
     saleType: SaleType.UNIT,
     approximateQuantity: 120,
@@ -376,7 +376,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T13:00:00.000Z',
   },
   {
-    merchantEmail: 'javier.perez@abastopaceno.bo',
+    merchantEmail: 'javier.perez@abastoboliviano.bo',
     productName: 'queso fresco',
     saleType: SaleType.UNIT,
     approximateQuantity: 22,
@@ -388,7 +388,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T18:00:00.000Z',
   },
   {
-    merchantEmail: 'javier.perez@abastopaceno.bo',
+    merchantEmail: 'javier.perez@abastoboliviano.bo',
     productName: 'refresco de mocochinchi',
     saleType: SaleType.UNIT,
     approximateQuantity: 30,
@@ -400,7 +400,7 @@ const offersSeed: SeedOffer[] = [
     availableUntil: '2026-06-18T17:00:00.000Z',
   },
   {
-    merchantEmail: 'patricia.alcon@abastopaceno.bo',
+    merchantEmail: 'patricia.alcon@abastoboliviano.bo',
     productName: 'uva',
     saleType: SaleType.UNIT,
     approximateQuantity: 17,
@@ -452,9 +452,9 @@ async function bootstrap() {
     console.log(`Ofertas creadas: ${offers.length}`);
     console.log('');
     console.log('Credenciales sugeridas para pruebas:');
-    console.log(`- Admin: admin@abastopaceno.bo / ${ADMIN_PASSWORD}`);
-    console.log(`- Comerciante: lucia.quispe@abastopaceno.bo / ${DEFAULT_PASSWORD}`);
-    console.log(`- Usuario: mateo.veizaga@abastopaceno.bo / ${DEFAULT_PASSWORD}`);
+    console.log(`- Admin: admin@abastoboliviano.bo / ${ADMIN_PASSWORD}`);
+    console.log(`- Comerciante: lucia.quispe@abastoboliviano.bo / ${DEFAULT_PASSWORD}`);
+    console.log(`- Usuario: mateo.veizaga@abastoboliviano.bo / ${DEFAULT_PASSWORD}`);
   } catch (error) {
     console.error('Error al ejecutar el seed:', error);
     process.exitCode = 1;

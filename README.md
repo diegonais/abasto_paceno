@@ -2,7 +2,7 @@
 
 Plataforma geolocalizada para consultar puntos de venta y ofertas de productos esenciales en La Paz, Bolivia.
 
-Abasto Paceno no es un ecommerce: no procesa pagos, no gestiona delivery y no maneja inventario exacto. Su foco es mostrar disponibilidad aproximada y ofertas en un mapa, con una experiencia web y un prototipo movil de consulta.
+Abasto Boliviano no es un ecommerce: no procesa pagos, no gestiona delivery y no maneja inventario exacto. Su foco es mostrar disponibilidad aproximada y ofertas en un mapa, con una experiencia web y un prototipo movil de consulta.
 
 ## Contenido del monorepo
 
@@ -15,6 +15,8 @@ abasto_paceno/
 |-- packages/    Espacio reservado para paquetes compartidos
 `-- README.md
 ```
+
+El repositorio puede conservar el nombre historico; la marca del producto y las referencias internas del codigo usan Abasto Boliviano.
 
 ## Stack principal
 

@@ -14,8 +14,8 @@ export function AuthFormShell({
         <div className="auth-spotlight-copy">
           <img
             className="auth-spotlight-logo"
-            src="/abasto-paceno.png"
-            alt="Abasto Paceno"
+            src="/abasto-boliviano.png"
+            alt="Abasto Boliviano"
           />
           <h1>{asideTitle ?? title}</h1>
         </div>

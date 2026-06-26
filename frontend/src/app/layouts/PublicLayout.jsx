@@ -17,8 +17,8 @@ export function PublicLayout() {
           <Link className="brand-mark" to="/">
             <img
               className="brand-mark-logo"
-              src="/abasto-paceno.png"
-              alt="Abasto Paceño"
+              src="/abasto-boliviano.png"
+              alt="Abasto Boliviano"
             />
           </Link>
 

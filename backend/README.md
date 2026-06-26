@@ -1,6 +1,6 @@
-# Backend Abasto Paceno
+# Backend Abasto Boliviano
 
-API REST de Abasto Paceno construida con NestJS, TypeScript, TypeORM y PostgreSQL.
+API REST de Abasto Boliviano construida con NestJS, TypeScript, TypeORM y PostgreSQL.
 
 El backend expone la informacion que consumen el frontend web y el prototipo movil: usuarios, autenticacion, productos, categorias, perfiles de comerciantes y ofertas geolocalizadas.
 
@@ -51,7 +51,7 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
-DATABASE_NAME=abasto_paceno
+DATABASE_NAME=abasto_boliviano
 JWT_SECRET=super_secret_change_me
 JWT_EXPIRES_IN=1d
 CORS_ORIGIN=http://localhost:5173

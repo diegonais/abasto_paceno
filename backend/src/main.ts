@@ -32,8 +32,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Abasto Paceno API')
-    .setDescription('Backend inicial del prototipo Abasto Paceno')
+    .setTitle('Abasto Boliviano API')
+    .setDescription('Backend inicial del prototipo Abasto Boliviano')
     .setVersion('1.0.0')
     .addBearerAuth()
     .build();

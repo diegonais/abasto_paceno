@@ -3,7 +3,7 @@ import '../../styles/landing-preview.css';
 const infoCards = [
   {
     icon: 'clipboard',
-    title: 'Qué resuelve Abasto Paceño',
+    title: 'Qué resuelve Abasto Boliviano',
     description:
       'Conecta a la ciudadanía con ofertas activas de productos en La Paz mediante un mapa claro, permitiendo encontrar puntos de venta cercanos, consultar disponibilidad aproximada y tomar mejores decisiones de compra.',
   },
@@ -105,8 +105,8 @@ export function PublicHomePage() {
               <center>
                   <img
                 className="heroLogo"
-                src="/abasto-paceno.png"
-                alt="Abasto Paceño"
+                src="/abasto-boliviano.png"
+                alt="Abasto Boliviano"
               />
 
               <h1 className="heroTitle">
@@ -118,12 +118,12 @@ export function PublicHomePage() {
               
 
               {/* <p className="heroDescription">
-                Abasto Paceño conecta a la ciudadanía con ofertas reales de productos en La Paz.
+                Abasto Boliviano conecta a la ciudadanía con ofertas reales de productos en La Paz.
                 Un sistema claro, confiable y accesible para tomar mejores decisiones cada día.
               </p> */}
             </div>
 
-            <aside className="infoPanel" aria-label="Información de Abasto Paceño">
+            <aside className="infoPanel" aria-label="Información de Abasto Boliviano">
               {infoCards.map((card) => (
                 <article className="infoCard infoCardLarge" key={card.title}>
                   <div className="infoIcon">

@@ -1,6 +1,6 @@
-# App movil Abasto Paceno
+# App movil Abasto Boliviano
 
-Prototipo movil de consulta para Abasto Paceno, construido con Expo SDK 54, React Native y TypeScript.
+Prototipo movil de consulta para Abasto Boliviano, construido con Expo SDK 54, React Native y TypeScript.
 
 La app permite:
 
@@ -106,7 +106,7 @@ La URL base viene de `EXPO_PUBLIC_API_URL`. No se debe dejar una URL final hardc
 
 - La paleta esta en `src/constants/theme.ts`.
 - El tema claro/oscuro se maneja desde `src/context/ThemeContext.tsx`.
-- El logo completo vive en `assets/abasto-paceno.png`.
+- El logo completo vive en `assets/abasto-boliviano.png`.
 - En modo claro se usa el logo normal.
 - En modo oscuro el logo dentro de la app se pinta en blanco para mantener contraste.
 - La navegacion usa una barra flotante inferior tipo capsula.
@@ -114,7 +114,7 @@ La URL base viene de `EXPO_PUBLIC_API_URL`. No se debe dejar una URL final hardc
 `app.config.js` usa un nombre dinamico:
 
 - En Expo Go local se oculta el texto duplicado debajo del logo de carga.
-- En EAS Build se usa `Abasto Paceno`, porque Android requiere un nombre valido para instalar el APK.
+- En EAS Build se usa `Abasto Boliviano`, porque Android requiere un nombre valido para instalar el APK.
 
 ## Generar APK
 

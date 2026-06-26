@@ -21,8 +21,8 @@ export function Topbar() {
         <Link className="brand-mark" to="/">
           <img
             className="brand-mark-logo"
-            src="/abasto-paceno.png"
-            alt="Abasto Paceno"
+            src="/abasto-boliviano.png"
+            alt="Abasto Boliviano"
           />
         </Link>
 

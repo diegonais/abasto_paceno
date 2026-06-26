@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import { useAppTheme } from '../context/ThemeContext';
 
-const logoSource = require('../../assets/abasto-paceno.png');
+const logoSource = require('../../assets/abasto-boliviano.png');
 
 type BrandLogoProps = {
   compact?: boolean;
