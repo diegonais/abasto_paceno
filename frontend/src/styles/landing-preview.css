@@ -617,3 +617,799 @@
 [data-theme='dark'] .landingPage .secondaryButton:hover {
   background: rgba(127, 220, 169, 0.12);
 }
+
+.public-shell.public-shell-home {
+  background:
+    linear-gradient(115deg, rgba(255, 250, 243, 0.98) 0%, rgba(248, 243, 232, 0.96) 42%, rgba(235, 247, 239, 0.98) 100%);
+}
+
+.public-shell-home .brand-mark {
+  width: 58px;
+  height: 50px;
+}
+
+.public-shell-home .public-nav-button {
+  font: inherit;
+}
+
+.public-shell-home .public-nav-button:hover {
+  color: #7b1835;
+}
+
+.landingPage {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(115deg, #fffaf3 0%, #f9f1e6 42%, #edf7f0 100%);
+  background-size: 200% 200%;
+  animation: moveGradient 25s ease infinite;
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.landingMapTexture {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(123, 24, 53, 0.06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(123, 24, 53, 0.05) 1px, transparent 1px),
+    repeating-linear-gradient(136deg, transparent 0 54px, rgba(0, 121, 52, 0.09) 54px 56px, transparent 56px 108px),
+    repeating-linear-gradient(28deg, transparent 0 76px, rgba(123, 24, 53, 0.07) 76px 78px, transparent 78px 140px);
+  background-size: 96px 96px, 96px 96px, auto, auto;
+  opacity: 0.58;
+  animation: moveMapTexture 40s linear infinite;
+}
+
+@keyframes moveMapTexture {
+  from {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 96px 96px, -96px 96px, 150px 150px, -150px 150px;
+  }
+}
+
+.bg-blobs {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  mix-blend-mode: multiply;
+  animation: floatBlob 20s infinite alternate ease-in-out;
+}
+
+[data-theme='dark'] .blob {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+.blob-1 {
+  top: 10%;
+  left: 10%;
+  width: min(35vw, 400px);
+  height: min(35vw, 400px);
+  background: radial-gradient(circle, #aa2950 0%, transparent 70%);
+  animation-duration: 25s;
+}
+
+.blob-2 {
+  bottom: 15%;
+  right: 15%;
+  width: min(40vw, 450px);
+  height: min(40vw, 450px);
+  background: radial-gradient(circle, #007934 0%, transparent 70%);
+  animation-duration: 30s;
+  animation-delay: -5s;
+}
+
+.blob-3 {
+  top: 40%;
+  left: 50%;
+  width: min(30vw, 350px);
+  height: min(30vw, 350px);
+  background: radial-gradient(circle, #7b1835 0%, transparent 70%);
+  animation-duration: 22s;
+  animation-delay: -10s;
+}
+
+@keyframes floatBlob {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.landingPage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 250, 243, 0.86) 0%, rgba(255, 250, 243, 0.54) 42%, rgba(255, 250, 243, 0.18) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(123, 24, 53, 0.04) 100%);
+}
+
+.landingPage::after {
+  content: "";
+  position: absolute;
+  right: -8rem;
+  bottom: -11rem;
+  z-index: -1;
+  width: min(44rem, 58vw);
+  height: min(34rem, 52vh);
+  pointer-events: none;
+  border: 1px solid rgba(123, 24, 53, 0.1);
+  transform: skewX(-12deg);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.34) 0 18px, rgba(123, 24, 53, 0.045) 18px 19px),
+    linear-gradient(135deg, rgba(123, 24, 53, 0.09), rgba(0, 121, 52, 0.08));
+}
+
+.landingPage .heroSection {
+  padding: clamp(0.75rem, 1.8vh, 1.5rem) clamp(1.25rem, 4vw, 4.5rem);
+}
+
+.landingPage .heroGrid {
+  max-width: 1560px;
+  grid-template-columns: minmax(420px, 0.88fr) minmax(560px, 1.12fr);
+  gap: clamp(2rem, 4vw, 5rem);
+}
+
+.landingPage .heroContent {
+  max-width: 690px;
+}
+
+.landingPage .eyebrow {
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 16px 40px rgba(123, 24, 53, 0.08);
+}
+
+.landingPage .eyebrowDot {
+  border-radius: 999px;
+  background: #007934;
+  box-shadow: 0 0 0 6px rgba(0, 121, 52, 0.12);
+}
+
+.landingPage .heroLogo {
+  width: min(14rem, 15vw);
+  margin: 0 0 0.8rem;
+}
+
+.landingPage .heroTitle {
+  max-width: 12ch;
+  margin-bottom: 0.8rem;
+  color: #1d1117;
+  font-size: 4.15rem;
+  line-height: 0.94;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+.landingPage .heroDescription {
+  max-width: 58ch;
+  margin-bottom: 1rem;
+  color: #553742;
+  font-size: 1rem;
+  line-height: 1.48;
+}
+
+.landingPage .primaryButton,
+.landingPage .secondaryButton {
+  border-radius: 999px;
+  min-height: 46px;
+  padding: 0.72rem 1.15rem;
+}
+
+.landingPage .secondaryButton {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.landingInsights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.landingInsight {
+  min-width: 0;
+  min-height: 68px;
+  display: grid;
+  align-content: center;
+  gap: 0.25rem;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid rgba(123, 24, 53, 0.13);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 18px 48px rgba(67, 20, 35, 0.07);
+}
+
+.landingInsight strong {
+  color: #7b1835;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.landingInsight span {
+  color: #6b4a56;
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.landingVisual {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(340px, 0.96fr) minmax(280px, 0.82fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.mapPreview {
+  position: relative;
+  min-height: clamp(390px, 55vh, 470px);
+  overflow: hidden;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(123, 24, 53, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(123, 24, 53, 0.07) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(239, 249, 242, 0.92));
+  background-size: 64px 64px, 64px 64px, auto;
+  box-shadow: 0 28px 80px rgba(67, 20, 35, 0.13);
+}
+
+.mapPreview::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 16px solid rgba(0, 121, 52, 0.08);
+  border-left-color: transparent;
+  border-bottom-color: rgba(123, 24, 53, 0.09);
+  transform: rotate(-18deg);
+}
+
+.mapPreviewHeader {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(10px);
+}
+
+.mapPreviewHeader span {
+  color: #6b4a56;
+  font-weight: 700;
+}
+
+.mapPreviewHeader strong {
+  color: #7b1835;
+}
+
+.mapRoute {
+  position: absolute;
+  left: 10%;
+  top: 38%;
+  width: 82%;
+  height: 112px;
+  border-top: 12px solid rgba(123, 24, 53, 0.72);
+  border-right: 12px solid rgba(123, 24, 53, 0.72);
+  border-radius: 0 74px 0 0;
+  transform: rotate(-10deg);
+}
+
+.mapRoute::after {
+  content: "";
+  position: absolute;
+  right: -12px;
+  top: 94px;
+  width: 52%;
+  height: 92px;
+  border-bottom: 12px solid rgba(0, 121, 52, 0.72);
+  border-left: 12px solid rgba(0, 121, 52, 0.72);
+  border-radius: 0 0 0 72px;
+}
+
+.mapPin {
+  position: absolute;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border: 5px solid #ffffff;
+  border-radius: 999px;
+  background: #7b1835;
+  box-shadow: 0 12px 28px rgba(123, 24, 53, 0.3);
+}
+
+.mapPin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  width: 2px;
+  height: 34px;
+  background: rgba(123, 24, 53, 0.36);
+  transform: translateX(-50%);
+}
+
+.mapPinOne {
+  left: 18%;
+  top: 38%;
+}
+
+.mapPinTwo {
+  right: 18%;
+  top: 47%;
+  background: #007934;
+}
+
+.mapPinThree {
+  left: 46%;
+  bottom: 28%;
+}
+
+.offerStack {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 3;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.previewOffer {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.68rem 0.85rem;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(67, 20, 35, 0.1);
+}
+
+.previewOffer div {
+  min-width: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.previewOffer strong {
+  color: #1d1117;
+  line-height: 1.2;
+}
+
+.previewOffer span {
+  color: #6b4a56;
+  font-size: 0.86rem;
+}
+
+.previewOffer b {
+  flex: 0 0 auto;
+  color: #007934;
+}
+
+.landingPage .infoPanel {
+  gap: 0.85rem;
+  overflow: visible;
+}
+
+.landingPage .infoCard {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.landingPage .infoCardLarge {
+  grid-template-columns: 52px 1fr;
+  gap: 0.9rem;
+  padding: 0.85rem;
+}
+
+.landingPage .infoIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  background: rgba(123, 24, 53, 0.08);
+}
+
+.landingPage .infoIcon svg {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.landingPage .infoCardBody h3 {
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+}
+
+.landingPage .infoCardBody p {
+  font-size: 0.9rem;
+  line-height: 1.44;
+}
+
+@media (max-width: 1220px) {
+  .landingPage .heroTitle {
+    font-size: 3.65rem;
+  }
+
+  .landingVisual {
+    grid-template-columns: 1fr;
+  }
+
+  .mapPreview {
+    min-height: 360px;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 900px) {
+  .landingPage .heroSection {
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .landingPage .heroGrid {
+    gap: clamp(1.4rem, 3vw, 3.4rem);
+  }
+
+  .landingPage .eyebrow {
+    margin-bottom: 0.6rem;
+    padding: 0.38rem 0.72rem;
+    font-size: 0.7rem;
+  }
+
+  .landingPage .heroLogo {
+    width: min(10.6rem, 11vw);
+    margin-bottom: 0.55rem;
+  }
+
+  .landingPage .heroTitle {
+    font-size: 3.35rem;
+    line-height: 0.92;
+    margin-bottom: 0.55rem;
+  }
+
+  .landingPage .heroDescription {
+    max-width: 54ch;
+    margin-bottom: 0.75rem;
+    font-size: 0.92rem;
+    line-height: 1.38;
+  }
+
+  .landingPage .primaryButton,
+  .landingPage .secondaryButton {
+    min-height: 40px;
+    padding: 0.58rem 1rem;
+  }
+
+  .landingInsights {
+    gap: 0.55rem;
+    margin-top: 0.72rem;
+  }
+
+  .landingInsight {
+    min-height: 54px;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .landingInsight strong {
+    font-size: 0.9rem;
+  }
+
+  .landingInsight span {
+    font-size: 0.76rem;
+    line-height: 1.24;
+  }
+
+  .landingVisual {
+    gap: 0.75rem;
+  }
+
+  .mapPreview {
+    min-height: 390px;
+  }
+
+  .mapPreviewHeader {
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    padding: 0.64rem 0.78rem;
+  }
+
+  .offerStack {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    gap: 0.45rem;
+  }
+
+  .previewOffer {
+    min-height: 51px;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .previewOffer span {
+    font-size: 0.78rem;
+  }
+
+  .landingPage .infoPanel {
+    gap: 0.6rem;
+  }
+
+  .landingPage .infoCardLarge {
+    grid-template-columns: 44px 1fr;
+    gap: 0.7rem;
+    padding: 0.7rem;
+  }
+
+  .landingPage .infoIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .landingPage .infoIcon svg {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .landingPage .infoCardBody h3 {
+    margin-bottom: 0.22rem;
+    font-size: 0.92rem;
+  }
+
+  .landingPage .infoCardBody p {
+    font-size: 0.8rem;
+    line-height: 1.34;
+  }
+}
+
+@media (max-width: 1023px) {
+  .public-shell.public-shell-home,
+  .public-shell-home .public-main-home,
+  .landingPage,
+  .landingPage .pageShell {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+
+  .landingPage .heroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .landingPage .heroContent {
+    text-align: left;
+  }
+
+  .landingPage .eyebrow,
+  .landingPage .heroLogo,
+  .landingPage .heroDescription {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .landingPage .heroActions {
+    justify-content: flex-start;
+  }
+
+  .landingVisual {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .public-shell.public-shell-home,
+  .public-shell-home .public-main-home,
+  .landingPage,
+  .landingPage .pageShell,
+  .landingPage .heroSection,
+  .landingPage .heroGrid,
+  .landingPage .heroContent,
+  .landingVisual,
+  .mapPreview,
+  .landingPage .infoPanel {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .public-shell-home .public-header-inner {
+    width: 100vw;
+    max-width: 100vw;
+    gap: 0.55rem;
+    overflow: hidden;
+  }
+
+  .public-shell-home .brand-mark {
+    width: 54px;
+    height: 50px;
+  }
+
+  .public-shell-home .public-nav {
+    min-width: 0;
+    max-width: calc(100vw - 76px);
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    overflow: hidden;
+  }
+
+  .public-shell-home .public-nav a {
+    display: none;
+  }
+
+  .public-shell-home .public-nav-button {
+    flex: 0 0 auto;
+    display: inline-flex;
+    white-space: nowrap;
+    font-size: 0.88rem;
+  }
+
+  .public-shell-home .theme-toggle {
+    display: none;
+  }
+
+  .landingPage .heroSection {
+    padding: 1.5rem 1.25rem 2rem;
+  }
+
+  .landingPage .heroGrid,
+  .landingPage .heroContent {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landingPage .heroGrid {
+    display: block;
+  }
+
+  .landingPage .heroContent,
+  .landingVisual,
+  .landingInsights,
+  .mapPreview,
+  .landingPage .infoPanel {
+    width: 100%;
+    max-width: 22rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .landingPage .heroLogo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .landingVisual {
+    margin-top: 2rem;
+  }
+
+  .landingPage .eyebrow {
+    white-space: normal;
+  }
+
+  .landingPage .heroTitle {
+    font-size: 2.55rem;
+  }
+
+  .landingPage .heroDescription {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .landingPage .heroActions,
+  .landingPage .primaryButton,
+  .landingPage .secondaryButton {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .landingInsights {
+    grid-template-columns: 1fr;
+  }
+
+  .mapPreview {
+    min-height: 420px;
+  }
+
+  .landingPage .infoCardLarge {
+    grid-template-columns: 52px 1fr;
+  }
+}
+
+[data-theme='dark'] .public-shell.public-shell-home,
+[data-theme='dark'] .landingPage {
+  background:
+    linear-gradient(115deg, #101722 0%, #162230 42%, #10261d 100%);
+  background-size: 200% 200%;
+}
+
+[data-theme='dark'] .landingMapTexture {
+  background:
+    linear-gradient(90deg, rgba(248, 240, 223, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(248, 240, 223, 0.04) 1px, transparent 1px),
+    repeating-linear-gradient(136deg, transparent 0 54px, rgba(127, 220, 169, 0.1) 54px 56px, transparent 56px 108px),
+    repeating-linear-gradient(28deg, transparent 0 76px, rgba(248, 240, 223, 0.06) 76px 78px, transparent 78px 140px);
+}
+
+[data-theme='dark'] .landingPage::before {
+  background:
+    linear-gradient(90deg, rgba(16, 23, 34, 0.9) 0%, rgba(16, 23, 34, 0.58) 42%, rgba(16, 23, 34, 0.18) 100%),
+    linear-gradient(180deg, rgba(16, 23, 34, 0.1) 0%, rgba(0, 121, 52, 0.08) 100%);
+}
+
+[data-theme='dark'] .landingPage::after {
+  border-color: rgba(248, 240, 223, 0.08);
+  background:
+    repeating-linear-gradient(90deg, rgba(248, 240, 223, 0.04) 0 18px, rgba(127, 220, 169, 0.045) 18px 19px),
+    linear-gradient(135deg, rgba(127, 220, 169, 0.08), rgba(0, 121, 52, 0.1));
+}
+
+[data-theme='dark'] .landingInsight,
+[data-theme='dark'] .mapPreview,
+[data-theme='dark'] .mapPreviewHeader,
+[data-theme='dark'] .previewOffer,
+[data-theme='dark'] .landingPage .infoCard {
+  background-color: rgba(24, 33, 46, 0.84);
+  border-color: rgba(248, 240, 223, 0.12);
+}
+
+[data-theme='dark'] .landingPage .heroTitle,
+[data-theme='dark'] .previewOffer strong,
+[data-theme='dark'] .mapPreviewHeader strong {
+  color: #f8f0df;
+}
+
+[data-theme='dark'] .landingPage .heroDescription,
+[data-theme='dark'] .landingInsight span,
+[data-theme='dark'] .previewOffer span,
+[data-theme='dark'] .mapPreviewHeader span {
+  color: #c7b89f;
+}
+
+[data-theme='dark'] .landingInsight strong,
+[data-theme='dark'] .previewOffer b {
+  color: #7fdca9;
+}

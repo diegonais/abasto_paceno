@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -9,6 +10,8 @@ export function PublicLayout() {
   const { isAuthenticated, role } = useAuth();
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isMapExperience = location.pathname === '/map' || location.pathname === '/comercios';
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   return (
     <div className={`public-shell${isHome ? ' public-shell-home' : ''}`}>
@@ -36,6 +39,19 @@ export function PublicLayout() {
             >
               Mapa
             </NavLink>
+            <NavLink
+              to="/comercios"
+              className={({ isActive }) => `public-nav-link${isActive ? ' active' : ''}`}
+            >
+              Comercios
+            </NavLink>
+            <button
+              className="public-nav-link public-nav-button"
+              type="button"
+              onClick={() => setIsAboutOpen(true)}
+            >
+              Acerca de
+            </button>
             {isAuthenticated ? (
               <Link to={getDefaultRouteForRole(role)}>
                 <Button variant="primary" size="sm" className="navButton">Entrar al panel</Button>
@@ -58,9 +74,40 @@ export function PublicLayout() {
         </div>
       </header>
 
-      <main className={`public-main${isHome ? ' public-main-home' : ''}`}>
+      <main className={`public-main${isHome ? ' public-main-home' : ''}${isMapExperience ? ' public-main-map' : ''}`}>
         <Outlet />
       </main>
+
+      {isAboutOpen ? (
+        <div
+          className="about-modal-backdrop"
+          role="presentation"
+          onClick={() => setIsAboutOpen(false)}
+        >
+          <section
+            className="about-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="about-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="about-modal-close"
+              type="button"
+              aria-label="Cerrar acerca de"
+              onClick={() => setIsAboutOpen(false)}
+            >
+              ×
+            </button>
+            <p className="about-modal-eyebrow">Hackaton Build with AI</p>
+            <h2 id="about-title">Acerca de Abasto Boliviano</h2>
+            <p>
+              Proyecto desarrollado para la Hackaton Build with AI por Diego
+              Fariñaz y Paulo Batuani.
+            </p>
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }

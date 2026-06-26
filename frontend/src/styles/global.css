@@ -214,6 +214,13 @@ textarea {
   color: var(--color-primary);
 }
 
+.public-nav-button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
 .public-nav-link.active::after {
   content: '';
   position: absolute;
@@ -1024,6 +1031,64 @@ textarea {
   color: var(--color-muted);
 }
 
+.about-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(32, 16, 24, 0.46);
+  backdrop-filter: blur(8px);
+}
+
+.about-modal {
+  position: relative;
+  width: min(520px, calc(100vw - 2rem));
+  padding: 1.5rem;
+  border: 1px solid rgba(123, 24, 53, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 250, 243, 0.96);
+  color: var(--color-text);
+  box-shadow: 0 28px 80px rgba(32, 16, 24, 0.24);
+}
+
+.about-modal-eyebrow {
+  margin: 0 0 0.65rem;
+  color: var(--color-primary);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.about-modal h2 {
+  margin: 0 2.25rem 0.75rem 0;
+  color: var(--color-primary);
+  font-size: 1.55rem;
+  line-height: 1.12;
+}
+
+.about-modal p:last-child {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.about-modal-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(123, 24, 53, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
 .auth-card {
   width: min(540px, calc(100vw - 2rem));
 }
@@ -1622,6 +1687,18 @@ textarea {
   box-shadow: none;
 }
 
+[data-theme='dark'] .about-modal {
+  background: rgba(24, 33, 46, 0.96);
+  border-color: rgba(248, 240, 223, 0.14);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36);
+}
+
+[data-theme='dark'] .about-modal-close {
+  background: rgba(248, 240, 223, 0.06);
+  border-color: rgba(248, 240, 223, 0.16);
+  color: var(--color-primary);
+}
+
 [data-theme='dark'] .public-shell,
 .public-shell[data-theme='dark'] {
   background: #101722;
@@ -1957,6 +2034,10 @@ textarea {
     display: inline-flex;
   }
 
+  .public-nav-button {
+    display: inline-flex;
+  }
+
   .heroActions {
     flex-direction: column;
     align-items: stretch;
@@ -1985,4 +2066,1394 @@ textarea {
     flex-wrap: wrap;
     justify-content: flex-end;
   }
+}
+
+/* Public map experience */
+.public-main-map {
+  height: calc(100dvh - 56px);
+  padding: 0;
+  overflow: hidden;
+}
+
+.public-map-page {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(0.75rem, 1.3vw, 1.25rem);
+  overflow: hidden;
+  background:
+    linear-gradient(30deg, rgba(123, 24, 53, 0.055) 12%, transparent 12% 88%, rgba(123, 24, 53, 0.055) 88%),
+    linear-gradient(150deg, rgba(15, 125, 80, 0.05) 10%, transparent 10% 86%, rgba(15, 125, 80, 0.045) 86%),
+    linear-gradient(180deg, #fffaf3 0%, #f5e9df 100%);
+  background-size: 220px 220px, 260px 260px, auto;
+}
+
+.public-map-experience {
+  position: relative;
+  display: block;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 8px;
+  background: #e9dfd4;
+  box-shadow: 0 24px 70px rgba(80, 37, 46, 0.18);
+}
+
+.public-map-experience .map-stage {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.public-map-experience .map-wrapper {
+  height: 100% !important;
+  min-height: 0;
+  border-radius: 8px;
+}
+
+.public-map-experience .map-canvas {
+  background: #efe5d8;
+}
+
+.public-map-experience .loading-state {
+  height: 100%;
+  min-height: 0;
+  background: rgba(255, 250, 243, 0.7);
+}
+
+.map-explorer-panel {
+  position: absolute;
+  z-index: 760;
+  top: clamp(0.8rem, 1.4vw, 1.25rem);
+  bottom: clamp(0.8rem, 1.4vw, 1.25rem);
+  left: clamp(0.8rem, 1.4vw, 1.25rem);
+  width: min(392px, calc(100% - 2rem));
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(48, 25, 34, 0.96) 0%, rgba(35, 19, 26, 0.96) 100%);
+  color: #fff8ee;
+  box-shadow: 0 24px 70px rgba(35, 14, 23, 0.34);
+}
+
+.map-explorer-scroll {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  padding: clamp(1rem, 1.45vw, 1.35rem);
+  overflow: auto;
+}
+
+.map-hero-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.map-eyebrow,
+.map-section-label {
+  margin: 0;
+  color: #ff9b35;
+  font-size: 0.73rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.map-hero-copy h1 {
+  max-width: 11ch;
+  margin: 0;
+  color: #fff8ee;
+  font-size: clamp(2rem, 2.8vw, 3.2rem);
+  line-height: 0.98;
+}
+
+.map-hero-copy p,
+.nearby-panel p,
+.geo-status {
+  margin: 0;
+  color: rgba(255, 248, 238, 0.76);
+  font-size: 0.94rem;
+}
+
+.map-view-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  padding: 0.35rem;
+  border: 1px solid rgba(255, 248, 238, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 248, 238, 0.06);
+}
+
+.map-view-switch button,
+.map-type-button,
+.map-offer-card,
+.merchant-card-head,
+.merchant-product-row,
+.nearby-inline-action,
+.nearby-clear-action,
+.nearby-action,
+.radius-option {
+  cursor: pointer;
+  font: inherit;
+}
+
+.map-view-switch button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 248, 238, 0.72);
+  font-weight: 800;
+}
+
+.map-view-switch button.is-active {
+  background: #fff8ee;
+  color: #7b1835;
+}
+
+.map-search-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.map-search-field span {
+  color: rgba(255, 248, 238, 0.72);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.map-search-field input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid rgba(255, 248, 238, 0.16);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  background: rgba(255, 248, 238, 0.08);
+  color: #fff8ee;
+  outline: none;
+}
+
+.map-search-field input::placeholder {
+  color: rgba(255, 248, 238, 0.46);
+}
+
+.map-search-field input:focus {
+  border-color: rgba(255, 155, 53, 0.58);
+  box-shadow: 0 0 0 3px rgba(255, 155, 53, 0.14);
+}
+
+.map-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.map-type-button {
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid rgba(255, 248, 238, 0.1);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  background: rgba(255, 248, 238, 0.065);
+  color: #fff8ee;
+  text-align: left;
+}
+
+.map-type-button.is-active {
+  border-color: rgba(255, 155, 53, 0.62);
+  background: rgba(255, 155, 53, 0.14);
+}
+
+.map-type-button strong,
+.map-type-button small {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-type-button strong {
+  font-size: 0.92rem;
+}
+
+.map-type-button small {
+  color: rgba(255, 248, 238, 0.62);
+  font-size: 0.77rem;
+}
+
+.map-type-icon,
+.map-offer-icon,
+.merchant-product-icon {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--type-color, var(--offer-color)) 18%, transparent);
+  color: var(--type-color, var(--offer-color));
+}
+
+.map-type-icon {
+  width: 34px;
+  height: 34px;
+}
+
+.map-offer-icon,
+.merchant-product-icon {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+}
+
+.map-type-glyph {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  color: currentColor;
+}
+
+.map-type-glyph::before,
+.map-type-glyph::after {
+  content: '';
+  position: absolute;
+  display: block;
+  border-color: currentColor;
+}
+
+.map-type-glyph-all::before {
+  inset: 3px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.map-type-glyph-all::after {
+  inset: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.map-type-glyph-verduras::before {
+  width: 14px;
+  height: 10px;
+  left: 1px;
+  top: 4px;
+  border: 2px solid currentColor;
+  border-radius: 100% 0 100% 0;
+  transform: rotate(-18deg);
+}
+
+.map-type-glyph-verduras::after {
+  width: 11px;
+  height: 2px;
+  left: 6px;
+  top: 12px;
+  background: currentColor;
+  transform: rotate(-34deg);
+}
+
+.map-type-glyph-frutas::before,
+.map-type-glyph-huevos::before {
+  width: 13px;
+  height: 14px;
+  left: 2px;
+  top: 3px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.map-type-glyph-frutas::after {
+  width: 8px;
+  height: 5px;
+  right: 1px;
+  top: 1px;
+  border: 2px solid currentColor;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+  transform: rotate(-24deg);
+}
+
+.map-type-glyph-lacteos::before {
+  width: 9px;
+  height: 14px;
+  left: 4px;
+  top: 3px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+
+.map-type-glyph-lacteos::after {
+  width: 7px;
+  height: 2px;
+  left: 5px;
+  top: 8px;
+  background: currentColor;
+}
+
+.map-type-glyph-carnicos::before {
+  width: 13px;
+  height: 11px;
+  left: 2px;
+  top: 3px;
+  border: 2px solid currentColor;
+  border-radius: 55% 45% 55% 45%;
+  transform: rotate(-18deg);
+}
+
+.map-type-glyph-carnicos::after {
+  width: 8px;
+  height: 8px;
+  right: 0;
+  bottom: 0;
+  border: 2px solid currentColor;
+  border-left: 0;
+  border-radius: 50%;
+}
+
+.map-type-glyph-panaderia::before {
+  width: 15px;
+  height: 11px;
+  left: 1px;
+  top: 5px;
+  border: 2px solid currentColor;
+  border-radius: 10px 10px 4px 4px;
+}
+
+.map-type-glyph-panaderia::after {
+  width: 2px;
+  height: 7px;
+  left: 7px;
+  top: 5px;
+  background: currentColor;
+  transform: rotate(22deg);
+}
+
+.map-type-glyph-abarrotes::before {
+  width: 13px;
+  height: 11px;
+  left: 2px;
+  top: 6px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+
+.map-type-glyph-abarrotes::after {
+  width: 7px;
+  height: 6px;
+  left: 5px;
+  top: 2px;
+  border: 2px solid currentColor;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.map-type-glyph-bebidas::before {
+  width: 11px;
+  height: 14px;
+  left: 4px;
+  top: 3px;
+  border: 2px solid currentColor;
+  border-radius: 2px 2px 5px 5px;
+}
+
+.map-type-glyph-bebidas::after {
+  width: 8px;
+  height: 2px;
+  left: 5px;
+  top: 8px;
+  background: currentColor;
+}
+
+.map-type-glyph-huevos::before {
+  height: 16px;
+  top: 1px;
+  border-radius: 50% 50% 46% 46%;
+}
+
+.map-type-glyph-otros::before {
+  width: 14px;
+  height: 10px;
+  left: 2px;
+  bottom: 1px;
+  border: 2px solid currentColor;
+}
+
+.map-type-glyph-otros::after {
+  width: 10px;
+  height: 10px;
+  left: 4px;
+  top: 1px;
+  border-left: 2px solid currentColor;
+  border-top: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.nearby-panel {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(255, 248, 238, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 248, 238, 0.06);
+}
+
+.nearby-panel strong {
+  display: block;
+  margin-top: 0.2rem;
+  color: #fff8ee;
+}
+
+.nearby-inline-action,
+.nearby-clear-action {
+  min-height: 42px;
+  border-radius: 8px;
+  font-weight: 850;
+}
+
+.nearby-inline-action {
+  border: 0;
+  background: #f07818;
+  color: #24131a;
+}
+
+.nearby-clear-action {
+  border: 1px solid rgba(255, 248, 238, 0.14);
+  background: transparent;
+  color: #fff8ee;
+}
+
+.map-results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #fff8ee;
+}
+
+.map-results-head span {
+  color: rgba(255, 248, 238, 0.62);
+  font-size: 0.86rem;
+}
+
+.map-offer-list,
+.merchant-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.merchant-priority-results {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.map-offer-card,
+.merchant-card,
+.merchant-product-row {
+  border: 1px solid rgba(255, 248, 238, 0.11);
+  border-radius: 8px;
+  background: rgba(255, 248, 238, 0.074);
+}
+
+.map-offer-card {
+  width: 100%;
+  min-height: 74px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: #fff8ee;
+  text-align: left;
+}
+
+.map-offer-card.is-selected,
+.merchant-product-row.is-selected {
+  border-color: rgba(255, 155, 53, 0.72);
+  background: rgba(255, 155, 53, 0.14);
+}
+
+.map-offer-copy,
+.merchant-product-row > span:nth-child(2) {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.map-offer-copy strong,
+.map-offer-copy span,
+.map-offer-copy small,
+.merchant-card-head strong,
+.merchant-card-head small,
+.merchant-product-row strong,
+.merchant-product-row small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-offer-copy strong,
+.merchant-card-head strong,
+.merchant-product-row strong {
+  color: #fff8ee;
+}
+
+.map-offer-copy span,
+.map-offer-copy small,
+.merchant-card-head small,
+.merchant-product-row small {
+  color: rgba(255, 248, 238, 0.64);
+  font-size: 0.82rem;
+}
+
+.map-price {
+  color: #8af0b0;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.merchant-card {
+  overflow: hidden;
+}
+
+.merchant-card-head {
+  width: 100%;
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: 0.75rem;
+  border: 0;
+  background: transparent;
+  padding: 0.75rem;
+  color: #fff8ee;
+  text-align: left;
+}
+
+.merchant-card-toggle {
+  width: 30px;
+  height: 30px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 248, 238, 0.1);
+  color: #ff9b35;
+  font-weight: 900;
+}
+
+.merchant-products {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0 0.65rem 0.65rem;
+}
+
+.merchant-product-row {
+  width: 100%;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem;
+  color: #fff8ee;
+  text-align: left;
+}
+
+.map-explorer-panel .empty-state {
+  min-height: 120px;
+  padding: 0.8rem;
+  border: 1px dashed rgba(255, 248, 238, 0.16);
+  border-radius: 8px;
+  color: rgba(255, 248, 238, 0.72);
+  text-align: center;
+}
+
+.map-floating-actions {
+  position: absolute;
+  z-index: 740;
+  top: clamp(0.8rem, 1.4vw, 1.25rem);
+  right: clamp(0.8rem, 1.4vw, 1.25rem);
+  width: min(238px, calc(100% - 2rem));
+  display: grid;
+  gap: 0.65rem;
+}
+
+.nearby-action {
+  min-height: 50px;
+  border: 0;
+  border-radius: 8px;
+  background: #f07818;
+  color: #26131c;
+  font-weight: 900;
+  box-shadow: 0 16px 32px rgba(240, 120, 24, 0.28);
+}
+
+.radius-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 248, 238, 0.12);
+  border-radius: 8px;
+  background: rgba(38, 19, 28, 0.88);
+  color: #fff8ee;
+  box-shadow: 0 18px 40px rgba(35, 14, 23, 0.22);
+}
+
+.radius-option {
+  position: relative;
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: rgba(255, 248, 238, 0.78);
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.radius-option input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radius-option.is-active {
+  background: #fff8ee;
+  color: #7b1835;
+}
+
+.map-status-bar,
+.map-legend,
+.selected-offer-ribbon {
+  position: absolute;
+  z-index: 730;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 8px;
+  background: rgba(255, 250, 243, 0.9);
+  color: #2f1e24;
+  box-shadow: 0 14px 34px rgba(80, 37, 46, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.map-status-bar {
+  right: clamp(0.8rem, 1.4vw, 1.25rem);
+  bottom: clamp(0.8rem, 1.4vw, 1.25rem);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: min(520px, calc(100% - 440px));
+  padding: 0.55rem 0.75rem;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.map-status-bar span {
+  white-space: nowrap;
+}
+
+.map-legend {
+  right: clamp(0.8rem, 1.4vw, 1.25rem);
+  bottom: calc(clamp(0.8rem, 1.4vw, 1.25rem) + 50px);
+  flex-wrap: wrap;
+  max-width: min(520px, calc(100% - 440px));
+  padding: 0.5rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.map-legend i {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--legend-color);
+}
+
+.selected-offer-ribbon {
+  left: calc(clamp(0.8rem, 1.4vw, 1.25rem) + min(392px, calc(100% - 2rem)) + 1rem);
+  bottom: clamp(0.8rem, 1.4vw, 1.25rem);
+  max-width: min(520px, calc(100% - 470px));
+  padding: 0.65rem 0.8rem;
+}
+
+.selected-offer-ribbon span,
+.selected-offer-ribbon strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-offer-ribbon span {
+  color: var(--color-muted);
+}
+
+.selected-offer-ribbon strong {
+  color: var(--color-text);
+}
+
+.food-marker-shell {
+  border: 0;
+  background: transparent;
+}
+
+.food-marker {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #fffaf3;
+  border-radius: 50% 50% 50% 10px;
+  background: var(--marker-color);
+  box-shadow: 0 12px 24px rgba(47, 30, 36, 0.28);
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+
+.food-marker svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  transform: rotate(45deg);
+}
+
+.food-marker-shell.is-selected .food-marker {
+  border-color: #ffcf70;
+  box-shadow: 0 0 0 5px rgba(255, 207, 112, 0.32), 0 18px 34px rgba(47, 30, 36, 0.34);
+  transform: rotate(-45deg) scale(1.16);
+}
+
+.user-location-marker-shell {
+  border: 0;
+  background: transparent;
+}
+
+.user-location-marker {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(15, 125, 80, 0.18);
+}
+
+.user-location-marker::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  border: 2px solid rgba(15, 125, 80, 0.35);
+}
+
+.user-location-marker span {
+  width: 14px;
+  height: 14px;
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: #0f7d50;
+  box-shadow: 0 6px 16px rgba(15, 125, 80, 0.28);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.marker-popup {
+  min-width: 210px;
+}
+
+.marker-popup strong {
+  color: var(--color-primary);
+}
+
+[data-theme='dark'] .public-map-page {
+  background:
+    linear-gradient(30deg, rgba(127, 220, 169, 0.08) 12%, transparent 12% 88%, rgba(127, 220, 169, 0.08) 88%),
+    linear-gradient(150deg, rgba(255, 155, 53, 0.06) 10%, transparent 10% 86%, rgba(255, 155, 53, 0.06) 86%),
+    linear-gradient(180deg, #101722 0%, #18212e 100%);
+}
+
+[data-theme='dark'] .public-map-experience {
+  border-color: rgba(248, 240, 223, 0.14);
+  background: #101722;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+}
+
+[data-theme='dark'] .map-status-bar,
+[data-theme='dark'] .map-legend,
+[data-theme='dark'] .selected-offer-ribbon {
+  border-color: rgba(248, 240, 223, 0.14);
+  background: rgba(24, 33, 46, 0.9);
+  color: #f8f0df;
+}
+
+[data-theme='dark'] .selected-offer-ribbon strong {
+  color: #f8f0df;
+}
+
+[data-theme='dark'] .selected-offer-ribbon span {
+  color: #c7b89f;
+}
+
+@media (max-width: 1180px) {
+  .map-explorer-panel {
+    width: min(350px, calc(100% - 2rem));
+  }
+
+  .map-status-bar,
+  .map-legend {
+    max-width: min(420px, calc(100% - 390px));
+  }
+
+  .selected-offer-ribbon {
+    left: calc(clamp(0.8rem, 1.4vw, 1.25rem) + min(350px, calc(100% - 2rem)) + 1rem);
+    max-width: min(430px, calc(100% - 430px));
+  }
+}
+
+@media (max-width: 900px) {
+  .public-main-map {
+    overflow: auto;
+  }
+
+  .public-map-page {
+    min-height: calc(100dvh - 56px);
+    height: auto;
+    overflow: visible;
+  }
+
+  .public-map-experience {
+    display: grid;
+    grid-template-rows: minmax(420px, 58dvh) auto;
+    height: auto;
+    min-height: calc(100dvh - 1.5rem - 56px);
+    overflow: visible;
+  }
+
+  .public-map-experience .map-stage,
+  .map-explorer-panel {
+    position: relative;
+    inset: auto;
+  }
+
+  .map-explorer-panel {
+    order: 2;
+    width: auto;
+    margin: 0;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .public-map-experience .map-stage {
+    order: 1;
+    min-height: 420px;
+  }
+
+  .map-floating-actions {
+    width: min(220px, calc(100% - 1.5rem));
+  }
+
+  .map-status-bar,
+  .map-legend,
+  .selected-offer-ribbon {
+    display: none;
+  }
+}
+
+/* Abasto Boliviano map palette */
+.map-explorer-panel {
+  border-color: rgba(123, 24, 53, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 250, 243, 0.97) 0%, rgba(255, 246, 237, 0.97) 100%);
+  color: var(--color-text);
+  box-shadow: 0 24px 70px rgba(80, 37, 46, 0.2);
+}
+
+.map-eyebrow,
+.map-section-label {
+  color: var(--color-primary);
+}
+
+.map-hero-copy h1,
+.nearby-panel strong,
+.map-results-head,
+.map-view-switch button,
+.map-type-button,
+.map-offer-card,
+.merchant-card-head,
+.merchant-product-row,
+.map-offer-copy strong,
+.merchant-card-head strong,
+.merchant-product-row strong {
+  color: var(--color-text);
+}
+
+.map-hero-copy p,
+.nearby-panel p,
+.geo-status,
+.map-search-field span,
+.map-type-button small,
+.map-results-head span,
+.map-offer-copy span,
+.map-offer-copy small,
+.merchant-card-head small,
+.merchant-product-row small,
+.map-explorer-panel .empty-state {
+  color: var(--color-muted);
+}
+
+.map-view-switch,
+.nearby-panel {
+  border-color: rgba(123, 24, 53, 0.12);
+  background: rgba(123, 24, 53, 0.05);
+}
+
+.map-view-switch button.is-active,
+.nearby-inline-action,
+.nearby-action,
+.radius-option.is-active {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.map-search-field input {
+  border-color: rgba(123, 24, 53, 0.14);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--color-text);
+}
+
+.map-search-field input::placeholder {
+  color: rgba(119, 98, 103, 0.74);
+}
+
+.map-search-field input:focus {
+  border-color: rgba(170, 41, 80, 0.46);
+  box-shadow: 0 0 0 3px rgba(170, 41, 80, 0.12);
+}
+
+.map-type-button,
+.map-offer-card,
+.merchant-card,
+.merchant-product-row {
+  border-color: rgba(123, 24, 53, 0.1);
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.map-type-button.is-active {
+  border-color: rgba(170, 41, 80, 0.42);
+  background: rgba(123, 24, 53, 0.08);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.map-type-icon,
+.map-offer-icon,
+.merchant-product-icon {
+  background: color-mix(in srgb, var(--type-color, var(--offer-color)) 14%, white);
+}
+
+.nearby-clear-action {
+  border-color: rgba(123, 24, 53, 0.16);
+  color: var(--color-primary);
+}
+
+.map-offer-card.is-selected,
+.merchant-product-row.is-selected {
+  border-color: rgba(170, 41, 80, 0.46);
+  background: rgba(123, 24, 53, 0.08);
+}
+
+.map-price {
+  color: var(--color-success);
+}
+
+.merchant-card-toggle {
+  background: rgba(123, 24, 53, 0.08);
+  color: var(--color-primary);
+}
+
+.map-explorer-panel .empty-state {
+  border-color: rgba(123, 24, 53, 0.18);
+}
+
+.nearby-action {
+  box-shadow: 0 16px 32px rgba(123, 24, 53, 0.2);
+}
+
+.radius-card {
+  border-color: rgba(123, 24, 53, 0.12);
+  background: rgba(255, 250, 243, 0.92);
+  color: var(--color-text);
+  box-shadow: 0 18px 40px rgba(80, 37, 46, 0.16);
+}
+
+.radius-option {
+  color: var(--color-text);
+}
+
+.food-marker-shell.is-selected .food-marker {
+  border-color: #f3c3d0;
+  box-shadow: 0 0 0 5px rgba(170, 41, 80, 0.18), 0 18px 34px rgba(47, 30, 36, 0.34);
+}
+
+.food-marker {
+  border-color: var(--marker-color);
+  background: #fffaf3;
+  color: var(--marker-color);
+}
+
+.food-marker svg {
+  stroke: currentColor;
+}
+
+.food-marker-shell.is-selected .food-marker {
+  border-color: var(--marker-color);
+  background: #fff6ed;
+}
+
+[data-theme='dark'] .map-explorer-panel {
+  border-color: rgba(248, 240, 223, 0.14);
+  background:
+    linear-gradient(180deg, rgba(24, 33, 46, 0.96) 0%, rgba(16, 23, 34, 0.96) 100%);
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .map-view-switch,
+[data-theme='dark'] .nearby-panel,
+[data-theme='dark'] .map-type-button,
+[data-theme='dark'] .map-offer-card,
+[data-theme='dark'] .merchant-card,
+[data-theme='dark'] .merchant-product-row,
+[data-theme='dark'] .radius-card {
+  border-color: rgba(248, 240, 223, 0.12);
+  background: rgba(248, 240, 223, 0.055);
+}
+
+[data-theme='dark'] .map-view-switch button.is-active,
+[data-theme='dark'] .nearby-inline-action,
+[data-theme='dark'] .nearby-action,
+[data-theme='dark'] .radius-option.is-active {
+  background: #007934;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .map-search-field input {
+  border-color: rgba(248, 240, 223, 0.16);
+  background: rgba(248, 240, 223, 0.055);
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .map-search-field input::placeholder {
+  color: rgba(199, 184, 159, 0.7);
+}
+
+[data-theme='dark'] .map-type-button.is-active,
+[data-theme='dark'] .map-offer-card.is-selected,
+[data-theme='dark'] .merchant-product-row.is-selected {
+  border-color: rgba(127, 220, 169, 0.44);
+  background: rgba(127, 220, 169, 0.1);
+}
+
+[data-theme='dark'] .map-type-icon,
+[data-theme='dark'] .map-offer-icon,
+[data-theme='dark'] .merchant-product-icon {
+  background: color-mix(in srgb, var(--type-color, var(--offer-color)) 20%, #18212e);
+}
+
+/* Map interaction polish */
+.public-map-experience .leaflet-bottom.leaflet-right .leaflet-control-zoom {
+  margin-right: clamp(0.8rem, 1.4vw, 1.25rem);
+  margin-bottom: 7.9rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 8px;
+  box-shadow: 0 14px 34px rgba(80, 37, 46, 0.16);
+  overflow: hidden;
+}
+
+.public-map-experience .leaflet-control-zoom a {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 250, 243, 0.96);
+  color: var(--color-text);
+  line-height: 1;
+  font-weight: 900;
+}
+
+.public-map-experience .leaflet-control-zoom a:hover {
+  background: #fff4ed;
+  color: var(--color-primary);
+}
+
+.food-marker {
+  width: 42px;
+  height: 42px;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 14px;
+  background: #fffaf3 !important;
+  box-shadow: 0 12px 24px rgba(47, 30, 36, 0.22);
+  transform: none;
+}
+
+.food-marker svg {
+  stroke: currentColor !important;
+  transform: none;
+}
+
+.food-marker-shell.is-selected .food-marker {
+  background: #fff6ed !important;
+  box-shadow: 0 0 0 5px rgba(170, 41, 80, 0.16), 0 18px 34px rgba(47, 30, 36, 0.28);
+  transform: scale(1.12);
+}
+
+.user-location-marker {
+  width: 48px;
+  height: 48px;
+  background: transparent;
+}
+
+.user-location-marker::before {
+  inset: 7px;
+  border: 2px solid rgba(37, 99, 235, 0.24);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.user-location-marker .user-location-wave {
+  position: absolute;
+  inset: 3px;
+  width: auto;
+  height: auto;
+  border: 2px solid rgba(37, 99, 235, 0.42);
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  box-shadow: none;
+  animation: user-location-pulse 1.6s ease-out infinite;
+}
+
+.user-location-marker .user-location-dot {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: #2563eb;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.32);
+}
+
+.offer-popup .leaflet-popup-content-wrapper {
+  overflow: hidden;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 8px;
+  background: #fffaf3;
+  box-shadow: 0 24px 60px rgba(47, 30, 36, 0.22);
+}
+
+.offer-popup .leaflet-popup-content {
+  width: 320px !important;
+  margin: 0;
+}
+
+.offer-popup .leaflet-popup-tip {
+  background: #fffaf3;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+}
+
+.marker-popup-card {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  color: var(--color-text);
+}
+
+.marker-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.marker-popup-type {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--popup-type-color) 28%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--popup-type-color) 11%, white);
+  color: var(--popup-type-color);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.marker-popup-header button,
+.marker-popup-actions a,
+.marker-popup-actions button {
+  border-radius: 8px;
+  font-weight: 850;
+}
+
+.marker-popup-header button {
+  min-height: 34px;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  padding: 0 0.75rem;
+  background: rgba(123, 24, 53, 0.05);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.marker-popup-body {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.marker-popup-body h3,
+.marker-popup-body p {
+  margin: 0;
+}
+
+.marker-popup-body h3 {
+  color: var(--color-text);
+  font-size: 1.12rem;
+  line-height: 1.25;
+}
+
+.marker-popup-location {
+  color: var(--color-muted);
+}
+
+.marker-popup-product {
+  color: var(--color-primary);
+  font-weight: 850;
+}
+
+.marker-popup-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+.marker-popup-meta span {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  background: rgba(15, 125, 80, 0.1);
+  color: var(--color-success);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.marker-popup-meta strong {
+  color: var(--color-success);
+  font-size: 1rem;
+}
+
+.marker-popup-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.marker-popup-actions a,
+.marker-popup-actions button {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(123, 24, 53, 0.16);
+  padding: 0 0.65rem;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-primary);
+  cursor: pointer;
+  text-align: center;
+}
+
+.marker-popup-actions .marker-popup-primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.marker-popup-detail {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding-top: 0.2rem;
+}
+
+.marker-popup-detail div {
+  border: 1px solid rgba(123, 24, 53, 0.1);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  background: rgba(123, 24, 53, 0.04);
+}
+
+.marker-popup-detail dt {
+  color: var(--color-muted);
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+
+.marker-popup-detail dd {
+  margin: 0.12rem 0 0;
+  color: var(--color-text);
+  font-weight: 850;
+}
+
+@keyframes user-location-pulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.45);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+[data-theme='dark'] .public-map-experience .leaflet-control-zoom a,
+[data-theme='dark'] .offer-popup .leaflet-popup-content-wrapper,
+[data-theme='dark'] .offer-popup .leaflet-popup-tip {
+  background: #18212e;
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .offer-popup .leaflet-popup-content-wrapper,
+[data-theme='dark'] .offer-popup .leaflet-popup-tip {
+  border-color: rgba(248, 240, 223, 0.14);
+}
+
+[data-theme='dark'] .marker-popup-actions a,
+[data-theme='dark'] .marker-popup-actions button,
+[data-theme='dark'] .marker-popup-header button,
+[data-theme='dark'] .marker-popup-detail div {
+  border-color: rgba(248, 240, 223, 0.14);
+  background: rgba(248, 240, 223, 0.055);
 }

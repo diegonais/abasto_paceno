@@ -71,6 +71,7 @@ export class OffersService {
       id: offer.id,
       productId: offer.product.id,
       productName: offer.product.productName,
+      categoryName: offer.product.category.categoryName,
       saleType: offer.saleType,
       approximateQuantity: offer.approximateQuantity,
       price: offer.price,

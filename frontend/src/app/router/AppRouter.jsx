@@ -46,6 +46,7 @@ export function AppRouter() {
       <Route element={<PublicLayout />}>
         <Route index element={<PublicHomePage />} />
         <Route path="/map" element={<PublicMapPage />} />
+        <Route path="/comercios" element={<PublicMapPage initialView="merchants" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
