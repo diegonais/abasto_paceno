@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -22,6 +22,16 @@ export function UserProfilePage() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const photoPreviewUrl = useMemo(
+    () => (profilePhoto ? URL.createObjectURL(profilePhoto) : ''),
+    [profilePhoto],
+  );
+
+  useEffect(() => {
+    if (!photoPreviewUrl) return undefined;
+
+    return () => URL.revokeObjectURL(photoPreviewUrl);
+  }, [photoPreviewUrl]);
 
   function handleChange(event) {
     setFormValues((current) => ({ ...current, [event.target.name]: event.target.value }));
@@ -44,9 +54,11 @@ export function UserProfilePage() {
 
   function validateForm() {
     if (!formValues.fullName.trim()) return 'El nombre completo es obligatorio.';
-    if (!/\S+@\S+\.\S+/.test(formValues.email)) return 'Ingresa un correo electronico valido.';
+    if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+      return 'Ingresa un correo electrónico válido.';
+    }
     if (formValues.password && formValues.password.length < 6) {
-      return 'La nueva contrasena debe tener al menos 6 caracteres.';
+      return 'La nueva contraseña debe tener al menos 6 caracteres.';
     }
 
     return '';
@@ -85,24 +97,69 @@ export function UserProfilePage() {
     }
   }
 
+  const currentPhotoUrl = user?.profilePhotoPath ? getAssetUrl(user.profilePhotoPath) : '';
+  const visiblePhotoUrl = photoPreviewUrl || currentPhotoUrl;
+  const userInitial = (formValues.fullName || user?.email || 'U').charAt(0).toUpperCase();
+
   return (
-    <div className="stack-lg">
-      <PageHeader title="Mi perfil" description="Actualiza tus datos bÃ¡sicos de acceso." />
-      <Card className="form-card">
-        <form className="stack-md" onSubmit={handleSubmit}>
+    <div className="stack-lg profile-page">
+      <PageHeader
+        title="Mi perfil"
+        description="Actualiza tus datos de acceso y la foto que se muestra en tu cuenta."
+      />
+      <Card className="form-card profile-card">
+        <form className="profile-form" onSubmit={handleSubmit}>
           <ErrorMessage message={error || message} />
-          {user?.profilePhotoPath ? (
-            <img
-              src={getAssetUrl(user.profilePhotoPath)}
-              alt="Foto de perfil"
-              style={{ width: '112px', height: '112px', objectFit: 'cover', borderRadius: '18px' }}
+
+          <section className="profile-photo-panel" aria-label="Foto de perfil">
+            <div className="profile-avatar-preview">
+              {visiblePhotoUrl ? (
+                <img src={visiblePhotoUrl} alt="Foto de perfil" />
+              ) : (
+                <span>{userInitial}</span>
+              )}
+            </div>
+            <div>
+              <strong>Foto de perfil</strong>
+              <p>Usa una imagen clara. Se verá en el círculo del encabezado.</p>
+            </div>
+            <Input
+              label="Cambiar foto"
+              name="profilePhoto"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={handlePhotoChange}
             />
-          ) : null}
-          <Input label="Nombre completo" name="fullName" value={formValues.fullName} onChange={handleChange} />
-          <Input label="Correo electrÃ³nico" name="email" type="email" value={formValues.email} onChange={handleChange} />
-          <Input label="Nueva contraseÃ±a" name="password" type="password" value={formValues.password} onChange={handleChange} />
-          <Input label="Actualizar foto de perfil" name="profilePhoto" type="file" accept="image/png,image/jpeg,image/webp" onChange={handlePhotoChange} />
-          <Button type="submit">Guardar cambios</Button>
+          </section>
+
+          <div className="profile-form-grid">
+            <Input
+              label="Nombre completo"
+              name="fullName"
+              value={formValues.fullName}
+              onChange={handleChange}
+            />
+            <Input
+              label="Correo electrónico"
+              name="email"
+              type="email"
+              value={formValues.email}
+              onChange={handleChange}
+            />
+            <Input
+              label="Nueva contraseña"
+              name="password"
+              type="password"
+              value={formValues.password}
+              onChange={handleChange}
+              placeholder="Déjalo vacío si no quieres cambiarla"
+            />
+          </div>
+
+          <div className="profile-submit-row">
+            <span>Los cambios se aplican inmediatamente al guardar.</span>
+            <Button type="submit">Guardar cambios</Button>
+          </div>
         </form>
       </Card>
     </div>

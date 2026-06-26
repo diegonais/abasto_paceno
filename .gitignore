@@ -3,16 +3,16 @@ node_modules/
 .expo/
 */.expo/
 
-dist/
-*/dist/
-coverage/
-*/coverage/
-
 *.log
 expo-start*.log
 yarn-error.log
 yarn-debug.log
 npm-debug.log*
+
+dist/
+*/dist/
+coverage/
+*/coverage/
 
 .env
 */.env

@@ -12,6 +12,7 @@ import { Role } from '../../common/enums/role.enum';
 import { MerchantVerificationStatus } from '../../common/enums/merchant-verification-status.enum';
 import { removeStoredFile } from '../../common/uploads/upload.utils';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { Category } from '../categories/entities/category.entity';
 import { MerchantProfile } from '../merchant-profiles/entities/merchant-profile.entity';
 import { Product } from '../products/entities/product.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
@@ -35,6 +36,8 @@ export class OffersService {
     private readonly merchantProfilesRepository: Repository<MerchantProfile>,
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
+    @InjectRepository(Category)
+    private readonly categoriesRepository: Repository<Category>,
   ) {}
 
   findAllActive() {
@@ -93,6 +96,7 @@ export class OffersService {
       productPhotoPath: offer.productPhotoPath,
       availableFrom: offer.availableFrom,
       availableUntil: offer.availableUntil,
+      createdAt: offer.createdAt,
       merchantProfileId: offer.merchantProfile.id,
       businessName: offer.merchantProfile.businessName,
       ownerFullName: offer.merchantProfile.ownerFullName,
@@ -106,7 +110,7 @@ export class OffersService {
       createOfferDto.availableUntil,
     );
 
-    const product = await this.findActiveProduct(createOfferDto.productId);
+    const product = await this.resolveProductForOffer(createOfferDto);
     const merchantProfile = await this.resolveMerchantProfileForCreate(
       createOfferDto,
       currentUser,
@@ -161,8 +165,8 @@ export class OffersService {
       );
     }
 
-    if (updateOfferDto.productId) {
-      offer.product = await this.findActiveProduct(updateOfferDto.productId);
+    if (updateOfferDto.productId || updateOfferDto.customProductName) {
+      offer.product = await this.resolveProductForOffer(updateOfferDto);
     }
 
     if (updateOfferDto.saleType) {
@@ -365,6 +369,74 @@ export class OffersService {
     }
 
     return product;
+  }
+
+  private async resolveProductForOffer(offerDto: OfferInput | OfferUpdateInput) {
+    if (offerDto.customProductName?.trim()) {
+      return this.findOrCreateCustomProduct(offerDto.customProductName);
+    }
+
+    if (!offerDto.productId) {
+      throw new BadRequestException('productId or customProductName is required');
+    }
+
+    return this.findActiveProduct(offerDto.productId);
+  }
+
+  private async findOrCreateCustomProduct(productName: string) {
+    const normalizedProductName = productName.trim().toLowerCase();
+
+    if (!normalizedProductName) {
+      throw new BadRequestException('customProductName cannot be empty');
+    }
+
+    const category = await this.findOrCreateOtherCategory();
+    const existingProduct = await this.productsRepository.findOne({
+      where: {
+        productName: normalizedProductName,
+        category: {
+          id: category.id,
+        },
+        isActive: true,
+      },
+    });
+
+    if (existingProduct) {
+      return existingProduct;
+    }
+
+    const product = this.productsRepository.create({
+      productName: normalizedProductName,
+      description: 'Producto agregado por comerciante desde una oferta.',
+      category,
+      isActive: true,
+    });
+
+    return this.productsRepository.save(product);
+  }
+
+  private async findOrCreateOtherCategory() {
+    const existingCategory = await this.categoriesRepository.findOne({
+      where: {
+        categoryName: 'otros',
+      },
+    });
+
+    if (existingCategory) {
+      if (!existingCategory.isActive) {
+        existingCategory.isActive = true;
+        return this.categoriesRepository.save(existingCategory);
+      }
+
+      return existingCategory;
+    }
+
+    const category = this.categoriesRepository.create({
+      categoryName: 'otros',
+      isActive: true,
+    });
+
+    return this.categoriesRepository.save(category);
   }
 
   private validateOfferDates(

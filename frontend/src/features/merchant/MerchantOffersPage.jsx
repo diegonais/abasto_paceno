@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Badge } from '../../components/ui/Badge';
@@ -25,8 +25,11 @@ import { productsService } from '../../services/productsService';
 import { formatCurrency } from '../../utils/format';
 import { validateImageFile } from '../../utils/files';
 
+const OTHER_PRODUCT_VALUE = '__other_product__';
+
 const emptyForm = {
   productId: '',
+  customProductName: '',
   saleType: SALE_TYPES.UNIT,
   availabilityType: OFFER_AVAILABILITY_TYPES.FIXED,
   approximateQuantity: '',
@@ -37,6 +40,11 @@ const emptyForm = {
   availableFrom: '',
   availableUntil: '',
 };
+
+function getProductLabel(product) {
+  const categoryName = product.category?.categoryName;
+  return categoryName ? `${product.productName} · ${categoryName}` : product.productName;
+}
 
 export function MerchantOffersPage({ mode }) {
   const navigate = useNavigate();
@@ -50,6 +58,20 @@ export function MerchantOffersPage({ mode }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  const productOptions = useMemo(
+    () => [
+      { value: '', label: 'Selecciona un producto' },
+      ...products.map((product) => ({
+        value: product.id,
+        label: getProductLabel(product),
+      })),
+      { value: OTHER_PRODUCT_VALUE, label: 'Otro producto' },
+    ],
+    [products],
+  );
+
+  const isCustomProduct = formValues.productId === OTHER_PRODUCT_VALUE;
 
   async function loadData() {
     setLoading(true);
@@ -80,6 +102,7 @@ export function MerchantOffersPage({ mode }) {
         const offer = await offersService.getById(id);
         setCurrentOffer(offer);
         setFormValues({
+          ...emptyForm,
           productId: offer.product?.id ?? '',
           saleType: offer.saleType ?? SALE_TYPES.UNIT,
           availabilityType: offer.availabilityType ?? OFFER_AVAILABILITY_TYPES.FIXED,
@@ -106,6 +129,9 @@ export function MerchantOffersPage({ mode }) {
     setFormValues((current) => ({
       ...current,
       [name]: value,
+      ...(name === 'productId' && value !== OTHER_PRODUCT_VALUE
+        ? { customProductName: '' }
+        : {}),
       ...(name === 'availabilityType' && value === OFFER_AVAILABILITY_TYPES.FIXED
         ? { availableFrom: '', availableUntil: '' }
         : {}),
@@ -136,12 +162,21 @@ export function MerchantOffersPage({ mode }) {
   }
 
   function validateForm() {
-    if (!formValues.productId) return 'Selecciona un producto.';
-    if (!formValues.latitude || Number.isNaN(Number(formValues.latitude))) return 'Selecciona una ubicacion valida en el mapa.';
-    if (!formValues.longitude || Number.isNaN(Number(formValues.longitude))) return 'Selecciona una ubicacion valida en el mapa.';
-    if (!formValues.locationDescription.trim()) return 'Describe la ubicacion de venta.';
-    if (!formValues.price || Number(formValues.price) < 0) return 'Ingresa un precio valido.';
-    if (!productPhoto && !currentOffer?.productPhotoPath) return 'La foto del producto es obligatoria.';
+    if (isCustomProduct && !formValues.customProductName.trim()) {
+      return 'Escribe el nombre del producto.';
+    }
+    if (!isCustomProduct && !formValues.productId) return 'Selecciona un producto.';
+    if (!formValues.latitude || Number.isNaN(Number(formValues.latitude))) {
+      return 'Selecciona una ubicación válida en el mapa.';
+    }
+    if (!formValues.longitude || Number.isNaN(Number(formValues.longitude))) {
+      return 'Selecciona una ubicación válida en el mapa.';
+    }
+    if (!formValues.locationDescription.trim()) return 'Describe la ubicación de venta.';
+    if (!formValues.price || Number(formValues.price) < 0) return 'Ingresa un precio válido.';
+    if (!productPhoto && !currentOffer?.productPhotoPath) {
+      return 'La foto del producto es obligatoria.';
+    }
     if (formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY) {
       if (!formValues.availableFrom || !formValues.availableUntil) {
         return 'Las ofertas temporales requieren fecha de inicio y fin.';
@@ -176,7 +211,8 @@ export function MerchantOffersPage({ mode }) {
 
     try {
       const payload = buildFormData({
-        productId: formValues.productId,
+        productId: isCustomProduct ? '' : formValues.productId,
+        customProductName: isCustomProduct ? formValues.customProductName.trim() : '',
         saleType: formValues.saleType,
         availabilityType: formValues.availabilityType,
         approximateQuantity: formValues.approximateQuantity,
@@ -218,78 +254,185 @@ export function MerchantOffersPage({ mode }) {
   const isFormMode = mode === 'create' || mode === 'edit';
 
   return (
-    <div className="stack-lg">
+    <div className="stack-lg merchant-offers-page">
       <PageHeader
         title="Mis ofertas"
-        description="Publica, edita o deshabilita tus ofertas sin mezclarlo con otras vistas."
+        description="Publica, edita o deshabilita tus ofertas desde un solo lugar."
         actions={!isFormMode ? <Button onClick={() => navigate('/merchant/offers/create')}>Nueva oferta</Button> : null}
       />
 
       <ErrorMessage message={error} />
 
       {isFormMode ? (
-        <div className="content-grid content-grid-map-form">
-          <Card className="form-card">
-            <form className="stack-md" onSubmit={handleSubmit}>
-              {currentOffer?.productPhotoPath ? (
-                <img
-                  src={getAssetUrl(currentOffer.productPhotoPath)}
-                  alt="Foto actual del producto"
-                  style={{ width: '100%', maxWidth: '320px', borderRadius: '20px', objectFit: 'cover' }}
-                />
-              ) : null}
-              <Select
-                label="Producto"
-                name="productId"
-                value={formValues.productId}
-                onChange={handleChange}
-                options={[
-                  { value: '', label: 'Selecciona un producto' },
-                  ...products.map((product) => ({ value: product.id, label: product.productName })),
-                ]}
-              />
-              <Select
-                label="Tipo de venta"
-                name="saleType"
-                value={formValues.saleType}
-                onChange={handleChange}
-                options={[
-                  { value: SALE_TYPES.UNIT, label: 'Unidad' },
-                  { value: SALE_TYPES.TRAY, label: 'Maple' },
-                ]}
-              />
-              <Select
-                label="Disponibilidad"
-                name="availabilityType"
-                value={formValues.availabilityType}
-                onChange={handleChange}
-                options={[
-                  { value: OFFER_AVAILABILITY_TYPES.FIXED, label: 'Venta fija' },
-                  { value: OFFER_AVAILABILITY_TYPES.TEMPORARY, label: 'Por periodo de tiempo' },
-                ]}
-              />
-              <Input label="Foto del producto" name="productPhoto" type="file" accept="image/png,image/jpeg,image/webp" onChange={handlePhotoChange} />
-              <Input label="Cantidad aproximada" name="approximateQuantity" type="number" value={formValues.approximateQuantity} onChange={handleChange} />
-              <Input label="Precio" name="price" type="number" step="0.01" min="0" value={formValues.price} onChange={handleChange} />
-              <Input label="Latitud" name="latitude" value={formValues.latitude} onChange={handleChange} />
-              <Input label="Longitud" name="longitude" value={formValues.longitude} onChange={handleChange} />
-              {formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY ? (
-                <>
-                  <Input label="Disponible desde" name="availableFrom" type="datetime-local" value={formValues.availableFrom} onChange={handleChange} />
-                  <Input label="Disponible hasta" name="availableUntil" type="datetime-local" value={formValues.availableUntil} onChange={handleChange} />
-                </>
-              ) : null}
-              <Textarea label="Descripcion de ubicacion" name="locationDescription" value={formValues.locationDescription} onChange={handleChange} rows={4} />
-              <div className="inline-actions">
-                <Button type="button" variant="ghost" onClick={() => navigate('/merchant/offers')}>Cancelar</Button>
-                <Button type="submit" disabled={saving}>{saving ? 'Guardando...' : 'Guardar oferta'}</Button>
+        <div className="content-grid content-grid-map-form offer-editor-layout">
+          <Card className="form-card offer-form-card">
+            <form className="offer-editor-form" onSubmit={handleSubmit}>
+              <section className="offer-form-section">
+                <div className="offer-section-head">
+                  <span>1</span>
+                  <div>
+                    <h2>Producto</h2>
+                    <p>Elige uno existente o registra uno nuevo con la opción Otro producto.</p>
+                  </div>
+                </div>
+
+                {currentOffer?.productPhotoPath ? (
+                  <img
+                    className="offer-current-photo"
+                    src={getAssetUrl(currentOffer.productPhotoPath)}
+                    alt="Foto actual del producto"
+                  />
+                ) : null}
+
+                <div className="offer-form-grid">
+                  <Select
+                    className={isCustomProduct ? '' : 'field-span-2'}
+                    label="Producto"
+                    name="productId"
+                    value={formValues.productId}
+                    onChange={handleChange}
+                    options={productOptions}
+                  />
+                  {isCustomProduct ? (
+                    <Input
+                      label="Nombre del producto"
+                      name="customProductName"
+                      value={formValues.customProductName}
+                      onChange={handleChange}
+                      placeholder="Ej. quinua, miel, charque..."
+                    />
+                  ) : null}
+                  <Input
+                    className="field-span-2"
+                    label="Foto del producto"
+                    name="productPhoto"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={handlePhotoChange}
+                  />
+                </div>
+              </section>
+
+              <section className="offer-form-section">
+                <div className="offer-section-head">
+                  <span>2</span>
+                  <div>
+                    <h2>Precio y venta</h2>
+                    <p>Indica cómo vendes el producto y su disponibilidad.</p>
+                  </div>
+                </div>
+
+                <div className="offer-form-grid offer-form-grid-three">
+                  <Select
+                    label="Tipo de venta"
+                    name="saleType"
+                    value={formValues.saleType}
+                    onChange={handleChange}
+                    options={[
+                      { value: SALE_TYPES.UNIT, label: 'Unidad' },
+                      { value: SALE_TYPES.TRAY, label: 'Maple' },
+                    ]}
+                  />
+                  <Input
+                    label="Cantidad aproximada"
+                    name="approximateQuantity"
+                    type="number"
+                    min="0"
+                    value={formValues.approximateQuantity}
+                    onChange={handleChange}
+                    placeholder="Opcional"
+                  />
+                  <Input
+                    label="Precio"
+                    name="price"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={formValues.price}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                  />
+                  <Select
+                    className="field-span-full"
+                    label="Disponibilidad"
+                    name="availabilityType"
+                    value={formValues.availabilityType}
+                    onChange={handleChange}
+                    options={[
+                      { value: OFFER_AVAILABILITY_TYPES.FIXED, label: 'Venta fija' },
+                      { value: OFFER_AVAILABILITY_TYPES.TEMPORARY, label: 'Por periodo de tiempo' },
+                    ]}
+                  />
+                  {formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY ? (
+                    <>
+                      <Input
+                        label="Disponible desde"
+                        name="availableFrom"
+                        type="datetime-local"
+                        value={formValues.availableFrom}
+                        onChange={handleChange}
+                      />
+                      <Input
+                        label="Disponible hasta"
+                        name="availableUntil"
+                        type="datetime-local"
+                        value={formValues.availableUntil}
+                        onChange={handleChange}
+                      />
+                    </>
+                  ) : null}
+                </div>
+              </section>
+
+              <section className="offer-form-section">
+                <div className="offer-section-head">
+                  <span>3</span>
+                  <div>
+                    <h2>Ubicación</h2>
+                    <p>Toca el mapa para llenar las coordenadas y describe el punto de venta.</p>
+                  </div>
+                </div>
+
+                <div className="offer-form-grid">
+                  <Input
+                    label="Latitud"
+                    name="latitude"
+                    value={formValues.latitude}
+                    onChange={handleChange}
+                  />
+                  <Input
+                    label="Longitud"
+                    name="longitude"
+                    value={formValues.longitude}
+                    onChange={handleChange}
+                  />
+                  <Textarea
+                    className="field-span-full"
+                    label="Descripción de ubicación"
+                    name="locationDescription"
+                    value={formValues.locationDescription}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="Ej. puesto 12, pasillo central del mercado."
+                  />
+                </div>
+              </section>
+
+              <div className="offer-submit-bar">
+                <Button type="button" variant="ghost" onClick={() => navigate('/merchant/offers')}>
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={saving}>
+                  {saving ? 'Guardando...' : 'Guardar oferta'}
+                </Button>
               </div>
             </form>
           </Card>
 
-          <Card className="map-card map-card-picker">
+          <Card className="map-card map-card-picker offer-map-card">
             <div className="map-panel-heading">
-              <h2>Ubicacion de la oferta</h2>
+              <h2>Ubicación de la oferta</h2>
+              <p>Toca el mapa exactamente donde atenderás esta oferta.</p>
             </div>
             <MapView
               offers={offers}
@@ -325,7 +468,7 @@ export function MerchantOffersPage({ mode }) {
               rows={offers}
             />
           ) : (
-            <EmptyState title="Sin ofertas propias" description="Crea tu primera oferta para aparecer en el mapa publico." />
+            <EmptyState title="Sin ofertas propias" description="Crea tu primera oferta para aparecer en el mapa público." />
           )}
         </Card>
       )}

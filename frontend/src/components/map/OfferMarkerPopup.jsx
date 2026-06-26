@@ -10,7 +10,7 @@ import {
 } from '../../features/public/mapUtils';
 import { formatCurrency } from '../../utils/format';
 
-export function OfferMarkerPopup({ offer }) {
+export function OfferMarkerPopup({ offer, onRouteRequest, routeLoading }) {
   const map = useMap();
   const [showDetail, setShowDetail] = useState(false);
   const [shareStatus, setShareStatus] = useState('');
@@ -20,9 +20,6 @@ export function OfferMarkerPopup({ offer }) {
   const type = getTypeMeta(getOfferTypeKey(offer));
   const googleMapsUrl = coordinates
     ? `https://www.google.com/maps/search/?api=1&query=${coordinates.lat},${coordinates.lng}`
-    : '';
-  const routeUrl = coordinates
-    ? `https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat},${coordinates.lng}`
     : '';
   const shareText = `${productName} en ${merchantName}${
     offer.price ? ` - ${formatCurrency(offer.price)}` : ''
@@ -75,9 +72,14 @@ export function OfferMarkerPopup({ offer }) {
       </div>
 
       <div className="marker-popup-actions">
-        <a className="marker-popup-primary" href={routeUrl} target="_blank" rel="noreferrer">
-          Ruta aqui
-        </a>
+        <button
+          className="marker-popup-primary"
+          type="button"
+          disabled={!coordinates || routeLoading}
+          onClick={() => onRouteRequest?.(offer)}
+        >
+          {routeLoading ? 'Calculando...' : 'Ruta aqui'}
+        </button>
         <a href={googleMapsUrl} target="_blank" rel="noreferrer">
           Google Maps
         </a>

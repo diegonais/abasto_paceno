@@ -54,7 +54,9 @@ export function PublicLayout() {
             </button>
             {isAuthenticated ? (
               <Link to={getDefaultRouteForRole(role)}>
-                <Button variant="primary" size="sm" className="navButton">Entrar al panel</Button>
+                <Button variant="primary" size="sm" className="navButton">
+                  Entrar al panel
+                </Button>
               </Link>
             ) : (
               <>
@@ -65,7 +67,9 @@ export function PublicLayout() {
                   Ingresar
                 </NavLink>
                 <Link to="/register">
-                  <Button variant="primary" size="sm" className="navButton">Crear cuenta</Button>
+                  <Button variant="primary" size="sm" className="navButton">
+                    Crear cuenta
+                  </Button>
                 </Link>
               </>
             )}
@@ -103,7 +107,7 @@ export function PublicLayout() {
             <h2 id="about-title">Acerca de Abasto Boliviano</h2>
             <p>
               Proyecto desarrollado para la Hackaton Build with AI por Diego
-              Fariñas y Paulo Batuani.
+              Fariñaz y Paulo Batuani.
             </p>
           </section>
         </div>

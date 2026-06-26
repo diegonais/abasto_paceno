@@ -66,6 +66,72 @@ function OfferPrice({ offer }) {
   );
 }
 
+function formatRouteDistance(distanceKm) {
+  if (!Number.isFinite(distanceKm)) return '';
+  if (distanceKm < 1) return `${Math.round(distanceKm * 1000)} m`;
+  return `${distanceKm.toFixed(distanceKm >= 10 ? 0 : 1)} km`;
+}
+
+function formatRouteDuration(durationMinutes) {
+  if (!Number.isFinite(durationMinutes)) return '';
+  if (durationMinutes < 1) return '< 1 min';
+  if (durationMinutes < 60) return `${Math.round(durationMinutes)} min`;
+
+  const hours = Math.floor(durationMinutes / 60);
+  const minutes = Math.round(durationMinutes % 60);
+  return minutes ? `${hours} h ${minutes} min` : `${hours} h`;
+}
+
+function requestBrowserLocation() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('La geolocalizacion no esta disponible en este navegador.'));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      () => {
+        reject(new Error('No pudimos obtener tu ubicacion. Revisa el permiso del navegador.'));
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 60000,
+        timeout: 10000,
+      },
+    );
+  });
+}
+
+async function fetchRouteInMap(origin, destination) {
+  const coordinates = `${origin.lng},${origin.lat};${destination.lng},${destination.lat}`;
+  const response = await fetch(
+    `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson&steps=false`,
+  );
+
+  if (!response.ok) {
+    throw new Error('No se pudo calcular la ruta.');
+  }
+
+  const data = await response.json();
+  const route = data.routes?.[0];
+
+  if (!route?.geometry?.coordinates?.length) {
+    throw new Error('No se encontro una ruta disponible.');
+  }
+
+  return {
+    coordinates: route.geometry.coordinates.map(([lng, lat]) => [lat, lng]),
+    distanceKm: route.distance / 1000,
+    durationMinutes: route.duration / 60,
+  };
+}
+
 function OfferList({ offers, selectedOfferId, onFocusOffer }) {
   if (!offers.length) {
     return (
@@ -212,6 +278,9 @@ export function PublicMapPanel({
   const [radiusKm, setRadiusKm] = useState(3);
   const [geoStatus, setGeoStatus] = useState('');
   const [locationFocusKey, setLocationFocusKey] = useState(0);
+  const [routeInfo, setRouteInfo] = useState(null);
+  const [routeLoading, setRouteLoading] = useState(false);
+  const [routeError, setRouteError] = useState('');
   const selectedOfferId = offerIdFromQuery || manualSelectedOfferId;
 
   const typeCounts = useMemo(() => {
@@ -272,35 +341,60 @@ export function PublicMapPanel({
     });
   }
 
-  function handleNearby() {
-    if (!navigator.geolocation) {
-      setGeoStatus('La geolocalizacion no esta disponible en este navegador.');
+  async function handleNearby() {
+    setGeoStatus('Solicitando ubicacion...');
+
+    try {
+      const location = await requestBrowserLocation();
+
+      setManualSelectedOfferId('');
+      setUserLocation(location);
+      setNearbyEnabled(true);
+      setRouteInfo(null);
+      setRouteError('');
+      setLocationFocusKey((currentKey) => currentKey + 1);
+      setGeoStatus(`Mostrando comercios en un radio de ${radiusKm} km.`);
+      navigate('/map');
+    } catch (requestError) {
+      setGeoStatus(requestError.message);
+    }
+  }
+
+  async function handleRouteRequest(offer) {
+    const destination = getOfferCoordinates(offer);
+
+    if (!destination) {
+      setRouteError('Esta oferta no tiene coordenadas para calcular ruta.');
       return;
     }
 
-    setGeoStatus('Solicitando ubicacion...');
+    setRouteLoading(true);
+    setRouteError('');
+    setGeoStatus(userLocation ? '' : 'Solicitando ubicacion para calcular ruta...');
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setManualSelectedOfferId('');
-        setUserLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-        setNearbyEnabled(true);
-        setLocationFocusKey((currentKey) => currentKey + 1);
-        setGeoStatus(`Mostrando comercios en un radio de ${radiusKm} km.`);
-        navigate('/map');
-      },
-      () => {
-        setGeoStatus('No pudimos obtener tu ubicacion. Revisa el permiso del navegador.');
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 60000,
-        timeout: 10000,
-      },
-    );
+    try {
+      const origin = userLocation ?? (await requestBrowserLocation());
+      const route = await fetchRouteInMap(origin, destination);
+
+      setUserLocation(origin);
+      setManualSelectedOfferId(offer.id);
+      setNearbyEnabled(false);
+      setLocationFocusKey((currentKey) => currentKey + 1);
+      setRouteInfo({
+        ...route,
+        offerId: offer.id,
+        destinationName: getMerchantName(offer),
+        productName: getProductName(offer),
+      });
+      setGeoStatus('');
+      navigate(`/map?offer=${offer.id}`, {
+        replace: routerLocation.pathname === '/map',
+      });
+    } catch (routeRequestError) {
+      setRouteError(routeRequestError.message);
+    } finally {
+      setRouteLoading(false);
+    }
   }
 
   function handleRadiusChange(nextRadius) {
@@ -316,6 +410,11 @@ export function PublicMapPanel({
   function clearNearby() {
     setNearbyEnabled(false);
     setGeoStatus('');
+  }
+
+  function clearRoute() {
+    setRouteInfo(null);
+    setRouteError('');
   }
 
   const visibleOfferCount = filteredOffers.length;
@@ -334,6 +433,10 @@ export function PublicMapPanel({
             selectedOfferId={selectedOfferId}
             userLocation={userLocation}
             locationFocusKey={locationFocusKey}
+            routeCoordinates={routeInfo?.coordinates ?? []}
+            activeRouteOfferId={routeInfo?.offerId ?? ''}
+            routeLoading={routeLoading}
+            onRouteRequest={handleRouteRequest}
             radiusKm={radiusKm}
             showUserRadius={nearbyEnabled}
           />
@@ -366,6 +469,35 @@ export function PublicMapPanel({
           <span>{visibleOfferCount} ofertas activas</span>
           {nearbyEnabled && userLocation ? <span>Radio {radiusKm} km</span> : null}
         </div>
+
+        {routeInfo ? (
+          <div className="route-summary-card">
+            <div>
+              <span>Ruta calculada</span>
+              <strong>{routeInfo.destinationName}</strong>
+              <small>{routeInfo.productName}</small>
+            </div>
+            <div className="route-summary-metrics">
+              <b>{formatRouteDistance(routeInfo.distanceKm)}</b>
+              <b>{formatRouteDuration(routeInfo.durationMinutes)}</b>
+            </div>
+            <button type="button" onClick={clearRoute} aria-label="Cerrar ruta">
+              Cerrar
+            </button>
+          </div>
+        ) : null}
+
+        {routeError ? (
+          <div className="route-summary-card route-summary-card-error">
+            <div>
+              <span>Ruta</span>
+              <strong>{routeError}</strong>
+            </div>
+            <button type="button" onClick={() => setRouteError('')} aria-label="Cerrar error de ruta">
+              Cerrar
+            </button>
+          </div>
+        ) : null}
 
         <div className="map-legend" aria-label="Tipos de productos">
           {FOOD_TYPES.filter((type) => type.key !== 'all' && (typeCounts[type.key] ?? 0) > 0)

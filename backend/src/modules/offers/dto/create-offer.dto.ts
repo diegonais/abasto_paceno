@@ -24,8 +24,18 @@ export class CreateOfferDto {
   merchantProfileId?: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsUUID()
-  productId: string;
+  productId?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Used when the merchant selects Otro producto. Creates or reuses a product in the otros category.',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  customProductName?: string;
 
   @ApiProperty({ enum: SaleType })
   @IsEnum(SaleType)

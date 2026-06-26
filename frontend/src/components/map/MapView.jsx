@@ -6,6 +6,7 @@ import {
   MapContainer,
   Marker,
   Popup,
+  Polyline,
   TileLayer,
   ZoomControl,
   useMap,
@@ -112,6 +113,7 @@ function MapViewportController({
   selectedPoint,
   userLocation,
   locationFocusKey,
+  routeCoordinates,
 }) {
   const map = useMap();
 
@@ -143,6 +145,19 @@ function MapViewportController({
   }, [locationFocusKey, map, userLocation]);
 
   useEffect(() => {
+    if (routeCoordinates?.length > 1) {
+      const bounds = L.latLngBounds(routeCoordinates);
+
+      if (bounds.isValid()) {
+        map.fitBounds(bounds.pad(0.16), {
+          animate: true,
+          maxZoom: 16,
+        });
+      }
+    }
+  }, [map, routeCoordinates]);
+
+  useEffect(() => {
     if (!selectedOffer && !selectedPoint && !userLocation && offers.length > 1) {
       const bounds = L.latLngBounds(
         offers
@@ -171,6 +186,10 @@ export function MapView({
   selectedPoint,
   userLocation,
   locationFocusKey = 0,
+  routeCoordinates = [],
+  activeRouteOfferId = '',
+  routeLoading = false,
+  onRouteRequest,
   radiusKm,
   showUserRadius = false,
   height = 420,
@@ -230,6 +249,7 @@ export function MapView({
           selectedPoint={selectedPoint}
           userLocation={userLocation}
           locationFocusKey={locationFocusKey}
+          routeCoordinates={routeCoordinates}
         />
 
         {showUserRadius && userLocation ? (
@@ -250,6 +270,19 @@ export function MapView({
           <Marker position={[userLocation.lat, userLocation.lng]} icon={userLocationIcon}>
             <Popup>Tu ubicacion aproximada</Popup>
           </Marker>
+        ) : null}
+
+        {routeCoordinates.length > 1 ? (
+          <Polyline
+            positions={routeCoordinates}
+            pathOptions={{
+              color: '#7b1835',
+              opacity: 0.92,
+              weight: 6,
+              lineCap: 'round',
+              lineJoin: 'round',
+            }}
+          />
         ) : null}
 
         {validOffers.map((offer) => {
@@ -274,7 +307,11 @@ export function MapView({
               zIndexOffset={isSelected ? 500 : 0}
             >
               <Popup className="offer-popup" closeButton={false} minWidth={300} maxWidth={360}>
-                <OfferMarkerPopup offer={offer} />
+                <OfferMarkerPopup
+                  offer={offer}
+                  onRouteRequest={onRouteRequest}
+                  routeLoading={routeLoading && activeRouteOfferId === offer.id}
+                />
               </Popup>
             </Marker>
           );

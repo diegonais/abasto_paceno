@@ -136,7 +136,8 @@ textarea {
 
 .public-header {
   height: 56px;
-  z-index: 20;
+  position: relative;
+  z-index: 5000;
   min-height: 56px;
   padding: 0;
   background: rgba(255, 250, 243, 0.92);
@@ -368,6 +369,12 @@ textarea {
 
 .map-panel {
   align-items: stretch;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.map-page-full {
   height: 100%;
   min-height: 0;
   overflow: hidden;
@@ -622,10 +629,12 @@ textarea {
   height: 56px;
   min-height: 56px;
   padding: 0;
+  position: relative;
+  z-index: 5000;
   background: rgba(255, 250, 243, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(123, 24, 53, 0.12);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .topbar-inner {
@@ -636,7 +645,7 @@ textarea {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: clamp(0.8rem, 1.6vw, 1.6rem);
 }
 
 .role-nav {
@@ -644,7 +653,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: clamp(0.9rem, 1.7vw, 1.6rem);
+  gap: clamp(0.75rem, 1.4vw, 1.3rem);
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
@@ -675,11 +684,143 @@ textarea {
   flex: 0 0 auto;
   flex-wrap: nowrap;
   align-items: center;
+  min-width: 0;
 }
 
 .topbar .navButton {
   min-height: 40px;
   padding: 0.65rem 0.95rem;
+}
+
+.account-menu-wrapper {
+  position: relative;
+  min-width: 0;
+}
+
+.account-menu-trigger {
+  max-width: min(32vw, 330px);
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.32rem 0.48rem 0.32rem 0.42rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(67, 20, 35, 0.08);
+}
+
+.account-menu-trigger:hover,
+.account-menu-trigger[aria-expanded='true'] {
+  border-color: rgba(123, 24, 53, 0.28);
+  background: #fffdf9;
+}
+
+.account-menu-avatar {
+  width: 30px;
+  height: 30px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.account-menu-avatar-image {
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.account-menu-text {
+  min-width: 0;
+  display: grid;
+  text-align: left;
+  line-height: 1.05;
+}
+
+.account-menu-text span {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.account-menu-text strong {
+  max-width: 190px;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.88rem;
+}
+
+.account-menu-caret {
+  width: 0.48rem;
+  height: 0.48rem;
+  flex: 0 0 auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  opacity: 0.62;
+}
+
+.account-menu {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  right: 0;
+  z-index: 5100;
+  width: min(280px, calc(100vw - 2rem));
+  padding: 0.55rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 253, 249, 0.98);
+  box-shadow: 0 24px 70px rgba(67, 20, 35, 0.2);
+}
+
+.account-menu-head {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem 0.7rem 0.75rem;
+  border-bottom: 1px solid rgba(123, 24, 53, 0.1);
+  margin-bottom: 0.35rem;
+}
+
+.account-menu-head strong {
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.account-menu-head span {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.account-menu-item {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0.65rem 0.7rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+  font-weight: 750;
+}
+
+.account-menu-item:hover {
+  background: rgba(123, 24, 53, 0.08);
+  color: var(--color-primary);
+}
+
+.account-menu-logout {
+  color: #8b1437;
 }
 
 .btn {
@@ -707,7 +848,10 @@ textarea {
 .primaryButton:focus-visible,
 .secondaryButton:focus-visible,
 .theme-toggle:focus-visible,
-.modal-close:focus-visible {
+.modal-close:focus-visible,
+.account-menu-trigger:focus-visible,
+.account-menu-item:focus-visible,
+.weekday-chip:focus-visible {
   outline: 3px solid rgba(170, 41, 80, 0.22);
   outline-offset: 2px;
 }
@@ -771,6 +915,319 @@ textarea {
   border-color: var(--color-primary-active);
 }
 
+.profile-page {
+  width: min(100%, 1080px);
+  height: auto;
+  min-height: 0;
+  margin-inline: auto;
+  grid-template-rows: auto auto;
+  align-content: start;
+}
+
+.page-shell > .profile-page {
+  height: auto;
+  overflow: visible;
+}
+
+.page-shell > .profile-page > .profile-card {
+  min-height: 0;
+  overflow: visible;
+}
+
+.profile-card {
+  padding: 0;
+  overflow: visible;
+}
+
+.profile-form {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.profile-photo-panel {
+  display: grid;
+  grid-template-columns: auto minmax(260px, 1fr) minmax(300px, 0.85fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.9rem;
+  border: 1px solid rgba(123, 24, 53, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 253, 249, 0.78);
+}
+
+.profile-avatar-preview {
+  width: 92px;
+  height: 92px;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 900;
+  box-shadow: 0 18px 40px rgba(67, 20, 35, 0.16);
+}
+
+.profile-avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-photo-panel strong,
+.profile-photo-panel p {
+  margin: 0;
+}
+
+.profile-photo-panel p {
+  margin-top: 0.2rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.profile-form .field-label {
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.profile-form .field-control {
+  min-height: 44px;
+  padding: 0.68rem 0.78rem;
+  border-radius: 8px;
+}
+
+.profile-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.3rem;
+}
+
+.profile-submit-row span {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.merchant-profile-page {
+  min-height: 0;
+}
+
+.merchant-form-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.merchant-form {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto;
+  align-content: start;
+  gap: 0.9rem;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.merchant-form-section,
+.merchant-status-card,
+.merchant-submit-bar {
+  border: 1px solid rgba(123, 24, 53, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 253, 249, 0.78);
+}
+
+.merchant-form-section {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0.95rem;
+}
+
+.merchant-section-head {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.merchant-section-head > span {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(123, 24, 53, 0.1);
+  color: var(--color-primary);
+  font-weight: 850;
+}
+
+.merchant-section-head h2,
+.merchant-section-head p,
+.merchant-store-callout p,
+.merchant-status-card p {
+  margin: 0;
+}
+
+.merchant-section-head h2 {
+  color: var(--color-text);
+  font-size: 1.02rem;
+  line-height: 1.2;
+}
+
+.merchant-section-head p,
+.merchant-store-callout p,
+.merchant-status-card p {
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.merchant-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.merchant-form-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.field-span-2 {
+  grid-column: span 2;
+}
+
+.field-span-full {
+  grid-column: 1 / -1;
+}
+
+.merchant-form .field {
+  gap: 0.32rem;
+}
+
+.merchant-form .field-label {
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.merchant-form .field-control {
+  min-height: 42px;
+  padding: 0.62rem 0.76rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.merchant-form textarea.field-control {
+  min-height: 96px;
+}
+
+.merchant-time-panel {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(360px, 1.15fr);
+  gap: 0.8rem;
+  align-items: end;
+}
+
+.weekday-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.weekday-chip {
+  min-height: 42px;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--color-text);
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.weekday-chip.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(123, 24, 53, 0.16);
+}
+
+.time-range-grid {
+  display: grid;
+  grid-template-columns: 0.62fr 0.62fr minmax(220px, 1fr);
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.merchant-store-callout {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(15, 125, 80, 0.14);
+  border-radius: 8px;
+  background: rgba(15, 125, 80, 0.07);
+}
+
+.merchant-store-callout strong {
+  color: var(--color-success);
+}
+
+.merchant-photo-preview {
+  width: 100%;
+  height: 118px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+}
+
+.merchant-status-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0.9rem;
+  background: rgba(15, 125, 80, 0.07);
+}
+
+.merchant-status-card span {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.merchant-status-card strong {
+  color: var(--color-success);
+  text-transform: capitalize;
+}
+
+.merchant-submit-bar {
+  position: sticky;
+  bottom: -1rem;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem;
+  background: rgba(255, 253, 249, 0.96);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 -18px 40px rgba(67, 20, 35, 0.08);
+}
+
+.merchant-submit-bar span {
+  min-width: 0;
+  color: var(--color-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -799,6 +1256,20 @@ textarea {
   justify-content: space-between;
   gap: 1rem;
   align-items: end;
+}
+
+.page-header h1,
+.page-header p {
+  margin: 0;
+}
+
+.page-header h1 {
+  line-height: 1.12;
+}
+
+.page-description {
+  max-width: 68ch;
+  margin-top: 0.35rem;
 }
 
 .public-feature-shell,
@@ -1020,6 +1491,7 @@ textarea {
 .modal-backdrop {
   position: fixed;
   inset: 0;
+  z-index: 7000;
   background: rgba(48, 17, 27, 0.4);
   display: grid;
   place-items: center;
@@ -1050,7 +1522,7 @@ textarea {
 .about-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 7000;
   display: grid;
   place-items: center;
   padding: 1rem;
@@ -1590,6 +2062,53 @@ textarea {
   border-color: var(--color-primary-active);
 }
 
+[data-theme='dark'] .account-menu-trigger,
+[data-theme='dark'] .account-menu,
+[data-theme='dark'] .profile-photo-panel,
+[data-theme='dark'] .merchant-form-section,
+[data-theme='dark'] .merchant-status-card,
+[data-theme='dark'] .merchant-submit-bar {
+  background: rgba(24, 33, 46, 0.94);
+  border-color: rgba(248, 240, 223, 0.12);
+}
+
+[data-theme='dark'] .account-menu-trigger:hover,
+[data-theme='dark'] .account-menu-trigger[aria-expanded='true'] {
+  background: rgba(31, 43, 58, 0.98);
+  border-color: rgba(127, 220, 169, 0.28);
+}
+
+[data-theme='dark'] .account-menu-avatar,
+[data-theme='dark'] .profile-avatar-preview,
+[data-theme='dark'] .weekday-chip.is-selected {
+  background: #007934;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .account-menu-head {
+  border-bottom-color: rgba(248, 240, 223, 0.1);
+}
+
+[data-theme='dark'] .account-menu-item:hover {
+  background: rgba(127, 220, 169, 0.12);
+  color: #7fdca9;
+}
+
+[data-theme='dark'] .account-menu-logout {
+  color: #f2a7ba;
+}
+
+[data-theme='dark'] .merchant-form .field-control,
+[data-theme='dark'] .weekday-chip {
+  background: rgba(248, 240, 223, 0.05);
+  border-color: rgba(248, 240, 223, 0.14);
+}
+
+[data-theme='dark'] .merchant-store-callout {
+  background: rgba(127, 220, 169, 0.08);
+  border-color: rgba(127, 220, 169, 0.18);
+}
+
 [data-theme='dark'] .btn-secondary,
 [data-theme='dark'] .btn-ghost {
   background: rgba(248, 240, 223, 0.05);
@@ -1632,7 +2151,10 @@ textarea {
 [data-theme='dark'] .primaryButton:focus-visible,
 [data-theme='dark'] .secondaryButton:focus-visible,
 [data-theme='dark'] .theme-toggle:focus-visible,
-[data-theme='dark'] .modal-close:focus-visible {
+[data-theme='dark'] .modal-close:focus-visible,
+[data-theme='dark'] .account-menu-trigger:focus-visible,
+[data-theme='dark'] .account-menu-item:focus-visible,
+[data-theme='dark'] .weekday-chip:focus-visible {
   outline-color: rgba(127, 220, 169, 0.34);
 }
 
@@ -1937,6 +2459,34 @@ textarea {
   .sidebar {
     margin-bottom: 0;
   }
+
+  .account-menu-trigger {
+    max-width: 260px;
+  }
+
+  .merchant-form-grid,
+  .merchant-form-grid-three,
+  .merchant-time-panel,
+  .time-range-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .profile-photo-panel {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .profile-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-photo-panel .field {
+    grid-column: 1 / -1;
+  }
+
+  .time-range-grid .field:last-child,
+  .merchant-store-callout {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-height: 820px) and (min-width: 1024px) {
@@ -2058,6 +2608,34 @@ textarea {
 
   .roleCard {
     min-height: auto;
+  }
+
+  .profile-page {
+    width: 100%;
+  }
+
+  .profile-photo-panel,
+  .profile-form-grid,
+  .merchant-form-grid,
+  .merchant-form-grid-three,
+  .merchant-time-panel,
+  .time-range-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-span-2 {
+    grid-column: 1 / -1;
+  }
+
+  .profile-submit-row,
+  .merchant-submit-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .profile-submit-row .btn,
+  .merchant-submit-bar .btn {
+    width: 100%;
   }
 }
 
@@ -2821,6 +3399,71 @@ textarea {
   background: var(--legend-color);
 }
 
+.route-summary-card {
+  position: absolute;
+  z-index: 735;
+  top: 11rem;
+  right: clamp(0.8rem, 1.4vw, 1.25rem);
+  width: min(300px, calc(100% - 440px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 250, 243, 0.94);
+  box-shadow: 0 18px 44px rgba(80, 37, 46, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.route-summary-card span,
+.route-summary-card small {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.route-summary-card strong {
+  display: block;
+  min-width: 0;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route-summary-metrics {
+  display: flex;
+  gap: 0.45rem;
+  grid-column: 1 / -1;
+}
+
+.route-summary-metrics b {
+  flex: 1;
+  min-height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(123, 24, 53, 0.08);
+  color: var(--color-primary);
+  font-size: 0.88rem;
+}
+
+.route-summary-card button {
+  min-height: 34px;
+  border: 1px solid rgba(123, 24, 53, 0.14);
+  border-radius: 8px;
+  background: rgba(123, 24, 53, 0.06);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.route-summary-card-error strong {
+  white-space: normal;
+}
+
 .selected-offer-ribbon {
   left: calc(clamp(0.8rem, 1.4vw, 1.25rem) + min(392px, calc(100% - 2rem)) + 1rem);
   bottom: clamp(0.8rem, 1.4vw, 1.25rem);
@@ -3435,6 +4078,11 @@ textarea {
   color: #ffffff;
 }
 
+.marker-popup-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
 .marker-popup-detail {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3489,7 +4137,8 @@ textarea {
 [data-theme='dark'] .marker-popup-actions a,
 [data-theme='dark'] .marker-popup-actions button,
 [data-theme='dark'] .marker-popup-header button,
-[data-theme='dark'] .marker-popup-detail div {
+[data-theme='dark'] .marker-popup-detail div,
+[data-theme='dark'] .route-summary-card {
   border-color: rgba(248, 240, 223, 0.14);
   background: rgba(248, 240, 223, 0.055);
 }

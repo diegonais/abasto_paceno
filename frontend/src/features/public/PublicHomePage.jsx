@@ -1,6 +1,18 @@
+import { useEffect, useMemo } from 'react';
+import { CircleMarker, MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { Link } from 'react-router-dom';
 
 import '../../styles/landing-preview.css';
+import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from '../../config/constants';
+import { formatCurrency } from '../../utils/format';
+import {
+  getMerchantName,
+  getOfferCoordinates,
+  getOfferTypeKey,
+  getProductName,
+  getTypeMeta,
+} from './mapUtils';
+import { useOffersMap } from './useOffersMap';
 
 const insightCards = [
   {
@@ -38,11 +50,135 @@ const infoCards = [
   },
 ];
 
-const previewOffers = [
-  { product: 'Huevo criollo', place: 'Miraflores', price: 'Bs 29' },
-  { product: 'Tomate', place: 'Sopocachi', price: 'Bs 5' },
-  { product: 'Pan marraqueta', place: 'Max Paredes', price: 'Bs 0.70' },
+const fallbackPreviewOffers = [
+  {
+    id: 'preview-huevo',
+    productName: 'Huevo criollo',
+    businessName: 'Caserita Lucia',
+    categoryName: 'huevos',
+    price: 29,
+    latitude: -16.5022,
+    longitude: -68.1215,
+    createdAt: '2026-06-26T10:00:00.000Z',
+  },
+  {
+    id: 'preview-leche',
+    productName: 'Leche',
+    businessName: 'Caserita Lucia',
+    categoryName: 'lacteos',
+    price: 6.5,
+    latitude: -16.5004,
+    longitude: -68.1239,
+    createdAt: '2026-06-26T09:00:00.000Z',
+  },
+  {
+    id: 'preview-tomate',
+    productName: 'Tomate',
+    businessName: 'Distribuidora Cardenas',
+    categoryName: 'verduras',
+    price: 5,
+    latitude: -16.5065,
+    longitude: -68.1292,
+    createdAt: '2026-06-26T08:00:00.000Z',
+  },
 ];
+
+function getOfferTimestamp(offer) {
+  return new Date(offer.createdAt ?? offer.availableFrom ?? 0).getTime();
+}
+
+function getOfferMapPath(offer) {
+  const offerId = String(offer?.id ?? '');
+
+  if (!offerId || offerId.startsWith('preview-')) {
+    return '/map';
+  }
+
+  return `/map?offer=${encodeURIComponent(offerId)}`;
+}
+
+function MiniMapViewport({ offers }) {
+  const map = useMap();
+  const boundsKey = useMemo(
+    () => offers.map((offer) => offer.id ?? getProductName(offer)).join('|'),
+    [offers],
+  );
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => map.invalidateSize(false), 120);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [map]);
+
+  useEffect(() => {
+    const coordinates = offers
+      .map((offer) => getOfferCoordinates(offer))
+      .filter(Boolean)
+      .map((coordinate) => [coordinate.lat, coordinate.lng]);
+
+    if (coordinates.length > 1) {
+      map.fitBounds(coordinates, {
+        animate: false,
+        maxZoom: 14,
+        padding: [42, 74],
+      });
+      return;
+    }
+
+    if (coordinates.length === 1) {
+      map.setView(coordinates[0], 14, { animate: false });
+      return;
+    }
+
+    map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM, { animate: false });
+  }, [boundsKey, map, offers]);
+
+  return null;
+}
+
+function MiniLatestMap({ offers }) {
+  return (
+    <MapContainer
+      attributionControl={false}
+      boxZoom={false}
+      center={DEFAULT_MAP_CENTER}
+      className="miniMapCanvas"
+      doubleClickZoom={false}
+      dragging={false}
+      keyboard={false}
+      scrollWheelZoom={false}
+      tap={false}
+      touchZoom={false}
+      zoom={DEFAULT_MAP_ZOOM}
+      zoomControl={false}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <MiniMapViewport offers={offers} />
+      {offers.map((offer) => {
+        const coordinates = getOfferCoordinates(offer);
+
+        if (!coordinates) return null;
+
+        const type = getTypeMeta(getOfferTypeKey(offer));
+
+        return (
+          <CircleMarker
+            center={[coordinates.lat, coordinates.lng]}
+            key={offer.id ?? getProductName(offer)}
+            pathOptions={{
+              color: '#fffaf3',
+              fillColor: type.color,
+              fillOpacity: 0.96,
+              opacity: 1,
+              weight: 3,
+            }}
+            radius={8}
+          />
+        );
+      })}
+    </MapContainer>
+  );
+}
 
 function LandingIcon({ name }) {
   const icons = {
@@ -86,6 +222,15 @@ function LandingIcon({ name }) {
 }
 
 export function PublicHomePage() {
+  const { offers, loading } = useOffersMap();
+  const latestOffers = useMemo(
+    () =>
+      [...(offers.length ? offers : fallbackPreviewOffers)]
+        .sort((first, second) => getOfferTimestamp(second) - getOfferTimestamp(first))
+        .slice(0, 3),
+    [offers],
+  );
+
   return (
     <section className="landingPage">
       <div className="landingMapTexture" aria-hidden="true" />
@@ -136,23 +281,25 @@ export function PublicHomePage() {
               <div className="mapPreview">
                 <div className="mapPreviewHeader">
                   <span>La Paz</span>
-                  <strong>Ofertas activas</strong>
+                  <strong>{loading ? 'Actualizando...' : 'Lo mas reciente'}</strong>
                 </div>
 
-                <div className="mapRoute" aria-hidden="true" />
-                <span className="mapPin mapPinOne" aria-hidden="true" />
-                <span className="mapPin mapPinTwo" aria-hidden="true" />
-                <span className="mapPin mapPinThree" aria-hidden="true" />
+                <MiniLatestMap offers={latestOffers} />
 
                 <div className="offerStack">
-                  {previewOffers.map((offer) => (
-                    <article className="previewOffer" key={offer.product}>
+                  {latestOffers.map((offer) => (
+                    <Link
+                      aria-label={`Ver ${getProductName(offer)} en el mapa`}
+                      className="previewOffer"
+                      key={offer.id ?? getProductName(offer)}
+                      to={getOfferMapPath(offer)}
+                    >
                       <div>
-                        <strong>{offer.product}</strong>
-                        <span>{offer.place}</span>
+                        <strong>{getProductName(offer)}</strong>
+                        <span>{getMerchantName(offer)}</span>
                       </div>
-                      <b>{offer.price}</b>
-                    </article>
+                      <b>{offer.price ? formatCurrency(offer.price) : 'Nuevo'}</b>
+                    </Link>
                   ))}
                 </div>
               </div>
