@@ -8,16 +8,16 @@ dist/
 coverage/
 */coverage/
 
-.env
-*/.env
-.env.local
-*/.env.local
-
 *.log
 expo-start*.log
 yarn-error.log
 yarn-debug.log
 npm-debug.log*
+
+.env
+*/.env
+.env.local
+*/.env.local
 
 .DS_Store
 Thumbs.db
