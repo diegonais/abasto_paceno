@@ -1,6 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
+import { OFFER_PHOTO_MAX_SIZE_BYTES } from '../../common/uploads/upload.constants';
+import {
+  buildRelativeUploadPath,
+  createImageStorage,
+  imageFileFilter,
+} from '../../common/uploads/upload.utils';
+import type { UploadedImageFile } from '../../common/uploads/upload.utils';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -43,22 +60,59 @@ export class OffersController {
   @ApiBearerAuth()
   @Post()
   @Roles(Role.ADMIN, Role.MERCHANT)
+  @UseInterceptors(
+    FileInterceptor('productPhoto', {
+      storage: createImageStorage('offers'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: OFFER_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
   create(
     @Body() createOfferDto: CreateOfferDto,
     @CurrentUser() currentUser: JwtPayload,
+    @UploadedFile() productPhoto?: UploadedImageFile,
   ) {
-    return this.offersService.create(createOfferDto, currentUser);
+    return this.offersService.create(
+      {
+        ...createOfferDto,
+        productPhotoPath: productPhoto
+          ? buildRelativeUploadPath('offers', productPhoto.filename)
+          : null,
+      },
+      currentUser,
+    );
   }
 
   @ApiBearerAuth()
   @Patch(':id')
   @Roles(Role.ADMIN, Role.MERCHANT)
+  @UseInterceptors(
+    FileInterceptor('productPhoto', {
+      storage: createImageStorage('offers'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: OFFER_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
   update(
     @Param('id') id: string,
     @Body() updateOfferDto: UpdateOfferDto,
     @CurrentUser() currentUser: JwtPayload,
+    @UploadedFile() productPhoto?: UploadedImageFile,
   ) {
-    return this.offersService.update(id, updateOfferDto, currentUser);
+    return this.offersService.update(
+      id,
+      {
+        ...updateOfferDto,
+        productPhotoPath: productPhoto
+          ? buildRelativeUploadPath('offers', productPhoto.filename)
+          : undefined,
+      },
+      currentUser,
+    );
   }
 
   @ApiBearerAuth()

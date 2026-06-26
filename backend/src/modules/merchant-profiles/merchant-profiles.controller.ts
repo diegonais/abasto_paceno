@@ -1,6 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
+import { STORE_PHOTO_MAX_SIZE_BYTES } from '../../common/uploads/upload.constants';
+import {
+  buildRelativeUploadPath,
+  createImageStorage,
+  imageFileFilter,
+} from '../../common/uploads/upload.utils';
+import type { UploadedImageFile } from '../../common/uploads/upload.utils';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/enums/role.enum';
@@ -24,20 +41,56 @@ export class MerchantProfilesController {
   }
 
   @Get('me')
-  @Roles(Role.MERCHANT)
   getMe(@CurrentUser() currentUser: JwtPayload) {
     return this.merchantProfilesService.getMe(currentUser);
   }
 
+  @Post('apply')
+  @UseInterceptors(
+    FileInterceptor('storePhoto', {
+      storage: createImageStorage('stores'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: STORE_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
+  apply(
+    @CurrentUser() currentUser: JwtPayload,
+    @Body() createMerchantProfileDto: CreateMerchantProfileDto,
+    @UploadedFile() storePhoto?: UploadedImageFile,
+  ) {
+    return this.merchantProfilesService.apply(currentUser, {
+      ...createMerchantProfileDto,
+      storePhotoPath: storePhoto
+        ? buildRelativeUploadPath('stores', storePhoto.filename)
+        : null,
+    });
+  }
+
   @Patch('me')
-  @Roles(Role.MERCHANT)
+  @UseInterceptors(
+    FileInterceptor('storePhoto', {
+      storage: createImageStorage('stores'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: STORE_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
   updateMe(
     @CurrentUser() currentUser: JwtPayload,
     @Body() updateMerchantProfileDto: UpdateMerchantProfileDto,
+    @UploadedFile() storePhoto?: UploadedImageFile,
   ) {
     return this.merchantProfilesService.updateMe(
       currentUser,
-      updateMerchantProfileDto,
+      {
+        ...updateMerchantProfileDto,
+        storePhotoPath: storePhoto
+          ? buildRelativeUploadPath('stores', storePhoto.filename)
+          : undefined,
+      },
     );
   }
 
@@ -49,17 +102,49 @@ export class MerchantProfilesController {
 
   @Post()
   @Roles(Role.ADMIN)
-  create(@Body() createMerchantProfileDto: CreateMerchantProfileDto) {
-    return this.merchantProfilesService.create(createMerchantProfileDto);
+  @UseInterceptors(
+    FileInterceptor('storePhoto', {
+      storage: createImageStorage('stores'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: STORE_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
+  create(
+    @Body() createMerchantProfileDto: CreateMerchantProfileDto,
+    @UploadedFile() storePhoto?: UploadedImageFile,
+  ) {
+    return this.merchantProfilesService.create({
+      ...createMerchantProfileDto,
+      storePhotoPath: storePhoto
+        ? buildRelativeUploadPath('stores', storePhoto.filename)
+        : null,
+    });
   }
 
   @Patch(':id')
   @Roles(Role.ADMIN)
+  @UseInterceptors(
+    FileInterceptor('storePhoto', {
+      storage: createImageStorage('stores'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: STORE_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
   update(
     @Param('id') id: string,
     @Body() updateMerchantProfileDto: UpdateMerchantProfileDto,
+    @UploadedFile() storePhoto?: UploadedImageFile,
   ) {
-    return this.merchantProfilesService.update(id, updateMerchantProfileDto);
+    return this.merchantProfilesService.update(id, {
+      ...updateMerchantProfileDto,
+      storePhotoPath: storePhoto
+        ? buildRelativeUploadPath('stores', storePhoto.filename)
+        : undefined,
+    });
   }
 
   @Patch(':id/disable')

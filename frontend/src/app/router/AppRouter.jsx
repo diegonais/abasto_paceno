@@ -56,6 +56,7 @@ export function AppRouter() {
           <Route element={<RoleRoute allowedRoles={[ROLES.USER]} />}>
             <Route path="/app/map" element={<UserMapPage />} />
             <Route path="/app/profile" element={<UserProfilePage />} />
+            <Route path="/app/merchant-application" element={<MerchantProfilePage />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={[ROLES.MERCHANT]} />}>

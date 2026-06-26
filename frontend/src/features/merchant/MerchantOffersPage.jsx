@@ -13,14 +13,22 @@ import { Select } from '../../components/ui/Select';
 import { Table } from '../../components/ui/Table';
 import { Textarea } from '../../components/ui/Textarea';
 import { MapView } from '../../components/map/MapView';
-import { SALE_TYPES } from '../../config/constants';
+import {
+  OFFER_AVAILABILITY_TYPES,
+  OFFER_PHOTO_MAX_SIZE_BYTES,
+  SALE_TYPES,
+} from '../../config/constants';
+import { getAssetUrl } from '../../services/api/assets';
+import { buildFormData } from '../../services/api/formData';
 import { offersService } from '../../services/offersService';
 import { productsService } from '../../services/productsService';
 import { formatCurrency } from '../../utils/format';
+import { validateImageFile } from '../../utils/files';
 
 const emptyForm = {
   productId: '',
   saleType: SALE_TYPES.UNIT,
+  availabilityType: OFFER_AVAILABILITY_TYPES.FIXED,
   approximateQuantity: '',
   price: '',
   latitude: '',
@@ -37,6 +45,8 @@ export function MerchantOffersPage({ mode }) {
   const [products, setProducts] = useState([]);
   const [formValues, setFormValues] = useState(emptyForm);
   const [selectedPoint, setSelectedPoint] = useState(null);
+  const [productPhoto, setProductPhoto] = useState(null);
+  const [currentOffer, setCurrentOffer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -59,9 +69,7 @@ export function MerchantOffersPage({ mode }) {
   }
 
   useEffect(() => {
-    void (async () => {
-      await loadData();
-    })();
+    void loadData();
   }, []);
 
   useEffect(() => {
@@ -70,9 +78,11 @@ export function MerchantOffersPage({ mode }) {
 
       try {
         const offer = await offersService.getById(id);
+        setCurrentOffer(offer);
         setFormValues({
           productId: offer.product?.id ?? '',
           saleType: offer.saleType ?? SALE_TYPES.UNIT,
+          availabilityType: offer.availabilityType ?? OFFER_AVAILABILITY_TYPES.FIXED,
           approximateQuantity: offer.approximateQuantity ?? '',
           price: offer.price ?? '',
           latitude: offer.latitude ?? '',
@@ -87,11 +97,19 @@ export function MerchantOffersPage({ mode }) {
       }
     }
 
-    loadOffer();
+    void loadOffer();
   }, [id]);
 
   function handleChange(event) {
-    setFormValues((current) => ({ ...current, [event.target.name]: event.target.value }));
+    const { name, value } = event.target;
+
+    setFormValues((current) => ({
+      ...current,
+      [name]: value,
+      ...(name === 'availabilityType' && value === OFFER_AVAILABILITY_TYPES.FIXED
+        ? { availableFrom: '', availableUntil: '' }
+        : {}),
+    }));
   }
 
   function handleCoordinatePick(point) {
@@ -101,6 +119,39 @@ export function MerchantOffersPage({ mode }) {
       latitude: point.lat.toFixed(7),
       longitude: point.lng.toFixed(7),
     }));
+  }
+
+  function handlePhotoChange(event) {
+    const file = event.target.files?.[0];
+    const validationError = validateImageFile(file, OFFER_PHOTO_MAX_SIZE_BYTES);
+
+    if (validationError) {
+      setError(validationError);
+      setProductPhoto(null);
+      return;
+    }
+
+    setError('');
+    setProductPhoto(file ?? null);
+  }
+
+  function validateForm() {
+    if (!formValues.productId) return 'Selecciona un producto.';
+    if (!formValues.latitude || Number.isNaN(Number(formValues.latitude))) return 'Selecciona una ubicacion valida en el mapa.';
+    if (!formValues.longitude || Number.isNaN(Number(formValues.longitude))) return 'Selecciona una ubicacion valida en el mapa.';
+    if (!formValues.locationDescription.trim()) return 'Describe la ubicacion de venta.';
+    if (!formValues.price || Number(formValues.price) < 0) return 'Ingresa un precio valido.';
+    if (!productPhoto && !currentOffer?.productPhotoPath) return 'La foto del producto es obligatoria.';
+    if (formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY) {
+      if (!formValues.availableFrom || !formValues.availableUntil) {
+        return 'Las ofertas temporales requieren fecha de inicio y fin.';
+      }
+      if (new Date(formValues.availableUntil) <= new Date(formValues.availableFrom)) {
+        return 'La fecha final debe ser posterior a la fecha inicial.';
+      }
+    }
+
+    return '';
   }
 
   async function handleDisable(offerId) {
@@ -114,18 +165,35 @@ export function MerchantOffersPage({ mode }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    const validationError = validateForm();
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setSaving(true);
 
     try {
-      const payload = {
-        ...formValues,
-        approximateQuantity: formValues.approximateQuantity ? Number(formValues.approximateQuantity) : undefined,
-        price: formValues.price ? Number(formValues.price) : undefined,
-        latitude: Number(formValues.latitude),
-        longitude: Number(formValues.longitude),
-        availableFrom: formValues.availableFrom || undefined,
-        availableUntil: formValues.availableUntil || undefined,
-      };
+      const payload = buildFormData({
+        productId: formValues.productId,
+        saleType: formValues.saleType,
+        availabilityType: formValues.availabilityType,
+        approximateQuantity: formValues.approximateQuantity,
+        price: formValues.price,
+        latitude: Number(formValues.latitude).toFixed(7),
+        longitude: Number(formValues.longitude).toFixed(7),
+        locationDescription: formValues.locationDescription.trim(),
+        availableFrom:
+          formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY
+            ? formValues.availableFrom
+            : '',
+        availableUntil:
+          formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY
+            ? formValues.availableUntil
+            : '',
+        productPhoto,
+      });
 
       if (id) {
         await offersService.update(id, payload);
@@ -137,6 +205,8 @@ export function MerchantOffersPage({ mode }) {
       await loadData();
       setFormValues(emptyForm);
       setSelectedPoint(null);
+      setProductPhoto(null);
+      setCurrentOffer(null);
       setError('');
     } catch (requestError) {
       setError(requestError.message);
@@ -161,6 +231,13 @@ export function MerchantOffersPage({ mode }) {
         <div className="content-grid content-grid-map-form">
           <Card className="form-card">
             <form className="stack-md" onSubmit={handleSubmit}>
+              {currentOffer?.productPhotoPath ? (
+                <img
+                  src={getAssetUrl(currentOffer.productPhotoPath)}
+                  alt="Foto actual del producto"
+                  style={{ width: '100%', maxWidth: '320px', borderRadius: '20px', objectFit: 'cover' }}
+                />
+              ) : null}
               <Select
                 label="Producto"
                 name="productId"
@@ -181,15 +258,30 @@ export function MerchantOffersPage({ mode }) {
                   { value: SALE_TYPES.TRAY, label: 'Maple' },
                 ]}
               />
+              <Select
+                label="Disponibilidad"
+                name="availabilityType"
+                value={formValues.availabilityType}
+                onChange={handleChange}
+                options={[
+                  { value: OFFER_AVAILABILITY_TYPES.FIXED, label: 'Venta fija' },
+                  { value: OFFER_AVAILABILITY_TYPES.TEMPORARY, label: 'Por periodo de tiempo' },
+                ]}
+              />
+              <Input label="Foto del producto" name="productPhoto" type="file" accept="image/png,image/jpeg,image/webp" onChange={handlePhotoChange} />
               <Input label="Cantidad aproximada" name="approximateQuantity" type="number" value={formValues.approximateQuantity} onChange={handleChange} />
-              <Input label="Precio" name="price" type="number" step="0.01" value={formValues.price} onChange={handleChange} />
+              <Input label="Precio" name="price" type="number" step="0.01" min="0" value={formValues.price} onChange={handleChange} />
               <Input label="Latitud" name="latitude" value={formValues.latitude} onChange={handleChange} />
               <Input label="Longitud" name="longitude" value={formValues.longitude} onChange={handleChange} />
-              <Input label="Disponible desde" name="availableFrom" type="datetime-local" value={formValues.availableFrom} onChange={handleChange} />
-              <Input label="Disponible hasta" name="availableUntil" type="datetime-local" value={formValues.availableUntil} onChange={handleChange} />
+              {formValues.availabilityType === OFFER_AVAILABILITY_TYPES.TEMPORARY ? (
+                <>
+                  <Input label="Disponible desde" name="availableFrom" type="datetime-local" value={formValues.availableFrom} onChange={handleChange} />
+                  <Input label="Disponible hasta" name="availableUntil" type="datetime-local" value={formValues.availableUntil} onChange={handleChange} />
+                </>
+              ) : null}
               <Textarea label="Descripcion de ubicacion" name="locationDescription" value={formValues.locationDescription} onChange={handleChange} rows={4} />
               <div className="inline-actions">
-                <Button variant="ghost" onClick={() => navigate('/merchant/offers')}>Cancelar</Button>
+                <Button type="button" variant="ghost" onClick={() => navigate('/merchant/offers')}>Cancelar</Button>
                 <Button type="submit" disabled={saving}>{saving ? 'Guardando...' : 'Guardar oferta'}</Button>
               </div>
             </form>
@@ -216,6 +308,7 @@ export function MerchantOffersPage({ mode }) {
               columns={[
                 { key: 'product', label: 'Producto', render: (row) => row.product?.productName },
                 { key: 'saleType', label: 'Venta' },
+                { key: 'availabilityType', label: 'Disponibilidad' },
                 { key: 'price', label: 'Precio', render: (row) => row.price ? formatCurrency(row.price) : '-' },
                 { key: 'isActive', label: 'Estado', render: (row) => <Badge tone={row.isActive ? 'success' : 'warning'}>{row.isActive ? 'Activa' : 'Inactiva'}</Badge> },
                 {

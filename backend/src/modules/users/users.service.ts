@@ -6,13 +6,22 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 
 import { Role } from '../../common/enums/role.enum';
+import { removeStoredFile } from '../../common/uploads/upload.utils';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+
+type CreateUserInput = CreateUserDto & {
+  profilePhotoPath?: string | null;
+};
+
+type UpdateUserInput = UpdateUserDto & {
+  profilePhotoPath?: string | null;
+};
 
 @Injectable()
 export class UsersService {
@@ -21,19 +30,29 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserInput) {
     const email = createUserDto.email.trim().toLowerCase();
     await this.ensureEmailIsAvailable(email);
 
     const user = this.usersRepository.create({
       fullName: createUserDto.fullName.trim(),
       email,
+      profilePhotoPath: createUserDto.profilePhotoPath ?? null,
       passwordHash: await bcrypt.hash(createUserDto.password, 10),
       role: createUserDto.role ?? Role.USER,
       isActive: true,
     });
 
-    return this.usersRepository.save(user);
+    try {
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      if (createUserDto.profilePhotoPath) {
+        removeStoredFile(createUserDto.profilePhotoPath);
+      }
+
+      this.handleUniqueEmailError(error);
+      throw error;
+    }
   }
 
   findAll() {
@@ -82,10 +101,11 @@ export class UsersService {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, actor: JwtPayload) {
+  async update(id: string, updateUserDto: UpdateUserInput, actor: JwtPayload) {
     const user = await this.findOne(id);
     const isSelf = actor.sub === user.id;
     const isAdmin = actor.role === Role.ADMIN;
+    const previousPhotoPath = user.profilePhotoPath;
 
     if (!isAdmin && !isSelf) {
       throw new ForbiddenException('You can only update your own user');
@@ -117,6 +137,14 @@ export class UsersService {
       user.passwordHash = await bcrypt.hash(updateUserDto.password, 10);
     }
 
+    if (updateUserDto.profilePhotoPath) {
+      user.profilePhotoPath = updateUserDto.profilePhotoPath;
+
+      if (previousPhotoPath && previousPhotoPath !== updateUserDto.profilePhotoPath) {
+        removeStoredFile(previousPhotoPath);
+      }
+    }
+
     if (isAdmin && updateUserDto.role) {
       user.role = updateUserDto.role;
     }
@@ -125,7 +153,19 @@ export class UsersService {
       user.isActive = updateUserDto.isActive;
     }
 
-    return this.usersRepository.save(user);
+    try {
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      if (
+        updateUserDto.profilePhotoPath &&
+        updateUserDto.profilePhotoPath !== previousPhotoPath
+      ) {
+        removeStoredFile(updateUserDto.profilePhotoPath);
+      }
+
+      this.handleUniqueEmailError(error);
+      throw error;
+    }
   }
 
   updateMe(userId: string, updateUserDto: UpdateUserDto, actor: JwtPayload) {
@@ -139,12 +179,29 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  async updateRole(id: string, role: Role) {
+    const user = await this.findOne(id);
+    user.role = role;
+    return this.usersRepository.save(user);
+  }
+
   private async ensureEmailIsAvailable(email: string, userIdToIgnore?: string) {
     const existingUser = await this.usersRepository.findOne({
       where: { email },
     });
 
     if (existingUser && existingUser.id !== userIdToIgnore) {
+      throw new ConflictException('Email is already in use');
+    }
+  }
+
+  private handleUniqueEmailError(error: unknown) {
+    if (
+      error instanceof QueryFailedError &&
+      typeof (error as QueryFailedError & { driverError?: { code?: string } }).driverError?.code ===
+        'string' &&
+      (error as QueryFailedError & { driverError?: { code?: string } }).driverError?.code === '23505'
+    ) {
       throw new ConflictException('Email is already in use');
     }
   }

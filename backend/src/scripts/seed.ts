@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { DataSource, Repository } from 'typeorm';
 
 import { AppModule } from '../app.module';
+import { MerchantVerificationStatus } from '../common/enums/merchant-verification-status.enum';
 import { Role } from '../common/enums/role.enum';
 import { SaleType } from '../common/enums/sale-type.enum';
 import { Category } from '../modules/categories/entities/category.entity';
@@ -545,6 +546,8 @@ async function seedMerchantProfiles(
       ownerFullName: item.ownerFullName,
       phone: item.phone,
       description: item.description,
+      verificationStatus: MerchantVerificationStatus.APPROVED,
+      reviewNotes: 'Perfil aprobado por seed para entorno de pruebas.',
       isActive: item.isActive ?? true,
     });
   });

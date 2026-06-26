@@ -13,6 +13,9 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
+  @Column({ type: 'text', nullable: true })
+  profilePhotoPath: string | null;
+
   @Exclude()
   @Column()
   passwordHash: string;

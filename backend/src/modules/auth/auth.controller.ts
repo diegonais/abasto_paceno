@@ -1,6 +1,14 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
+import { PROFILE_PHOTO_MAX_SIZE_BYTES } from '../../common/uploads/upload.constants';
+import {
+  buildRelativeUploadPath,
+  createImageStorage,
+  imageFileFilter,
+} from '../../common/uploads/upload.utils';
+import type { UploadedImageFile } from '../../common/uploads/upload.utils';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { LoginDto } from './dto/login.dto';
@@ -15,8 +23,25 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  @UseInterceptors(
+    FileInterceptor('profilePhoto', {
+      storage: createImageStorage('users'),
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: PROFILE_PHOTO_MAX_SIZE_BYTES,
+      },
+    }),
+  )
+  register(
+    @Body() registerDto: RegisterDto,
+    @UploadedFile() profilePhoto?: UploadedImageFile,
+  ) {
+    return this.authService.register(
+      registerDto,
+      profilePhoto
+        ? buildRelativeUploadPath('users', profilePhoto.filename)
+        : null,
+    );
   }
 
   @Public()

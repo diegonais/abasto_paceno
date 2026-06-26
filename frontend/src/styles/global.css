@@ -352,6 +352,18 @@ textarea {
 
 .content-grid-map-form {
   grid-template-columns: minmax(320px, 0.85fr) minmax(420px, 1.15fr);
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
+}
+
+.content-grid-map-form > .form-card,
+.content-grid-map-form > .card {
+  min-height: 0;
+}
+
+.content-grid-map-form > .form-card {
+  overflow: auto;
 }
 
 .map-panel {
@@ -563,6 +575,10 @@ textarea {
 .offers-list,
 .auth-card {
   padding: 1.25rem;
+}
+
+.form-card {
+  min-height: 0;
 }
 
 .app-shell {
@@ -1801,6 +1817,22 @@ textarea {
 
   .content-grid-map-form {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: auto;
+  }
+
+  .page-shell {
+    overflow: auto;
+  }
+
+  .page-shell > .stack-lg,
+  .page-shell > .stack-xl,
+  .page-shell > .stack-lg > .content-grid,
+  .page-shell > .stack-xl > .content-grid,
+  .page-shell > .stack-lg > .map-panel,
+  .page-shell > .stack-xl > .map-panel {
+    height: auto;
+    overflow: visible;
   }
 
   .map-panel {
@@ -1818,6 +1850,10 @@ textarea {
 
   .map-card-picker {
     min-height: min(560px, 68dvh);
+  }
+
+  .content-grid-map-form > .form-card {
+    overflow: visible;
   }
 
   .offers-list {

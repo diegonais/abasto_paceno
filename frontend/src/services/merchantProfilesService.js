@@ -21,6 +21,10 @@ export const merchantProfilesService = {
     const { data } = await apiClient.get('/merchant-profiles/me');
     return data;
   },
+  async apply(payload) {
+    const { data } = await apiClient.post('/merchant-profiles/apply', payload);
+    return data;
+  },
   async updateMine(payload) {
     const { data } = await apiClient.patch('/merchant-profiles/me', payload);
     return data;

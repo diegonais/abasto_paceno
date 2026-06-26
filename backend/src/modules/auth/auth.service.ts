@@ -19,7 +19,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(
+    registerDto: RegisterDto,
+    profilePhotoPath?: string | null,
+  ) {
     const existingUser = await this.usersService.findOneByEmail(registerDto.email);
 
     if (existingUser) {
@@ -28,6 +31,7 @@ export class AuthService {
 
     const user = await this.usersService.create({
       ...registerDto,
+      profilePhotoPath,
       role: Role.USER,
     });
 

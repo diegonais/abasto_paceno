@@ -7,13 +7,24 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { OfferAvailability } from '../../common/enums/offer-availability.enum';
 import { Role } from '../../common/enums/role.enum';
+import { MerchantVerificationStatus } from '../../common/enums/merchant-verification-status.enum';
+import { removeStoredFile } from '../../common/uploads/upload.utils';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { MerchantProfile } from '../merchant-profiles/entities/merchant-profile.entity';
 import { Product } from '../products/entities/product.entity';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
+
+type OfferInput = CreateOfferDto & {
+  productPhotoPath?: string | null;
+};
+
+type OfferUpdateInput = UpdateOfferDto & {
+  productPhotoPath?: string | null;
+};
 
 @Injectable()
 export class OffersService {
@@ -73,11 +84,13 @@ export class OffersService {
       productName: offer.product.productName,
       categoryName: offer.product.category.categoryName,
       saleType: offer.saleType,
+      availabilityType: offer.availabilityType,
       approximateQuantity: offer.approximateQuantity,
       price: offer.price,
       latitude: Number(offer.latitude),
       longitude: Number(offer.longitude),
       locationDescription: offer.locationDescription,
+      productPhotoPath: offer.productPhotoPath,
       availableFrom: offer.availableFrom,
       availableUntil: offer.availableUntil,
       merchantProfileId: offer.merchantProfile.id,
@@ -86,8 +99,9 @@ export class OffersService {
     }));
   }
 
-  async create(createOfferDto: CreateOfferDto, currentUser: JwtPayload) {
+  async create(createOfferDto: OfferInput, currentUser: JwtPayload) {
     this.validateOfferDates(
+      createOfferDto.availabilityType,
       createOfferDto.availableFrom,
       createOfferDto.availableUntil,
     );
@@ -102,11 +116,13 @@ export class OffersService {
       merchantProfile,
       product,
       saleType: createOfferDto.saleType,
+      availabilityType: this.resolveAvailabilityType(createOfferDto),
       approximateQuantity: createOfferDto.approximateQuantity ?? null,
       price: createOfferDto.price?.toFixed(2) ?? null,
       latitude: createOfferDto.latitude.toFixed(7),
       longitude: createOfferDto.longitude.toFixed(7),
       locationDescription: createOfferDto.locationDescription?.trim() ?? null,
+      productPhotoPath: createOfferDto.productPhotoPath ?? null,
       availableFrom: createOfferDto.availableFrom
         ? new Date(createOfferDto.availableFrom)
         : null,
@@ -121,10 +137,11 @@ export class OffersService {
 
   async update(
     id: string,
-    updateOfferDto: UpdateOfferDto,
+    updateOfferDto: OfferUpdateInput,
     currentUser: JwtPayload,
   ) {
     this.validateOfferDates(
+      updateOfferDto.availabilityType,
       updateOfferDto.availableFrom,
       updateOfferDto.availableUntil,
     );
@@ -152,6 +169,10 @@ export class OffersService {
       offer.saleType = updateOfferDto.saleType;
     }
 
+    if (updateOfferDto.availabilityType) {
+      offer.availabilityType = updateOfferDto.availabilityType;
+    }
+
     if (updateOfferDto.approximateQuantity !== undefined) {
       offer.approximateQuantity = updateOfferDto.approximateQuantity ?? null;
     }
@@ -174,6 +195,15 @@ export class OffersService {
         updateOfferDto.locationDescription?.trim() ?? null;
     }
 
+    if (updateOfferDto.productPhotoPath) {
+      const previousPhotoPath = offer.productPhotoPath;
+      offer.productPhotoPath = updateOfferDto.productPhotoPath;
+
+      if (previousPhotoPath && previousPhotoPath !== updateOfferDto.productPhotoPath) {
+        removeStoredFile(previousPhotoPath);
+      }
+    }
+
     if (updateOfferDto.availableFrom !== undefined) {
       offer.availableFrom = updateOfferDto.availableFrom
         ? new Date(updateOfferDto.availableFrom)
@@ -184,6 +214,11 @@ export class OffersService {
       offer.availableUntil = updateOfferDto.availableUntil
         ? new Date(updateOfferDto.availableUntil)
         : null;
+    }
+
+    if (offer.availabilityType === OfferAvailability.FIXED) {
+      offer.availableFrom = null;
+      offer.availableUntil = null;
     }
 
     return this.offersRepository.save(offer);
@@ -219,7 +254,7 @@ export class OffersService {
   }
 
   private async resolveMerchantProfileForCreate(
-    createOfferDto: CreateOfferDto,
+    createOfferDto: OfferInput,
     currentUser: JwtPayload,
   ) {
     if (currentUser.role === Role.ADMIN) {
@@ -237,6 +272,21 @@ export class OffersService {
     const merchantProfile = await this.findMerchantProfileByUserId(
       currentUser.sub,
     );
+
+    if (
+      merchantProfile.verificationStatus !==
+      MerchantVerificationStatus.APPROVED
+    ) {
+      throw new ForbiddenException(
+        'Only approved merchants can create offers',
+      );
+    }
+
+    if (!createOfferDto.productPhotoPath) {
+      throw new BadRequestException(
+        'Product photo is required for merchant offers',
+      );
+    }
 
     if (
       createOfferDto.merchantProfileId &&
@@ -275,6 +325,7 @@ export class OffersService {
           id: userId,
         },
         isActive: true,
+        verificationStatus: MerchantVerificationStatus.APPROVED,
       },
     });
 
@@ -290,6 +341,7 @@ export class OffersService {
       where: {
         id: merchantProfileId,
         isActive: true,
+        verificationStatus: MerchantVerificationStatus.APPROVED,
       },
     });
 
@@ -316,9 +368,26 @@ export class OffersService {
   }
 
   private validateOfferDates(
+    availabilityType?: OfferAvailability,
     availableFrom?: string | null,
     availableUntil?: string | null,
   ) {
+    const resolvedAvailabilityType =
+      availabilityType ??
+      (availableFrom || availableUntil
+        ? OfferAvailability.TEMPORARY
+        : OfferAvailability.FIXED);
+
+    if (resolvedAvailabilityType === OfferAvailability.FIXED) {
+      return;
+    }
+
+    if (!availableFrom || !availableUntil) {
+      throw new BadRequestException(
+        'Temporary offers require availableFrom and availableUntil',
+      );
+    }
+
     if (!availableFrom || !availableUntil) {
       return;
     }
@@ -328,5 +397,14 @@ export class OffersService {
         'availableUntil must be later than availableFrom',
       );
     }
+  }
+
+  private resolveAvailabilityType(offerDto: OfferInput | OfferUpdateInput) {
+    return (
+      offerDto.availabilityType ??
+      (offerDto.availableFrom || offerDto.availableUntil
+        ? OfferAvailability.TEMPORARY
+        : OfferAvailability.FIXED)
+    );
   }
 }

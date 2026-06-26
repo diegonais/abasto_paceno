@@ -4,6 +4,7 @@ export const navigationByRole = {
   [ROLES.USER]: [
     { to: '/app/map', label: 'Mapa' },
     { to: '/app/profile', label: 'Perfil' },
+    { to: '/app/merchant-application', label: 'Quiero vender' },
   ],
   [ROLES.MERCHANT]: [
     { to: '/merchant/map', label: 'Mapa' },

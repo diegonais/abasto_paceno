@@ -1,6 +1,7 @@
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
 
+import { MerchantVerificationStatus } from '../../../common/enums/merchant-verification-status.enum';
 import { CreateMerchantProfileDto } from './create-merchant-profile.dto';
 
 export class UpdateMerchantProfileDto extends PartialType(
@@ -10,4 +11,9 @@ export class UpdateMerchantProfileDto extends PartialType(
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @ApiPropertyOptional({ enum: MerchantVerificationStatus })
+  @IsEnum(MerchantVerificationStatus)
+  @IsOptional()
+  verificationStatus?: MerchantVerificationStatus;
 }

@@ -103,7 +103,7 @@ export function PublicLayout() {
             <h2 id="about-title">Acerca de Abasto Boliviano</h2>
             <p>
               Proyecto desarrollado para la Hackaton Build with AI por Diego
-              Fariñaz y Paulo Batuani.
+              Fariñas y Paulo Batuani.
             </p>
           </section>
         </div>

@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../common/entities/base.entity';
+import { OfferAvailability } from '../../../common/enums/offer-availability.enum';
 import { SaleType } from '../../../common/enums/sale-type.enum';
 import { MerchantProfile } from '../../merchant-profiles/entities/merchant-profile.entity';
 import { Product } from '../../products/entities/product.entity';
@@ -25,6 +26,13 @@ export class Offer extends BaseEntity {
   })
   saleType: SaleType;
 
+  @Column({
+    type: 'enum',
+    enum: OfferAvailability,
+    default: OfferAvailability.FIXED,
+  })
+  availabilityType: OfferAvailability;
+
   @Column({ type: 'integer', nullable: true })
   approximateQuantity: number | null;
 
@@ -39,6 +47,9 @@ export class Offer extends BaseEntity {
 
   @Column({ type: 'text', nullable: true })
   locationDescription: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  productPhotoPath: string | null;
 
   @Column({ type: 'timestamp', nullable: true })
   availableFrom: Date | null;

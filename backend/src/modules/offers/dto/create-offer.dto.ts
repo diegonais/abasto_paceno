@@ -7,8 +7,11 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  MaxLength,
+  Min,
 } from 'class-validator';
 
+import { OfferAvailability } from '../../../common/enums/offer-availability.enum';
 import { SaleType } from '../../../common/enums/sale-type.enum';
 
 export class CreateOfferDto {
@@ -28,16 +31,23 @@ export class CreateOfferDto {
   @IsEnum(SaleType)
   saleType: SaleType;
 
+  @ApiPropertyOptional({ enum: OfferAvailability })
+  @IsOptional()
+  @IsEnum(OfferAvailability)
+  availabilityType?: OfferAvailability;
+
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
+  @Min(0)
   approximateQuantity?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
+  @Min(0)
   price?: number;
 
   @ApiProperty()
@@ -53,6 +63,7 @@ export class CreateOfferDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @MaxLength(280)
   locationDescription?: string;
 
   @ApiPropertyOptional()

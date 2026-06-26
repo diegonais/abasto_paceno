@@ -2,6 +2,8 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
+import * as express from 'express';
 
 import { AppModule } from './app.module';
 
@@ -29,6 +31,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector)),
   );
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
   app.setGlobalPrefix('api');
 
   const swaggerConfig = new DocumentBuilder()
