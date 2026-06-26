@@ -1,4 +1,4 @@
-# Abasto Paceno
+# Abasto Boliviano
 
 Plataforma geolocalizada para consultar puntos de venta y ofertas de productos esenciales en La Paz, Bolivia.
 
