@@ -5,6 +5,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { ErrorMessage } from '../../components/ui/ErrorMessage';
 import { LoadingState } from '../../components/ui/LoadingState';
 import { MapView } from '../../components/map/MapView';
+import { semanticSearchService } from '../../services/semanticSearchService';
 import { formatCurrency } from '../../utils/format';
 import {
   FOOD_TYPES,
@@ -47,12 +48,9 @@ function getFilteredOffers(offers, filters) {
     const typeKey = getOfferTypeKey(offer);
     const matchesType = filters.typeKey === 'all' || typeKey === filters.typeKey;
     const matchesText = matchesSearch(offer, filters.searchTerm);
-    const distanceKm = coordinates
-      ? distanceInKm(filters.userLocation, coordinates)
-      : null;
+    const distanceKm = coordinates ? distanceInKm(filters.userLocation, coordinates) : null;
     const matchesRadius =
-      !filters.nearbyEnabled ||
-      (distanceKm !== null && distanceKm <= filters.radiusKm);
+      !filters.nearbyEnabled || (distanceKm !== null && distanceKm <= filters.radiusKm);
 
     return matchesType && matchesText && matchesRadius;
   });
@@ -60,9 +58,7 @@ function getFilteredOffers(offers, filters) {
 
 function OfferPrice({ offer }) {
   return (
-    <span className="map-price">
-      {offer.price ? formatCurrency(offer.price) : 'Sin precio'}
-    </span>
+    <span className="map-price">{offer.price ? formatCurrency(offer.price) : 'Sin precio'}</span>
   );
 }
 
@@ -258,11 +254,7 @@ function MerchantList({
   );
 }
 
-export function PublicMapPanel({
-  variant = 'default',
-  mapHeight = '100%',
-  initialView = 'map',
-}) {
+export function PublicMapPanel({ variant = 'default', mapHeight = '100%', initialView = 'map' }) {
   const { offers, loading, error } = useOffersMap();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -270,6 +262,10 @@ export function PublicMapPanel({
   const offerIdFromQuery = searchParams.get('offer') ?? '';
   const activeView = offerIdFromQuery ? 'map' : initialView;
   const [searchTerm, setSearchTerm] = useState('');
+  const [semanticOffers, setSemanticOffers] = useState(null);
+  const [semanticStatus, setSemanticStatus] = useState('');
+  const [semanticLoading, setSemanticLoading] = useState(false);
+  const [semanticError, setSemanticError] = useState('');
   const [typeKey, setTypeKey] = useState('all');
   const [manualSelectedOfferId, setManualSelectedOfferId] = useState('');
   const [expandedMerchantId, setExpandedMerchantId] = useState(null);
@@ -282,26 +278,30 @@ export function PublicMapPanel({
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState('');
   const selectedOfferId = offerIdFromQuery || manualSelectedOfferId;
+  const baseOffers = semanticOffers ?? offers;
 
   const typeCounts = useMemo(() => {
     const counts = FOOD_TYPES.reduce((lookup, type) => {
-      lookup[type.key] = type.key === 'all' ? offers.length : 0;
+      lookup[type.key] = type.key === 'all' ? baseOffers.length : 0;
       return lookup;
     }, {});
 
-    offers.forEach((offer) => {
+    baseOffers.forEach((offer) => {
       const offerType = getOfferTypeKey(offer);
       counts[offerType] = (counts[offerType] ?? 0) + 1;
     });
 
     return counts;
-  }, [offers]);
+  }, [baseOffers]);
 
-  const normalizedSearchTerm = useMemo(() => normalizeText(searchTerm), [searchTerm]);
+  const normalizedSearchTerm = useMemo(
+    () => (semanticOffers ? '' : normalizeText(searchTerm)),
+    [searchTerm, semanticOffers],
+  );
 
   const filteredOffers = useMemo(
     () =>
-      getFilteredOffers(offers, {
+      getFilteredOffers(baseOffers, {
         nearbyEnabled,
         radiusKm,
         searchTerm: normalizedSearchTerm,
@@ -312,7 +312,7 @@ export function PublicMapPanel({
         const distanceKm = coordinates ? distanceInKm(userLocation, coordinates) : null;
         return { ...offer, distanceKm };
       }),
-    [nearbyEnabled, normalizedSearchTerm, offers, radiusKm, typeKey, userLocation],
+    [baseOffers, nearbyEnabled, normalizedSearchTerm, radiusKm, typeKey, userLocation],
   );
 
   const merchants = useMemo(
@@ -328,6 +328,9 @@ export function PublicMapPanel({
 
   function handleOfferFocus(offer) {
     setSearchTerm('');
+    setSemanticOffers(null);
+    setSemanticStatus('');
+    setSemanticError('');
     setTypeKey('all');
     setNearbyEnabled(false);
     setManualSelectedOfferId(offer.id);
@@ -339,6 +342,48 @@ export function PublicMapPanel({
     navigate(`/map?offer=${offer.id}`, {
       replace: routerLocation.pathname === '/map',
     });
+  }
+
+  async function handleSemanticSearch(event) {
+    event.preventDefault();
+    const query = searchTerm.trim();
+
+    if (query.length < 2) {
+      setSemanticError('Escribe al menos 2 caracteres para buscar.');
+      return;
+    }
+
+    setSemanticLoading(true);
+    setSemanticError('');
+
+    try {
+      const result = await semanticSearchService.search(query);
+      const nextOffers = Array.isArray(result.offers) ? result.offers : [];
+      const products = Array.isArray(result.products) ? result.products : [];
+
+      setSemanticOffers(nextOffers);
+      setTypeKey('all');
+      setManualSelectedOfferId('');
+      setRouteInfo(null);
+      setRouteError('');
+      setSemanticStatus(
+        products.length
+          ? `${nextOffers.length} ofertas para: ${products.join(', ')}`
+          : result.message || 'No encontramos productos relacionados en el catalogo.',
+      );
+      navigate('/map');
+    } catch (requestError) {
+      setSemanticError(requestError.message);
+    } finally {
+      setSemanticLoading(false);
+    }
+  }
+
+  function clearSemanticSearch() {
+    setSearchTerm('');
+    setSemanticOffers(null);
+    setSemanticStatus('');
+    setSemanticError('');
   }
 
   async function handleNearby() {
@@ -493,7 +538,11 @@ export function PublicMapPanel({
               <span>Ruta</span>
               <strong>{routeError}</strong>
             </div>
-            <button type="button" onClick={() => setRouteError('')} aria-label="Cerrar error de ruta">
+            <button
+              type="button"
+              onClick={() => setRouteError('')}
+              aria-label="Cerrar error de ruta"
+            >
               Cerrar
             </button>
           </div>
@@ -523,8 +572,8 @@ export function PublicMapPanel({
                 : 'Encuentra abasto cerca de ti'}
             </h1>
             <p>
-              Filtra por producto, revisa comercios cercanos y abre cada oferta
-              directamente en el mapa.
+              Filtra por producto, revisa comercios cercanos y abre cada oferta directamente en el
+              mapa.
             </p>
           </div>
 
@@ -545,14 +594,34 @@ export function PublicMapPanel({
             </button>
           </div>
 
-          <label className="map-search-field">
-            <span>Buscar</span>
-            <input
-              value={searchTerm}
-              placeholder="Producto, zona o comerciante"
-              onChange={(event) => setSearchTerm(event.target.value)}
-            />
-          </label>
+          <form className="map-search-form" onSubmit={handleSemanticSearch}>
+            <div className="map-search-head">
+              <div>
+                <strong>Busqueda inteligente</strong>
+                <small>Describe lo que quieres preparar y filtramos el mapa.</small>
+              </div>
+            </div>
+            <label className="map-search-field">
+              <span>Que estas buscando?</span>
+              <input
+                value={searchTerm}
+                placeholder="Ej. quiero hacer parrillada"
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+            </label>
+            <div className="map-search-actions">
+              <button className="nearby-inline-action" type="submit" disabled={semanticLoading}>
+                {semanticLoading ? 'Buscando...' : 'Buscar'}
+              </button>
+              {semanticOffers ? (
+                <button className="nearby-clear-action" type="button" onClick={clearSemanticSearch}>
+                  Ver todos
+                </button>
+              ) : null}
+            </div>
+            {semanticStatus ? <p className="semantic-search-status">{semanticStatus}</p> : null}
+            {semanticError ? <p className="semantic-search-error">{semanticError}</p> : null}
+          </form>
 
           {activeView === 'merchants' ? (
             <div className="merchant-priority-results">
@@ -609,9 +678,7 @@ export function PublicMapPanel({
             <div>
               <span className="map-section-label">Filtros</span>
               <strong>Ajusta la busqueda</strong>
-              <p>
-                Activa el GPS para limitar resultados por distancia aproximada.
-              </p>
+              <p>Activa el GPS para limitar resultados por distancia aproximada.</p>
             </div>
             <button className="nearby-inline-action" type="button" onClick={handleNearby}>
               Cerca de mi
@@ -646,7 +713,6 @@ export function PublicMapPanel({
           ) : null}
         </div>
       </aside>
-
     </section>
   );
 }

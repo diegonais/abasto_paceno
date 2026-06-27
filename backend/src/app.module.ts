@@ -13,6 +13,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { MerchantProfilesModule } from './modules/merchant-profiles/merchant-profiles.module';
 import { OffersModule } from './modules/offers/offers.module';
 import { ProductsModule } from './modules/products/products.module';
+import { SemanticSearchModule } from './modules/semantic-search/semantic-search.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -35,6 +36,7 @@ import { UsersModule } from './modules/users/users.module';
     CategoriesModule,
     ProductsModule,
     OffersModule,
+    SemanticSearchModule,
   ],
   providers: [
     {

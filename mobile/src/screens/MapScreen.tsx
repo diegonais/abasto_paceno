@@ -12,6 +12,12 @@ type MapScreenProps = {
   selectedOfferId: string | null;
   onOfferSelect: (offer: MapOffer) => void;
   onRefresh: () => void;
+  searchQuery: string;
+  searchStatus: string;
+  searching: boolean;
+  onSearchQueryChange: (query: string) => void;
+  onSemanticSearch: () => void;
+  onClearSemanticSearch: () => void;
 };
 
 export function MapScreen({
@@ -21,12 +27,20 @@ export function MapScreen({
   selectedOfferId,
   onOfferSelect,
   onRefresh,
+  searchQuery,
+  searchStatus,
+  searching,
+  onSearchQueryChange,
+  onSemanticSearch,
+  onClearSemanticSearch,
 }: MapScreenProps) {
   const { theme } = useAppTheme();
   const { colors } = theme;
 
   if (loading && !offers.length) {
-    return <ScreenState loading title="Cargando ofertas" description="Estamos consultando el backend." />;
+    return (
+      <ScreenState loading title="Cargando ofertas" description="Estamos consultando el backend." />
+    );
   }
 
   if (error && !offers.length) {
@@ -44,14 +58,31 @@ export function MapScreen({
     return (
       <ScrollView
         contentContainerStyle={styles.empty}
-        refreshControl={<RefreshControl refreshing={loading} tintColor={colors.primary} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={loading} tintColor={colors.primary} onRefresh={onRefresh} />
+        }
       >
-        <ScreenState title="Sin ofertas activas" description="Cuando haya publicaciones disponibles apareceran aqui." />
+        <ScreenState
+          title="Sin ofertas activas"
+          description="Cuando haya publicaciones disponibles apareceran aqui."
+        />
       </ScrollView>
     );
   }
 
-  return <OfferMap offers={offers} selectedOfferId={selectedOfferId} onOfferSelect={onOfferSelect} />;
+  return (
+    <OfferMap
+      offers={offers}
+      selectedOfferId={selectedOfferId}
+      onOfferSelect={onOfferSelect}
+      searchQuery={searchQuery}
+      searchStatus={searchStatus}
+      searching={searching}
+      onSearchQueryChange={onSearchQueryChange}
+      onSemanticSearch={onSemanticSearch}
+      onClearSemanticSearch={onClearSemanticSearch}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

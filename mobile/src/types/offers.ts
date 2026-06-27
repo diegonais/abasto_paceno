@@ -4,6 +4,7 @@ export type MapOffer = {
   id: string;
   productId: string;
   productName: string;
+  categoryName?: string;
   saleType: SaleType;
   approximateQuantity: number | null;
   price: string | number | null;

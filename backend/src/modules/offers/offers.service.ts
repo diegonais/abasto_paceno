@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { OfferAvailability } from '../../common/enums/offer-availability.enum';
 import { Role } from '../../common/enums/role.enum';
@@ -81,6 +81,31 @@ export class OffersService {
   async findMapOffers() {
     const offers = await this.findAllActive();
 
+    return this.mapOffersForMap(offers);
+  }
+
+  async findMapOffersByProductIds(productIds: string[]) {
+    if (!productIds.length) {
+      return [];
+    }
+
+    const offers = await this.offersRepository.find({
+      where: {
+        isActive: true,
+        product: {
+          id: In(productIds),
+          isActive: true,
+        },
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return this.mapOffersForMap(offers);
+  }
+
+  private mapOffersForMap(offers: Offer[]) {
     return offers.map((offer) => ({
       id: offer.id,
       productId: offer.product.id,
@@ -203,7 +228,10 @@ export class OffersService {
       const previousPhotoPath = offer.productPhotoPath;
       offer.productPhotoPath = updateOfferDto.productPhotoPath;
 
-      if (previousPhotoPath && previousPhotoPath !== updateOfferDto.productPhotoPath) {
+      if (
+        previousPhotoPath &&
+        previousPhotoPath !== updateOfferDto.productPhotoPath
+      ) {
         removeStoredFile(previousPhotoPath);
       }
     }
@@ -263,14 +291,18 @@ export class OffersService {
   ) {
     if (currentUser.role === Role.ADMIN) {
       if (!createOfferDto.merchantProfileId) {
-        throw new BadRequestException('merchantProfileId is required for admin');
+        throw new BadRequestException(
+          'merchantProfileId is required for admin',
+        );
       }
 
       return this.findActiveMerchantProfile(createOfferDto.merchantProfileId);
     }
 
     if (currentUser.role !== Role.MERCHANT) {
-      throw new ForbiddenException('Only merchants and admins can create offers');
+      throw new ForbiddenException(
+        'Only merchants and admins can create offers',
+      );
     }
 
     const merchantProfile = await this.findMerchantProfileByUserId(
@@ -278,12 +310,9 @@ export class OffersService {
     );
 
     if (
-      merchantProfile.verificationStatus !==
-      MerchantVerificationStatus.APPROVED
+      merchantProfile.verificationStatus !== MerchantVerificationStatus.APPROVED
     ) {
-      throw new ForbiddenException(
-        'Only approved merchants can create offers',
-      );
+      throw new ForbiddenException('Only approved merchants can create offers');
     }
 
     if (!createOfferDto.productPhotoPath) {
@@ -334,7 +363,9 @@ export class OffersService {
     });
 
     if (!merchantProfile) {
-      throw new NotFoundException('Merchant profile not found for current user');
+      throw new NotFoundException(
+        'Merchant profile not found for current user',
+      );
     }
 
     return merchantProfile;
@@ -371,13 +402,17 @@ export class OffersService {
     return product;
   }
 
-  private async resolveProductForOffer(offerDto: OfferInput | OfferUpdateInput) {
+  private async resolveProductForOffer(
+    offerDto: OfferInput | OfferUpdateInput,
+  ) {
     if (offerDto.customProductName?.trim()) {
       return this.findOrCreateCustomProduct(offerDto.customProductName);
     }
 
     if (!offerDto.productId) {
-      throw new BadRequestException('productId or customProductName is required');
+      throw new BadRequestException(
+        'productId or customProductName is required',
+      );
     }
 
     return this.findActiveProduct(offerDto.productId);

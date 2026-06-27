@@ -57,11 +57,14 @@ JWT_EXPIRES_IN=1d
 CORS_ORIGIN=http://localhost:5173
 GROQ_API_KEY=
 GROQ_SPEECH_TO_TEXT_MODEL=whisper-large-v3-turbo
+GEMINI_API_KEY=
 ```
 
 `CORS_ORIGIN` acepta una lista separada por comas si necesitas permitir mas de un origen, por ejemplo el frontend web y una URL adicional de pruebas.
 
 `GROQ_API_KEY` habilita la transcripcion de audio para publicaciones asistidas. `GROQ_SPEECH_TO_TEXT_MODEL` es opcional y por defecto usa `whisper-large-v3-turbo`.
+
+`GEMINI_API_KEY` habilita la busqueda inteligente con el modelo `gemini-2.5-flash`. Si no esta configurada o Gemini falla, `POST /api/semantic-search` responde con una busqueda simple por texto como fallback controlado.
 
 ## Base de datos
 
@@ -143,6 +146,10 @@ Ofertas:
 - `POST /api/offers`
 - `PATCH /api/offers/:id`
 - `PATCH /api/offers/:id/disable`
+
+Busqueda inteligente:
+
+- `POST /api/semantic-search`
 
 Productos:
 

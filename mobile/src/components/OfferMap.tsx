@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -15,9 +15,25 @@ type OfferMapProps = {
   offers: MapOffer[];
   selectedOfferId?: string | null;
   onOfferSelect?: (offer: MapOffer) => void;
+  searchQuery: string;
+  searchStatus: string;
+  searching: boolean;
+  onSearchQueryChange: (query: string) => void;
+  onSemanticSearch: () => void;
+  onClearSemanticSearch: () => void;
 };
 
-export function OfferMap({ offers, selectedOfferId, onOfferSelect }: OfferMapProps) {
+export function OfferMap({
+  offers,
+  selectedOfferId,
+  onOfferSelect,
+  searchQuery,
+  searchStatus,
+  searching,
+  onSearchQueryChange,
+  onSemanticSearch,
+  onClearSemanticSearch,
+}: OfferMapProps) {
   const mapRef = useRef<MapView>(null);
   const insets = useSafeAreaInsets();
   const { theme } = useAppTheme();
@@ -103,6 +119,74 @@ export function OfferMap({ offers, selectedOfferId, onOfferSelect }: OfferMapPro
           <ThemeToggle />
         </View>
         <Text style={[styles.count, { color: colors.muted }]}>{offers.length} ofertas activas</Text>
+        <View style={styles.searchIntro}>
+          <View style={styles.searchIntroCopy}>
+            <Text style={[styles.searchTitle, { color: colors.text }]}>Busqueda inteligente</Text>
+            <Text style={[styles.searchHint, { color: colors.muted }]}>
+              Describe lo que quieres preparar.
+            </Text>
+          </View>
+        </View>
+        <View style={styles.searchRow}>
+          <TextInput
+            value={searchQuery}
+            placeholder="Quiero hacer parrillada"
+            placeholderTextColor={colors.muted}
+            returnKeyType="search"
+            onChangeText={onSearchQueryChange}
+            onSubmitEditing={onSemanticSearch}
+            style={[
+              styles.searchInput,
+              {
+                borderColor: colors.border,
+                color: colors.text,
+                backgroundColor: colors.surface,
+              },
+            ]}
+          />
+          <TouchableOpacity
+            activeOpacity={0.84}
+            disabled={searching}
+            onPress={onSemanticSearch}
+            style={[
+              styles.searchButton,
+              {
+                backgroundColor: colors.primary,
+                opacity: searching ? 0.68 : 1,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.searchButtonText,
+                { color: theme.mode === 'dark' ? '#101722' : colors.surface },
+              ]}
+            >
+              {searching ? '...' : 'Buscar'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {searchStatus ? (
+          <Text
+            style={[
+              styles.searchStatus,
+              {
+                borderColor: colors.border,
+                backgroundColor: colors.badgeBg,
+                color: colors.muted,
+              },
+            ]}
+          >
+            {searchStatus}
+          </Text>
+        ) : null}
+        {searchQuery || searchStatus ? (
+          <TouchableOpacity activeOpacity={0.78} onPress={onClearSemanticSearch}>
+            <Text style={[styles.clearSearch, { color: colors.primary }]}>
+              Ver todas las ofertas
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {activeOffer ? (
@@ -135,7 +219,12 @@ export function OfferMap({ offers, selectedOfferId, onOfferSelect }: OfferMapPro
             onPress={closePreview}
             style={[styles.closeButton, { backgroundColor: colors.primary }]}
           >
-            <Text style={[styles.closeText, { color: theme.mode === 'dark' ? '#101722' : colors.surface }]}>
+            <Text
+              style={[
+                styles.closeText,
+                { color: theme.mode === 'dark' ? '#101722' : colors.surface },
+              ]}
+            >
               Cerrar
             </Text>
           </TouchableOpacity>
@@ -166,10 +255,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: spacing.lg,
     right: spacing.lg,
-    gap: spacing.xs,
+    gap: spacing.sm,
     padding: spacing.md,
     borderWidth: 1,
-    borderRadius: 0,
+    borderRadius: 8,
   },
   headerTop: {
     flexDirection: 'row',
@@ -180,6 +269,55 @@ const styles = StyleSheet.create({
   count: {
     paddingLeft: spacing.xs,
     fontSize: 13,
+  },
+  searchIntro: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingTop: spacing.xs,
+  },
+  searchIntroCopy: {
+    flex: 1,
+  },
+  searchTitle: {
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  searchHint: {
+    marginTop: 1,
+    fontSize: 12,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+    minHeight: 42,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: spacing.md,
+    fontSize: 14,
+  },
+  searchButton: {
+    minHeight: 42,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.md,
+    borderRadius: 8,
+  },
+  searchButtonText: {
+    fontWeight: '800',
+  },
+  searchStatus: {
+    padding: spacing.sm,
+    borderWidth: 1,
+    borderRadius: 8,
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  clearSearch: {
+    fontSize: 12,
+    fontWeight: '800',
   },
   preview: {
     position: 'absolute',
