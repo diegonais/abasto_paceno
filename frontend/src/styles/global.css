@@ -588,6 +588,71 @@ textarea {
   min-height: 0;
 }
 
+.audio-publication-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem;
+  border: 1px solid rgba(123, 24, 53, 0.12);
+  border-radius: 8px;
+  background: rgba(123, 24, 53, 0.06);
+}
+
+.audio-publication-panel strong,
+.audio-publication-panel p {
+  margin: 0;
+}
+
+.audio-publication-panel strong {
+  color: var(--color-text);
+}
+
+.audio-publication-panel p {
+  margin-top: 0.2rem;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.audio-speaking-guide {
+  display: grid;
+  gap: 0.28rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px dashed rgba(123, 24, 53, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 253, 249, 0.8);
+}
+
+.audio-speaking-guide strong,
+.audio-speaking-guide p,
+.audio-speaking-guide span {
+  margin: 0;
+}
+
+.audio-speaking-guide strong {
+  color: var(--color-text);
+  font-size: 0.92rem;
+}
+
+.audio-speaking-guide p,
+.audio-speaking-guide span {
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.audio-speaking-guide span {
+  font-style: italic;
+}
+
+.audio-suggestion-summary {
+  margin: -0.3rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
 .app-shell {
   height: 100dvh;
   min-height: 0;

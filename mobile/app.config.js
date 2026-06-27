@@ -23,7 +23,15 @@ module.exports = () => ({
     },
     edgeToEdgeEnabled: true,
   },
-  plugins: ['expo-font'],
+  plugins: [
+    'expo-font',
+    [
+      'expo-audio',
+      {
+        microphonePermission: 'Permite que Abasto Boliviano grabe audio para transcribir tus ofertas.',
+      },
+    ],
+  ],
   extra: {
     eas: {
       projectId: 'd06245c8-4ba2-4e13-99b5-ee37d101dad8',

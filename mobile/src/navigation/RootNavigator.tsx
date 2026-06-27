@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getMapOffers } from '../api/offers';
 import { FloatingTabBar } from '../components/FloatingTabBar';
 import { useAppTheme } from '../context/ThemeContext';
+import { AssistedPublicationScreen } from '../screens/AssistedPublicationScreen';
 import { MapScreen } from '../screens/MapScreen';
 import { OffersListScreen } from '../screens/OffersListScreen';
 import type { MapOffer } from '../types/offers';
@@ -12,6 +13,7 @@ import type { MapOffer } from '../types/offers';
 type TabsParamList = {
   Mapa: undefined;
   Ofertas: undefined;
+  Publicar: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabsParamList>();
@@ -89,6 +91,7 @@ export function RootNavigator() {
             />
           )}
         </Tab.Screen>
+        <Tab.Screen name="Publicar" component={AssistedPublicationScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

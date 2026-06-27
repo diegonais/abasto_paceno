@@ -8,6 +8,7 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { validateEnv } from './config/env.validation';
 import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './modules/auth/auth.module';
+import { AiPublicationModule } from './modules/ai-publication/ai-publication.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { MerchantProfilesModule } from './modules/merchant-profiles/merchant-profiles.module';
 import { OffersModule } from './modules/offers/offers.module';
@@ -28,6 +29,7 @@ import { UsersModule } from './modules/users/users.module';
     }),
     TypeOrmModule.forRootAsync(typeOrmConfig),
     AuthModule,
+    AiPublicationModule,
     UsersModule,
     MerchantProfilesModule,
     CategoriesModule,

@@ -16,6 +16,7 @@ type IoniconName = keyof typeof Ionicons.glyphMap;
 const routeIcon = {
   Mapa: 'map',
   Ofertas: 'list',
+  Publicar: 'mic',
 } as const satisfies Record<string, IoniconName>;
 
 export function FloatingTabBar({ state, descriptors, navigation, offersCount }: FloatingTabBarProps) {

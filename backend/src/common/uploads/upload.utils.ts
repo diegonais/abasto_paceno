@@ -3,12 +3,22 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { existsSync, mkdirSync, unlinkSync } from 'fs';
 
-import { ALLOWED_IMAGE_MIME_TYPES } from './upload.constants';
+import {
+  ALLOWED_AUDIO_MIME_TYPES,
+  ALLOWED_IMAGE_MIME_TYPES,
+} from './upload.constants';
 
 export type UploadedImageFile = {
   filename: string;
   mimetype: string;
   originalname: string;
+};
+
+export type UploadedAudioFile = {
+  buffer: Buffer;
+  mimetype: string;
+  originalname: string;
+  size: number;
 };
 
 function ensureDirectoryExists(directoryPath: string) {
@@ -51,6 +61,24 @@ export function imageFileFilter(
     callback(
       new BadRequestException(
         'Only JPG, PNG and WEBP image files are allowed',
+      ) as unknown as Error,
+      false,
+    );
+    return;
+  }
+
+  callback(null, true);
+}
+
+export function audioFileFilter(
+  _request: Express.Request,
+  file: UploadedAudioFile,
+  callback: (error: Error | null, acceptFile: boolean) => void,
+) {
+  if (!ALLOWED_AUDIO_MIME_TYPES.includes(file.mimetype)) {
+    callback(
+      new BadRequestException(
+        'Only audio files are allowed for transcription',
       ) as unknown as Error,
       false,
     );
